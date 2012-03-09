@@ -61,5 +61,10 @@ function! GetElixirIndent(line_num)
     return indent(plnum) + &sw
   endif
 
+  " keep the same indentation if the previous line is empty
+  if previous_line =~ '^\s*$'
+    return -1
+  endif
+
   return indent(plnum)
 endfunction
