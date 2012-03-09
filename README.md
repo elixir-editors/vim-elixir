@@ -1,6 +1,14 @@
 # vim-elixir
 
-Syntax highlight for the [Elixir programming language](http://elixir-lang.org)
+This project contains some Vim configuration files to work with [Elixir](http://elixir-lang.org).
+
+So far it's included:
+
+* Syntax highlighting
+
+* Filetype detection
+
+* Auto indentation(not finished yet!)
 
 ## Install
 
