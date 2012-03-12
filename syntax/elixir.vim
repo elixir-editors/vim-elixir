@@ -10,7 +10,7 @@ endif
 syn match elixirComment '#.*'
 
 syn match elixirKeyword '\<\%(case\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\|defmodule\|defprotocol\|defimpl\|defrecord\|defmacro\|defdelegate\|defexception\|defp\|def\|exit\|raise\|throw\)\>[?!]\@!'
-syn match elixirKeyword '\<\%(do\|\->\)\>\s*'
+syn match elixirKeyword '\<\%(do\|->\)\>\s*'
 syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\)\>[?!]\@!'
 
 syn match elixirOperator '\<\%(and\|not\|or\|when\|xor\|in\)\>'
