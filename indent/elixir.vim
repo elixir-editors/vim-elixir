@@ -9,14 +9,16 @@ endif
 let b:did_indent = 1
 
 setlocal indentexpr=GetElixirIndent(v:lnum)
-setlocal indentkeys+==end,=else,=match
+setlocal indentkeys+==end,=else,=match,=elsif,=catch,=after,=rescue
 
 if exists("*GetElixirIndent")
   finish
 endif
 
 let s:elixir_indent_keywords = '^\s*\<\%(case\|if\|unless\|try\|loop\|receive\|' .
-      \ 'fn\|defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|\(match\|else\)\(:\)\@=\)\>'
+      \ 'fn\|defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|[a-z]\w*\(:\)\@=\)\>'
+
+let s:elixir_clauses = '\(end\|else\|match\|elsif\|catch\|after\|rescue\)'
 
 function! s:BlockStarter(lnum, block_start_re)
    let lnum = a:lnum
@@ -45,7 +47,7 @@ function! GetElixirIndent(line_num)
 
   let this_line = getline(a:line_num)
 
-  if this_line =~ '^\s*\(else\|end\|match\)\>'
+  if this_line =~ s:elixir_clauses
     let bslnum = s:BlockStarter(a:line_num, s:elixir_indent_keywords)
     if bslnum > 0
       return indent(bslnum)
@@ -57,7 +59,7 @@ function! GetElixirIndent(line_num)
   let plnum = a:line_num - 1
   let previous_line = getline(plnum)
 
-  if previous_line =~ '\(do\|when\)$\|^\s*\(if\>\|\(match\|else\)\(:\)\@=\)'
+  if previous_line =~ '\(do\|when\)$\|^\s*\(if\>\|[a-z]\w*\(:\)\@=\)'
     return indent(plnum) + &sw
   endif
 
