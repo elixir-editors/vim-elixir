@@ -15,8 +15,8 @@ if exists("*GetElixirIndent")
   finish
 endif
 
-let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\|' .
-      \ 'fn\)\>\|^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|[a-z]\w*\(:\)\@=\)\)'
+let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\|fn\)\>\|' .
+      \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|[a-z]\w*\(:\)\@=\)\)'
 
 let s:elixir_clauses = '\(end\|else\|match\|elsif\|catch\|after\|rescue\)'
 
@@ -40,7 +40,7 @@ function! s:BlockStarter(lnum, block_start_re)
  endfunction
 
 function! GetElixirIndent(line_num)
-  " no indent if it's the first line of the file
+  " don't indent if it's the first line of the file
   if a:line_num == 0
     return 0
   endif
@@ -63,9 +63,14 @@ function! GetElixirIndent(line_num)
     return indent(plnum) + &sw
   endif
 
-  " keep the same indentation if the previous line is empty
   if previous_line =~ '^\s*$'
-    return -1
+    " keep the same indentation if the previous line is empty
+    if this_line =~ s:elixir_indent_keywords
+      return -1
+    else
+      " if the current line is also empty change indentation
+      return &sw
+    endif
   endif
 
   return indent(plnum)
