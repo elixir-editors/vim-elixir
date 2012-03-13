@@ -15,3 +15,7 @@ So far it's included:
 * Copy the files to your `~/.vim` directory.
 
 * If you use vim-pathogen you can clone this repo into `~/.vim/bundle`
+
+## Snippets
+
+If you are looking for snipmate snippets take a look at: [elixir-snippets](https://github.com/carlosgaldino/elixir-snippets)
