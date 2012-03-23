@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language: Elixir
 " Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
-" Last Change: 2012 Mar 6
+" Last Change: 2012 Mar 23
 
 if exists("b:current_syntax")
   finish
@@ -42,6 +42,7 @@ syn region elixirDocString     start=+'''+ end=+'''+
 
 syn match elixirSymbolInterpolated ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
+syn match elixirString             "'.*'"
 
 hi def link elixirComment             Comment
 hi def link elixirKeyword             Keyword
