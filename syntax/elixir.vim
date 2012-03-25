@@ -35,6 +35,7 @@ syn match elixirNumber '\<\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?
 syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
 syn match elixirNumber '\<0[bB][01]\+\>'
 
+syn region elixirString        start="'" end="'"
 syn region elixirString        start='"' end='"' contains=elixirInterpolation
 syn region elixirInterpolation start="#{" end="}" contained contains=ALLBUT,elixirComment
 syn region elixirDocString     start=+"""+ end=+"""+
@@ -42,7 +43,6 @@ syn region elixirDocString     start=+'''+ end=+'''+
 
 syn match elixirSymbolInterpolated ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
-syn match elixirString             "'.*'"
 
 hi def link elixirComment             Comment
 hi def link elixirKeyword             Keyword
