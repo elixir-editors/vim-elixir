@@ -11,7 +11,7 @@ syn match elixirComment '#.*'
 
 syn match elixirKeyword '\<\%(case\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\|defmodule\|defprotocol\|defimpl\|defrecord\|defmacro\|defdelegate\|defexception\|defp\|def\|exit\|raise\|throw\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(do\|->\)\>\s*'
-syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\|refer\)\>[?!]\@!'
 
 syn match elixirOperator '\<\%(and\|not\|or\|when\|xor\|in\)\>'
 syn match elixirOperator '%=\|\*=\|\*\*=\|+=\|-=\|\^=\|||='
@@ -29,7 +29,7 @@ syn match elixirBoolean 'true\|false'
 
 syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
 
-syn match elixirPseudoVariable '\<__\%(FILE\|LINE\|MODULE\|STOP_ITERATOR\|EXCEPTION\|OP\|REF\|FUNCTION\|BLOCK\|KVBLOCK\)__\>[?!]\@!'
+syn match elixirPseudoVariable '\<__\%(FILE\|LINE\|MODULE\|LOCAL\|MAIN\|FUNCTION\)__\>[?!]\@!'
 
 syn match elixirNumber '\<\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?\([eE][-+]\?\d\(_\?\d\)*\)\?\>'
 syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
