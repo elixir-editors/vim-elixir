@@ -1,7 +1,7 @@
 " Vim indent file
 " Language: Elixir
 " Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
-" Last Change: 2012 Mar 9
+" Last Change: 2012 Mar 27
 
 if exists("b:did_indent")
   finish
