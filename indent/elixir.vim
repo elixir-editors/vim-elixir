@@ -16,7 +16,7 @@ if exists("*GetElixirIndent")
 endif
 
 let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\|fn\)\>\|' .
-      \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|[a-z]\w*\(:\)\@=\)\)'
+      \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)\)'
 
 let s:elixir_clauses = '\(end\|else\|match\|elsif\|catch\|after\|rescue\)'
 
