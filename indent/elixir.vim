@@ -9,7 +9,7 @@ endif
 let b:did_indent = 1
 
 setlocal indentexpr=GetElixirIndent(v:lnum)
-setlocal indentkeys+==end,=else,=match,=elsif,=catch,=after,=rescue
+setlocal indentkeys+==end,=else:,=match:,=elsif:,=catch:,=after:,=rescue:
 
 if exists("*GetElixirIndent")
   finish
@@ -18,7 +18,7 @@ endif
 let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\|fn\)\>\|' .
       \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)\)'
 
-let s:elixir_clauses = '\(end\|else\|match\|elsif\|catch\|after\|rescue\)'
+let s:elixir_clauses = '\(else\|match\|elsif\|catch\|after\|rescue\):\|end'
 
 function! s:BlockStarter(lnum, block_start_re)
    let lnum = a:lnum
