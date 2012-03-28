@@ -64,14 +64,10 @@ function! GetElixirIndent(line_num)
     return indent(plnum) + &sw
   endif
 
+  " blank lines are indented based on the previous not blank line"
   if previous_line =~ '^\s*$'
-    " keep the same indentation if the previous line is empty
-    if this_line =~ s:elixir_indent_keywords
-      return -1
-    else
-      " if the current line is also empty change indentation
-      return &sw
-    endif
+    let nonblank = prevnonblank(a:line_num)
+    return indent(nonblank)
   endif
 
   return indent(plnum)
