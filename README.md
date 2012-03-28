@@ -8,7 +8,7 @@ So far it's included:
 
 * Filetype detection
 
-* Auto indentation(not finished yet!)
+* Auto indentation
 
 ## Install
 
