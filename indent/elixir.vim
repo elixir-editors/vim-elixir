@@ -1,7 +1,7 @@
 " Vim indent file
 " Language: Elixir
 " Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
-" Last Change: 2012 Mar 27
+" Last Change: 2012 Mar 28
 
 if exists("b:did_indent")
   finish
@@ -15,8 +15,9 @@ if exists("*GetElixirIndent")
   finish
 endif
 
-let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\|fn\)\>\|' .
-      \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)\)'
+let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\)\>\|' .
+      \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)' .
+      \ 'fn(.*)\s\(do\|->\)$\)'
 
 let s:elixir_clauses = '\(else\|match\|elsif\|catch\|after\|rescue\):\|end'
 
