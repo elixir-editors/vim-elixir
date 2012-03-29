@@ -35,8 +35,11 @@ syn match elixirNumber '\<\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?
 syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
 syn match elixirNumber '\<0[bB][01]\+\>'
 
+syn match elixirRegexEscape "\\\\\|\\[aAbBcdDefGhHnrsStvVwW]\|\\\d\{3}\|\\x[0-9a-fA-F]\{2}"
+syn match elixirRegexCharClass "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|digit\|graph\|lower\|print\|punct\|space\|upper\|xdigit\):\]"
+
 syn region elixirString        start="'" end="'"
-syn region elixirString        start='"' end='"' contains=elixirInterpolation
+syn region elixirString        start='"' end='"' contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
 syn region elixirInterpolation start="#{" end="}" contained contains=ALLBUT,elixirComment
 syn region elixirDocString     start=+"""+ end=+"""+
 syn region elixirDocString     start=+'''+ end=+'''+
@@ -56,4 +59,6 @@ hi def link elixirNumber              Number
 hi def link elixirDocString           Comment
 hi def link elixirInterpolation       Delimiter
 hi def link elixirSymbolInterpolated  elixirSymbol
+hi def link elixirRegexEscape         Special
+hi def link elixirRegexCharClass      Special
 hi def link elixirString              String
