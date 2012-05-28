@@ -7,6 +7,9 @@ if exists("b:current_syntax")
   finish
 endif
 
+" syncing starts 2000 lines before top line so docstrings don't screw things up
+syn sync minlines=2000
+
 syn match elixirComment '#.*'
 
 syn match elixirKeyword '\<\%(case\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\|defmodule\|defprotocol\|defimpl\|defrecord\|defmacro\|defdelegate\|defexception\|defp\|def\|exit\|raise\|throw\)\>[?!]\@!'
