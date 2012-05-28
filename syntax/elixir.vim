@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language: Elixir
 " Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
-" Last Change: 2012 Mar 26
+" Last Change: 2012 May 28
 
 if exists("b:current_syntax")
   finish
