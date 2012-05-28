@@ -50,9 +50,9 @@ syn region elixirRegex matchgroup=elixirDelimiter start="%r/" end="/[uiomxfr]*" 
 
 syn cluster elixirRegexSpecial   contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier
 
-syn region elixirString        start="'" end="'"
-syn region elixirString        start='"' end='"' contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
-syn region elixirInterpolation start="#{" end="}" contained contains=ALLBUT,elixirComment
+syn region elixirString        matchgroup=elixirDelimiter start="'" end="'"
+syn region elixirString        matchgroup=elixirDelimiter start='"' end='"' contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
+syn region elixirInterpolation matchgroup=elixirDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment
 syn region elixirDocString     start=+"""+ end=+"""+
 syn region elixirDocString     start=+'''+ end=+'''+
 
