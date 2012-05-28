@@ -12,7 +12,9 @@ syn sync minlines=2000
 
 syn match elixirComment '#.*'
 
-syn match elixirKeyword '\<\%(case\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\|defmodule\|defprotocol\|defimpl\|defrecord\|defmacro\|defdelegate\|defexception\|defp\|def\|exit\|raise\|throw\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(case\|cond\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecord\|defmacrop\?\|defdelegate\|defexception\|defp\?\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(do\|->\)\>\s*'
 syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\|refer\)\>[?!]\@!'
 
