@@ -40,9 +40,15 @@ syn match elixirNumber '\<\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?
 syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
 syn match elixirNumber '\<0[bB][01]\+\>'
 
-syn match elixirRegexEscape    "\\\\\|\\[aAbBcdDefGhHnrsStvVwW]\|\\\d\{3}\|\\x[0-9a-fA-F]\{2}"
-syn match elixirRegexCharClass "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|digit\|graph\|lower\|print\|punct\|space\|upper\|word\|xdigit\):\]"
-syn match elixirRegex          "%r/.*/[uiomxfr]*"
+syn match elixirRegexEscape     "\\\\\|\\[aAbBcdDefGhHnrsStvVwW]\|\\\d\{3}\|\\x[0-9a-fA-F]\{2}" contained
+syn match elixirRegexEscape     "?\|\.\|*\|\[\|\]\|+\|\^\|\$\||\|(\|)\|{\|}" contained
+syn match elixirRegexQuantifier "[*?+][?+]\="         contained display
+syn match elixirRegexQuantifier "{\d\+\%(,\d*\)\=}?\=" contained display
+syn match elixirRegexCharClass  "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|digit\|graph\|lower\|print\|punct\|space\|upper\|word\|xdigit\):\]" contained display
+
+syn region elixirRegex matchgroup=elixirDelimiter start="%r/" end="/[uiomxfr]*" skip="\\\\" contains=@elixirRegexSpecial
+
+syn cluster elixirRegexSpecial   contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier
 
 syn region elixirString        start="'" end="'"
 syn region elixirString        start='"' end='"' contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
@@ -65,7 +71,10 @@ hi def link elixirNumber              Number
 hi def link elixirDocString           Comment
 hi def link elixirInterpolation       Delimiter
 hi def link elixirSymbolInterpolated  elixirSymbol
-hi def link elixirRegex               Special
-hi def link elixirRegexEscape         elixirRegex
-hi def link elixirRegexCharClass      elixirRegex
+hi def link elixirRegex               elixirString
+hi def link elixirRegexEscape         elixirSpecial
+hi def link elixirRegexCharClass      elixirSpecial
+hi def link elixirRegexQuantifier     elixirSpecial
+hi def link elixirSpecial             Special
 hi def link elixirString              String
+hi def link elixirDelimiter           Delimiter
