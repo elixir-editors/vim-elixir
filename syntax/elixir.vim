@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language: Elixir
 " Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
-" Last Change: 2012 May 28
+" Last Change: 2013 Apr 24
 
 if exists("b:current_syntax")
   finish
@@ -13,7 +13,7 @@ syn sync minlines=2000
 syn match elixirComment '#.*'
 
 syn match elixirKeyword '\<\%(case\|cond\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\)\>[?!]\@!'
-syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecord\|defmacrop\?\|defdelegate\|defexception\|defp\?\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecord\|defmacrop\?\|defdelegate\|defoverridable\|defexception\|defcallback\|defp\?\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(do\|->\)\>\s*'
 syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\|alias\)\>[?!]\@!'
