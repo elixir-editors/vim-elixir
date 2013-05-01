@@ -8,6 +8,8 @@ if exists("b:did_indent")
 endif
 let b:did_indent = 1
 
+setlocal nosmartindent
+
 setlocal indentexpr=GetElixirIndent(v:lnum)
 setlocal indentkeys+==end,=else:,=match:,=elsif:,=catch:,=after:,=rescue:
 
