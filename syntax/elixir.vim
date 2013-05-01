@@ -10,7 +10,8 @@ endif
 " syncing starts 2000 lines before top line so docstrings don't screw things up
 syn sync minlines=2000
 
-syn match elixirComment '#.*'
+syn match elixirComment '#.*' contains=elixirTodo
+syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
 syn match elixirKeyword '\<\%(case\|cond\|end\|bc\|lc\|if\|unless\|try\|loop\|receive\|fn\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecord\|defmacrop\?\|defdelegate\|defoverridable\|defexception\|defcallback\|defp\?\)\>[?!]\@!'
@@ -54,13 +55,14 @@ syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape
 syn region elixirString        matchgroup=elixirDelimiter start="'" end="'"
 syn region elixirString        matchgroup=elixirDelimiter start='"' end='"' contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment
-syn region elixirDocString     start=+"""+ end=+"""+
-syn region elixirDocString     start=+'''+ end=+'''+
+syn region elixirDocString     start=+"""+ end=+"""+ contains=elixirTodo
+syn region elixirDocString     start=+'''+ end=+'''+ contains=elixirTodo
 
 syn match elixirSymbolInterpolated ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
 
 hi def link elixirComment                Comment
+hi def link elixirTodo                   Todo
 hi def link elixirKeyword                Keyword
 hi def link elixirOperator               Operator
 hi def link elixirSymbol                 Constant
