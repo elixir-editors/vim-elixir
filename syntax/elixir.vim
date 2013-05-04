@@ -52,8 +52,8 @@ syn region elixirRegex matchgroup=elixirDelimiter start="%r/" end="/[uiomxfr]*" 
 syn cluster elixirRegexSpecial   contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier
 syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
 
-syn region elixirString        matchgroup=elixirDelimiter start="'" end="'"
-syn region elixirString        matchgroup=elixirDelimiter start='"' end='"' contains=@elixirStringContained
+syn region elixirString        matchgroup=elixirDelimiter start="'" end="'" skip="\\'"
+syn region elixirString        matchgroup=elixirDelimiter start='"' end='"' skip='\\"' contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment
 syn region elixirDocString     start=+"""+ end=+"""+ contains=elixirTodo
 syn region elixirDocString     start=+'''+ end=+'''+ contains=elixirTodo
