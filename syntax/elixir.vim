@@ -14,7 +14,7 @@ syn match elixirComment '#.*' contains=elixirTodo
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
 syn match elixirKeyword '\<\%(case\|cond\|end\|bc\|lc\|inlist\|inbits\|if\|unless\|try\|loop\|receive\|fn\)\>[?!]\@!'
-syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecord\|defmacrop\?\|defdelegate\|defoverridable\|defexception\|defcallback\|defp\?\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecordp\?\|defmacrop\?\|defdelegate\|defoverridable\|defexception\|defcallback\|defp\?\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(do\|->\)\>\s*'
 syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\|alias\)\>[?!]\@!'
