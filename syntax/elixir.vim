@@ -72,7 +72,6 @@ hi def link elixirBoolean                Boolean
 hi def link elixirVariable               Identifier
 hi def link elixirNumber                 Number
 hi def link elixirDocString              Comment
-hi def link elixirInterpolation          Delimiter
 hi def link elixirSymbolInterpolated     elixirSymbol
 hi def link elixirRegex                  elixirString
 hi def link elixirRegexEscape            elixirSpecial
