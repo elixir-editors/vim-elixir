@@ -42,14 +42,14 @@ syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
 syn match elixirNumber '\<0[bB][01]\+\>'
 
 syn match elixirRegexEscape            "\\\\\|\\[aAbBcdDefGhHnrsStvVwW]\|\\\d\{3}\|\\x[0-9a-fA-F]\{2}" contained
-syn match elixirRegexEscapePunctuation "?\|\.\|*\|\[\|\]\|+\|\^\|\$\||\|(\|)\|{\|}" contained
+syn match elixirRegexEscapePunctuation "?\|\\.\|*\|\\\[\|\\\]\|+\|\\^\|\\\$\|\\|\|\\(\|\\)\|\\{\|\\}" contained
 syn match elixirRegexQuantifier        "[*?+][?+]\=" contained display
 syn match elixirRegexQuantifier        "{\d\+\%(,\d*\)\=}?\=" contained display
 syn match elixirRegexCharClass         "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|digit\|graph\|lower\|print\|punct\|space\|upper\|word\|xdigit\):\]" contained display
 
 syn region elixirRegex matchgroup=elixirDelimiter start="%r/" end="/[uiomxfr]*" skip="\\\\" contains=@elixirRegexSpecial
 
-syn cluster elixirRegexSpecial   contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier
+syn cluster elixirRegexSpecial   contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
 syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
 
 syn region elixirString        matchgroup=elixirDelimiter start="'" end="'" skip="\\'"
