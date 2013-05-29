@@ -19,7 +19,9 @@ syn match elixirKeyword '\<\%(case\|cond\|bc\|lc\|inlist\|inbits\|if\|unless\|tr
 syn match elixirKeyword '\<\%(defmodule\|defprotocol\|defimpl\|defrecordp\?\|defmacrop\?\|defdelegate\|defoverridable\|defexception\|defcallback\|defp\?\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>[?!]\@!'
 syn match elixirKeyword '\<\%(->\)\>\s*'
-syn match elixirKeyword '\<\%(import\|require\|use\|recur\|quote\|unquote\|super\|alias\)\>[?!]\@!'
+syn match elixirKeyword '\<\%(use\|recur\|quote\|unquote\|super\|alias\)\>[?!]\@!'
+
+syn keyword elixirInclude import require
 
 syn match elixirOperator '\<\%(and\|not\|or\|when\|xor\|in\)\>'
 syn match elixirOperator '%=\|\*=\|\*\*=\|+=\|-=\|\^=\|||='
@@ -66,6 +68,7 @@ syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|
 syn region elixirBlock              matchgroup=elixirKeyword start="\<do\>\(:\)\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 syn region elixirAnonymousFunction  matchgroup=elixirKeyword start="\<fn\>"         end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
+hi def link elixirInclude                Include
 hi def link elixirComment                Comment
 hi def link elixirTodo                   Todo
 hi def link elixirKeyword                Keyword
