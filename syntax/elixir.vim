@@ -37,7 +37,7 @@ syn match elixirBoolean 'true\|false'
 
 syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
 
-syn match elixirPseudoVariable '\<__\%(FILE\|MODULE\|MAIN\|ENV\|CALLER\)__\>[?!]\@!'
+syn match elixirPseudoVariable '\<__\%(FILE\|DIR\|MODULE\|ENV\|CALLER\)__\>[?!]\@!'
 
 syn match elixirNumber '\<\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?\([eE][-+]\?\d\(_\?\d\)*\)\?\>'
 syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
