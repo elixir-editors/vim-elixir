@@ -91,7 +91,7 @@ syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained    
 syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
 syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
 syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                                               skipwhite skipnl
+syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
 syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration            skipwhite skipnl
 syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
@@ -114,6 +114,7 @@ hi def link elixirOverridableDefine      Define
 hi def link elixirExceptionDefine        Define
 hi def link elixirCallbackDefine         Define
 hi def link elixirFunctionDeclaration    Function
+hi def link elixirMacroDeclaration       Macro
 hi def link elixirInclude                Include
 hi def link elixirComment                Comment
 hi def link elixirTodo                   Todo
