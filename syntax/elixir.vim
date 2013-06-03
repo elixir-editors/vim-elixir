@@ -15,14 +15,14 @@ syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@el
 syn match elixirComment '#.*' contains=elixirTodo
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
-syn match elixirKeyword '\<\%(case\|cond\|bc\|lc\|inlist\|inbits\|if\|unless\|try\|loop\|receive\|function\)\>[?!]\@!'
-syn match elixirKeyword '\<\%(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>[?!]\@!'
-syn match elixirKeyword '\<\%(->\)\>\s*'
-syn match elixirKeyword '\<\%(use\|recur\|quote\|unquote\|super\|alias\)\>[?!]\@!'
+syn keyword elixirKeyword case cond bc lc inlist inbits if unless try loop receive function
+syn keyword elixirKeyword exit raise throw after rescue catch else
+syn keyword elixirKeyword use recur quote unquote super alias
+syn match   elixirKeyword '\<\%(->\)\>\s*'
 
 syn keyword elixirInclude import require
 
-syn match elixirOperator '\<\%(and\|not\|or\|when\|xor\|in\)\>'
+syn keyword elixirOperator and not or when xor in
 syn match elixirOperator '%=\|\*=\|\*\*=\|+=\|-=\|\^=\|||='
 syn match elixirOperator "\%(<=>\|<\%(<\|=\)\@!\|>\%(<\|=\|>\)\@!\|<=\|>=\|===\|==\|=\~\|!=\|!\~\|?[ \t]\@=\)"
 syn match elixirOperator "!+[ \t]\@=\|&&\|||\|\^\|\*\|+\|-\|/"
@@ -32,13 +32,14 @@ syn match elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\
 syn match elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
 syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
 
-syn match elixirName '\<nil\>[?!]\@!\|\<[A-Z]\w*\>'
+syn keyword elixirName nil
+syn match   elixirName '\<[A-Z]\w*\>'
 
-syn match elixirBoolean 'true\|false'
+syn keyword elixirBoolean true false
 
 syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
 
-syn match elixirPseudoVariable '\<__\%(FILE\|DIR\|MODULE\|ENV\|CALLER\)__\>[?!]\@!'
+syn keyword elixirPseudoVariable __FILE__ __DIR__ __MODULE__ __ENV__ __CALLER__
 
 syn match elixirNumber '\<\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?\([eE][-+]\?\d\(_\?\d\)*\)\?\>'
 syn match elixirNumber '\<0[xX][0-9A-Fa-f]\+\>'
