@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe "Indenting" do
-  context "one liner functions inside do block declaring" do
-    it "with fn syntax" do
+  context "single body functions inside do block" do
+    it "is declared with fn syntax" do
       assert_correct_indenting <<-EOF
         def do
           some_func = fn  x -> x end
@@ -10,7 +10,7 @@ describe "Indenting" do
       EOF
     end
 
-    it "with function syntax" do
+    it "is declared with function syntax" do
       assert_correct_indenting <<-EOF
         def do
           some_func = function do x -> x end
@@ -19,6 +19,16 @@ describe "Indenting" do
     end
 
     it "spans in multiple lines" do
+      assert_correct_indenting <<-EOF
+        def test do
+          assert_raise Queue.Empty, fn ->
+            Q.new |> Q.deq!
+          end
+        end
+      EOF
+    end
+
+    it "spans in multiple lines inside parentheses" do
       assert_correct_indenting <<-EOF
         defmodule Test do
           def lol do
