@@ -27,7 +27,6 @@ function! s:BlockStarter(lnum, block_start_re)
    let lnum = a:lnum
    let maxindent = 10000
    while lnum > 1
-     let lnum = prevnonblank(lnum - 1)
      if indent(lnum) < maxindent
        if getline(lnum) =~ a:block_start_re
          return lnum
@@ -38,6 +37,7 @@ function! s:BlockStarter(lnum, block_start_re)
          endif
        endif
      endif
+     let lnum = prevnonblank(lnum - 1)
    endwhile
    return -1
  endfunction
