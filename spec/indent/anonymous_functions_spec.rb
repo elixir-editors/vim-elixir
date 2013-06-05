@@ -17,6 +17,18 @@ describe "Indenting" do
         end
       EOF
     end
+
+    it "spans in multiple lines" do
+      assert_correct_indenting <<-EOF
+        defmodule Test do
+          def lol do
+            Enum.map([1,2,3], fn x ->
+              x * 3
+            end)
+          end
+        end
+      EOF
+    end
   end
 
   context "multiple body functions declaring" do
