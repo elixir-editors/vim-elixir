@@ -1,5 +1,7 @@
 # vim-elixir
 
+[![Build Status](https://travis-ci.org/elixir-lang/vim-elixir.png?branch=master)](https://travis-ci.org/elixir-lang/vim-elixir)
+
 This project contains some Vim configuration files to work with [Elixir](http://elixir-lang.org).
 
 So far it's included:
