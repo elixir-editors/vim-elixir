@@ -16,15 +16,7 @@ let s:cpo_save = &cpo
 set cpo-=C
 
 CompilerSet makeprg=mix\ test
-
-CompilerSet errorformat=
-    \%A\ \ %n)\ %m,         " 1) test name (Module)
-    \%C,%C,%C,%C,           " following 4 lines of failure info
-    \%Z\ \ \ \ \ at\ %f:%l, " at foo_test:14
-    \%-GFailures%.%#,       " ignore three test output summary lines
-    \%-GFinished%.%#,
-    \%-G%n\ tests%.%#,
-    \%-G\\s%#               " ignore blank lines
+CompilerSet errorformat=%A\ \ %.)\ %m(%.%#),%C\ \ \ \ \ **%m,%C\ \ \ \ \ \ \ %m,%Z\ \ \ \ \ at\ %f:%l,%-G%.%#
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
