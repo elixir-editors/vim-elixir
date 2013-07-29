@@ -3,19 +3,62 @@ require 'vimrunner'
 
 module Support
   def assert_correct_indenting(string)
-    whitespace = string.scan(/^\s*/).first
-    string = string.split("\n").map { |line| line.gsub /^#{whitespace}/, '' }.join("\n").strip
+    content = write_file(string)
 
-    File.open 'test.exs', 'w' do |f|
-      f.write string
-    end
-
-    @vim.edit 'test.exs'
+    @vim.edit file
     @vim.normal 'gg=G'
     @vim.write
 
-    IO.read('test.exs').strip.should eq string
+    read_file.should eq(content)
   end
+
+  def assert_correct_syntax(syntax, cursor, string)
+    content = write_file(string)
+
+    @vim.edit file
+    @vim.feedkeys "/#{cursor}\n"
+
+    cursor_syntax_stack.should include(syntax)
+  end
+
+  def assert_incorrect_syntax(type, cursor, string)
+    content = write_file(string)
+
+    @vim.edit file
+    @vim.normal "/#{cursor}\n"
+
+    cursor_syntax_stack.should_not include(type)
+  end
+
+  private
+
+  def write_file(string)
+    content = file_content(string)
+    File.open file, 'w' do |f|
+      f.write content
+    end
+
+    content
+  end
+
+  def file_content(string)
+    whitespace = string.scan(/^\s*/).first
+    string.split("\n").map { |line|
+      line.gsub /^#{whitespace}/, ''
+    }.join("\n").strip
+  end
+
+  def cursor_syntax_stack
+    @vim.echo <<-EOF
+      map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+    EOF
+  end
+
+  def read_file
+    IO.read(file).strip
+  end
+
+  def file; 'test.exs'; end
 end
 
 RSpec.configure do |config|

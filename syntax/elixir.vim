@@ -71,6 +71,21 @@ syn region elixirAnonymousFunction  matchgroup=elixirKeyword start="\<fn\>"     
 
 syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirName,elixirBoolean,elixirVariable,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirRegexEscape,elixirRegexEscapePunctuation,elixirRegexCharClass,elixirRegexQuantifier,elixirSpecial,elixirString,elixirDelimiter
 
+syn match elixirDelimEscape "\\[(<{\[)>}\]]" transparent display contained contains=NONE
+
+syn region elixirSigil matchgroup=elixirDelimiter start="%\z([~`!@#$%^&*_\-+|\:;"',.?/]\)"       end="\z1" skip="\\\\\|\\\z1" fold
+syn region elixirSigil matchgroup=elixirDelimiter start="%[BCRW]\z([~`!@#$%^&*_\-+=|\:;"',.?/]\)" end="\z1" skip="\\\\\|\\\z1" fold
+syn region elixirSigil matchgroup=elixirDelimiter start="%[BCRW]\={"                              end="}"   skip="\\\\\|\\}"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirDelimiter start="%[BCRW]\=<"                              end=">"   skip="\\\\\|\\>"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirDelimiter start="%[BCRW]\=\["                             end="\]"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirDelimiter start="%[BCRW]\=("                              end=")"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
+
+syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]\z([~`!@#$%^&*_\-+=|\:;"',.?/]\)" end="\z1" skip="\\\\\|\\\z1" fold
+syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]{"                                end="}"   skip="\\\\\|\\}"   fold contains=@elixirStringContained,elixirRegexEscapePunctuation
+syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]<"                                end=">"   skip="\\\\\|\\>"   fold contains=@elixirStringContained,elixirRegexEscapePunctuation
+syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]\["                               end="\]"  skip="\\\\\|\\\]"  fold contains=@elixirStringContained,elixirRegexEscapePunctuation
+syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]("                                end=")"   skip="\\\\\|\\)"   fold contains=@elixirStringContained,elixirRegexEscapePunctuation
+
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
@@ -137,4 +152,5 @@ hi def link elixirRegexCharClass         elixirSpecial
 hi def link elixirRegexQuantifier        elixirSpecial
 hi def link elixirSpecial                Special
 hi def link elixirString                 String
+hi def link elixirSigil                  String
 hi def link elixirDelimiter              Delimiter
