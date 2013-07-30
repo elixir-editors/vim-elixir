@@ -16,7 +16,7 @@ module Support
     content = write_file(string)
 
     @vim.edit file
-    @vim.feedkeys "/#{cursor}\n"
+    @vim.search cursor
 
     cursor_syntax_stack.should include(syntax)
   end
@@ -25,7 +25,7 @@ module Support
     content = write_file(string)
 
     @vim.edit file
-    @vim.normal "/#{cursor}\n"
+    @vim.search cursor
 
     cursor_syntax_stack.should_not include(type)
   end
