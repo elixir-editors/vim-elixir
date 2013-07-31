@@ -60,8 +60,11 @@ syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape
 syn region elixirString        matchgroup=elixirDelimiter start="'" end="'" skip="\\'"
 syn region elixirString        matchgroup=elixirDelimiter start='"' end='"' skip='\\"' contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment,@elixirNotTop
-syn region elixirDocString     start=+"""+ end=+"""+ contains=elixirTodo fold
-syn region elixirDocString     start=+'''+ end=+'''+ contains=elixirTodo fold
+
+syn region elixirDocStringStart matchgroup=elixirDocString start=+"""+ end=+$+ oneline contains=ALLBUT,@elixirNotTop
+syn region elixirDocStringStart matchgroup=elixirDocString start=+'''+ end=+$+ oneline contains=ALLBUT,@elixirNotTop
+syn region elixirDocString     start=+\z("""\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo fold keepend
+syn region elixirDocString     start=+\z('''\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo fold keepend
 
 syn match elixirSymbolInterpolated ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
