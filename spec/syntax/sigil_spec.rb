@@ -72,7 +72,7 @@ describe "Sigil syntax" do
     end
 
     it "with escapes" do
-      assert_correct_syntax 'elixirRegexEscape', '\\\\', '%b(foo \n bar)'
+      assert_correct_syntax 'elixirRegexEscape', '\\', '%b(foo \n bar)'
     end
 
     it "with interpolation" do
