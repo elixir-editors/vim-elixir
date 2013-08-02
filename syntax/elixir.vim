@@ -110,7 +110,7 @@ syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained con
 syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
 syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
+syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName,elixirSymbol              skipwhite skipnl
 syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
 syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration            skipwhite skipnl
