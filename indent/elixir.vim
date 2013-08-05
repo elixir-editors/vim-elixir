@@ -62,7 +62,7 @@ function! GetElixirIndent(line_num)
   let plnum = a:line_num - 1
   let previous_line = getline(plnum)
 
-  if previous_line =~ '\(do\|when\|->\)$\|^\s*\(if\>\|[a-z]\w*\(:\)\@=\)'
+  if previous_line =~ '\(do\|when\|->\)$\|^\s*\(^.*[\[{(].*[,:]$\)'
     return indent(plnum) + &sw
   endif
 
