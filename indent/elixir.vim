@@ -21,7 +21,7 @@ let s:elixir_indent_keywords = '\%(\<\(case\|if\|unless\|try\|loop\|receive\)\>\
       \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defcallback\|defoverridable\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)\|' .
       \ 'fn(.*)\s\(do\|->\)$\)'
 
-let s:elixir_clauses = '\(else\|match\|elsif\|catch\|after\|rescue\):\|end'
+let s:elixir_clauses = '^\s*\(else\|match\|elsif\|catch\|after\|rescue\|end\)\>'
 
 function! s:BlockStarter(lnum, block_start_re)
    let lnum = a:lnum
