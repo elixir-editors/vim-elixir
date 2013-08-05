@@ -36,6 +36,8 @@ syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
 syn keyword elixirName nil
 syn match   elixirName '\<[A-Z]\w*\>'
 
+syn match elixirUnusedVariable '\<_\w*\>'
+
 syn keyword elixirBoolean true false
 
 syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
@@ -72,7 +74,7 @@ syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|
 syn region elixirBlock              matchgroup=elixirKeyword start="\<do\>\(:\)\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 syn region elixirAnonymousFunction  matchgroup=elixirKeyword start="\<fn\>"         end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
-syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirName,elixirBoolean,elixirVariable,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirRegexEscape,elixirRegexEscapePunctuation,elixirRegexCharClass,elixirRegexQuantifier,elixirSpecial,elixirString,elixirDelimiter
+syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirName,elixirBoolean,elixirVariable,elixirUnusedVariable,exists,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirRegexEscape,elixirRegexEscapePunctuation,elixirRegexCharClass,elixirRegexQuantifier,elixirSpecial,elixirString,elixirDelimiter
 
 syn match elixirDelimEscape "\\[(<{\[)>}\]]" transparent display contained contains=NONE
 
@@ -145,6 +147,7 @@ hi def link elixirPseudoVariable         Constant
 hi def link elixirName                   Type
 hi def link elixirBoolean                Boolean
 hi def link elixirVariable               Identifier
+hi def link elixirUnusedVariable         Comment
 hi def link elixirNumber                 Number
 hi def link elixirDocString              Comment
 hi def link elixirSymbolInterpolated     elixirSymbol
