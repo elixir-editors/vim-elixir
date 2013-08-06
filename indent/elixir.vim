@@ -26,7 +26,7 @@ let s:elixir_clauses = '^\s*\(else\|match\|elsif\|catch\|after\|rescue\|end\)\>'
 function! s:BlockStarter(lnum, block_start_re)
    let lnum = a:lnum
    let maxindent = 10000
-   while lnum > 1
+   while lnum > 0
      if indent(lnum) < maxindent
        if getline(lnum) =~ a:block_start_re
          return lnum
