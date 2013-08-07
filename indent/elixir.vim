@@ -2,7 +2,6 @@
 " Language: Elixir
 " Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
 " Last Change: 2013 Apr 24
-
 if exists("b:did_indent")
   finish
 endif
@@ -19,14 +18,14 @@ endif
 
 let s:elixir_indent_keywords = '\%(\<\(case\|cond\|if\|unless\|try\|loop\|receive\)\>\|' .
       \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defcallback\|defoverridable\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)\|' .
-      \ 'fn(.*)\s\(do\|->\)$\)'
+      \ 'fn\(.*\)\s\(do\|->\)$\)'
 
 let s:elixir_clauses = '^\s*\(else\|match\|elsif\|catch\|after\|rescue\|end\)\>'
 
 function! s:BlockStarter(lnum, block_start_re)
    let lnum = a:lnum
    let maxindent = 10000
-   while lnum > 1
+   while lnum > 0
      if indent(lnum) < maxindent
        if getline(lnum) =~ a:block_start_re
          return lnum
