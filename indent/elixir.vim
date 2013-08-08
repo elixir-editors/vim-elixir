@@ -38,19 +38,20 @@ function! GetElixirIndent(...)
     return 0
   endif
 
-  if getline(lnum) =~ s:indent_keywords .
-        \ '\|^\s*\%(^.*[\[{(].*[,:]\|.*->\)$'
-    let ind += &sw
-  endif
+  if synIDattr(synID(v:lnum, 1, 1), "name") !~ '\(Comment\|String\)$'
+    if getline(lnum) =~ s:indent_keywords .
+          \ '\|^\s*\%(^.*[\[{(].*[,:]\|.*->\)$'
+      let ind += &sw
+    endif
 
-  if getline(v:lnum) =~ s:deindent_keywords
-    let bslnum = searchpair(
-          \ '\<\%(' . s:block_start . '\)\>',
-          \ '\<\%(' . s:block_middle . '\)\>\zs',
-          \ '[^:]\<' . s:block_end . '\>\zs',
-          \ 'nbW',
-          \ s:block_skip )
-    let ind = indent(bslnum)
+    if getline(v:lnum) =~ s:deindent_keywords
+      let bslnum = searchpair( '\<\%(' . s:block_start . '\):\@!\>',
+            \ '\<\%(' . s:block_middle . '\):\@!\>\zs',
+            \ '\<:\@<!' . s:block_end . '\>\zs',
+            \ 'nbW',
+            \ s:block_skip )
+      let ind = indent(bslnum)
+    endif
   endif
 
   return ind

@@ -5,9 +5,9 @@ describe "Indenting" do
     it "with end keyword" do
       assert_correct_indenting <<-EOF
         defmodule Test do
-          @doc ""
+          @doc """
           end
-          ""
+          """
         end
       EOF
     end
