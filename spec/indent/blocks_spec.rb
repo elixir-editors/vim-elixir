@@ -18,4 +18,12 @@ describe "Indenting" do
       end
     EOF
   end
+
+  it "does not consider do: as the start of a block" do
+    assert_correct_indenting <<-EOF
+      def f do
+        if true do: 42
+      end
+    EOF
+  end
 end
