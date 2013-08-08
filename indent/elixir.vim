@@ -17,60 +17,44 @@ if exists("*GetElixirIndent")
   finish
 endif
 
-let s:elixir_indent_keywords = '\%(\<\(case\|cond\|if\|unless\|try\|loop\|receive\)\>\|' .
-      \ '^\s*\(defmodule\|defimpl\|defmacro\|defdelegate\|defexception\|defcallback\|defoverridable\|defp\|def\|test\|[a-z]\w*\(:\)\@=\)\|' .
-      \ 'fn(.*)\s\(do\|->\)$\)'
+let s:cpo_save = &cpo
+set cpo&vim
 
-let s:elixir_clauses = '^\s*\(else\|match\|elsif\|catch\|after\|rescue\|end\)\>'
+let s:skip_syntax  = '\%(Comment\|String\)$'
+let s:block_skip   = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '" . s:skip_syntax . "'"
+let s:block_start  = 'do\|fn'
+let s:block_middle = 'else\|match\|elsif\|catch\|after\|rescue'
+let s:block_end    = 'end'
 
-function! s:BlockStarter(lnum, block_start_re)
-   let lnum = a:lnum
-   let maxindent = 10000
-   while lnum > 1
-     if indent(lnum) < maxindent
-       if getline(lnum) =~ a:block_start_re
-         return lnum
-       else
-         let maxindent = indent(lnum)
-         if maxindent == 0
-           return -1
-         endif
-       endif
-     endif
-     let lnum = prevnonblank(lnum - 1)
-   endwhile
-   return -1
- endfunction
+let s:indent_keywords   = '\<\%(' . s:block_start . '\|' . s:block_middle . '\)$'
+let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>'
 
-function! GetElixirIndent(line_num)
-  " don't indent if it's the first line of the file
-  if a:line_num == 0
+function! GetElixirIndent(...)
+  let lnum = prevnonblank(v:lnum - 1)
+  let ind  = indent(lnum)
+
+  " At the start of the file use zero indent.
+  if lnum == 0
     return 0
   endif
 
-  let this_line = getline(a:line_num)
-
-  if this_line =~ s:elixir_clauses
-    let bslnum = s:BlockStarter(a:line_num, s:elixir_indent_keywords)
-    if bslnum > 0
-      return indent(bslnum)
-    else
-      return -1
-    endif
+  if getline(lnum) =~ s:indent_keywords .
+        \ '\|^\s*\%(^.*[\[{(].*[,:]\|.*->\)$'
+    let ind += &sw
   endif
 
-  let plnum = a:line_num - 1
-  let previous_line = getline(plnum)
-
-  if previous_line =~ '\(do\|when\|->\)$\|^\s*\(^.*[\[{(].*[,:]$\)'
-    return indent(plnum) + &sw
+  if getline(v:lnum) =~ s:deindent_keywords
+    let bslnum = searchpair(
+          \ '\<\%(' . s:block_start . '\)\>',
+          \ '\<\%(' . s:block_middle . '\)\>\zs',
+          \ '[^:]\<' . s:block_end . '\>\zs',
+          \ 'nbW',
+          \ s:block_skip )
+    let ind = indent(bslnum)
   endif
 
-  " blank lines are indented based on the previous not blank line"
-  if previous_line =~ '^\s*$'
-    let nonblank = prevnonblank(a:line_num)
-    return indent(nonblank)
-  endif
-
-  return indent(plnum)
+  return ind
 endfunction
+
+let &cpo = s:cpo_save
+unlet s:cpo_save
