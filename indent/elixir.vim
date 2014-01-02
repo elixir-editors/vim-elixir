@@ -65,7 +65,7 @@ function! GetElixirIndent(...)
     endif
 
     " if last line starts with pipeline
-    " and currentline doesn't start with pipeline
+    " and current line doesn't start with pipeline
     " returns the indentation before the pipeline
     if last_line =~ s:pipeline &&
           \ current_line !~ s:pipeline
@@ -81,6 +81,7 @@ function! GetElixirIndent(...)
       let ind = indent(bslnum)
     endif
 
+    " indent case statements '->'
     if current_line =~ s:arrow
       let ind += &sw
     endif
