@@ -25,6 +25,14 @@ describe "Heredoc syntax" do
         end
       EOF
     end
+
+    it "with interpolation" do
+      assert_correct_syntax 'elixirInterpolation', 'bar', <<-EOF
+        @doc """
+        foo \#{bar}
+        """
+      EOF
+    end
   end
 
   describe "character list" do
@@ -40,6 +48,14 @@ describe "Heredoc syntax" do
       assert_correct_syntax 'elixirDocString', %q(^\s*\zs'''), <<-EOF
         @doc '''
         foo '''
+        '''
+      EOF
+    end
+
+    it "with interpolation" do
+      assert_correct_syntax 'elixirInterpolation', 'bar', <<-EOF
+        @doc '''
+        foo \#{bar}
         '''
       EOF
     end
