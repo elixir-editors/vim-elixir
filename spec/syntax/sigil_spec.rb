@@ -37,6 +37,22 @@ describe "Sigil syntax" do
       assert_correct_syntax 'elixirDelimiter', ']', '%B[foo bar]'
     end
 
+    it "escapes double quotes unless only preceded by whitespace" do
+      assert_correct_syntax 'elixirDelimiter', %q(^\s*\zs"""), <<-EOF
+        %r"""
+        foo """
+        """
+      EOF
+    end
+
+    it "escapes single quotes unless only preceded by whitespace" do
+      assert_correct_syntax 'elixirDelimiter', %q(^\s*\zs'''), <<-EOF
+        %r'''
+        foo '''
+        '''
+      EOF
+    end
+
     it "without escapes" do
       assert_incorrect_syntax 'elixirRegexEscape', '\\', '%B(foo \n bar)'
     end

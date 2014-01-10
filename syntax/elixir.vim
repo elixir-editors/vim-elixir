@@ -91,6 +91,10 @@ syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]<"              
 syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]\["                               end="\]"  skip="\\\\\|\\\]"  fold contains=@elixirStringContained,elixirRegexEscapePunctuation
 syn region elixirSigil matchgroup=elixirDelimiter start="%[bcrw]("                                end=")"   skip="\\\\\|\\)"   fold contains=@elixirStringContained,elixirRegexEscapePunctuation
 
+" Sigils surrounded with docString
+syn region elixirSigil matchgroup=elixirDelimiter start=+%[BCRWbcrw]\z("""\)+ end=+^\s*\zs\z1+ skip=+\\"+ fold
+syn region elixirSigil matchgroup=elixirDelimiter start=+%[BCRWbcrw]\z('''\)+ end=+^\s*\zs\z1+ skip=+\\'+ fold
+
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
