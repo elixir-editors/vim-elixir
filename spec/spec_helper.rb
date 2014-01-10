@@ -6,6 +6,9 @@ module Support
     content = write_file(string)
 
     @vim.edit file
+    # remove all indentation
+    @vim.normal 'ggVG999<<'
+    # force vim to indent the file
     @vim.normal 'gg=G'
     @vim.write
 
