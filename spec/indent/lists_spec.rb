@@ -63,4 +63,15 @@ describe "Indenting" do
     end
     EOF
   end
+
+  specify "lists with break line after square brackets" do
+    assert_correct_indenting <<-EOF
+    def project do
+      deps: [
+        { :bar, path: "deps/umbrella/apps/bar" },
+        { :umbrella, path: "deps/umbrella" }
+      ]
+    end
+    EOF
+  end
 end
