@@ -99,11 +99,4 @@ describe "Sigil syntax" do
       assert_correct_syntax 'elixirRegexEscapePunctuation', '( ', '~s(\( )'
     end
   end
-
-  describe "old syntax" do
-    it "string" do
-      assert_correct_syntax 'elixirDelimiter', 's', '%s(string)'
-      assert_correct_syntax 'elixirSigil', 'foo', '%s(string)'
-    end
-  end
 end
