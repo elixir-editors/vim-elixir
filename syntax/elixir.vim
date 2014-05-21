@@ -24,7 +24,6 @@ syn match   elixirKeyword '\<\%(->\)\>\s*'
 syn keyword elixirInclude import require alias use
 
 syn keyword elixirOperator and not or when xor in
-syn match elixirOperator '%=\|\*=\|\*\*=\|+=\|-=\|\^=\|||='
 syn match elixirOperator "\%(<=>\|<\%(<\|=\)\@!\|>\%(<\|=\|>\)\@!\|<=\|>=\|===\|==\|=\~\|!=\|!\~\|\s?[ \t]\@=\)"
 syn match elixirOperator "!+[ \t]\@=\|&&\|||\|\^\|\*\|+\|-\|/"
 syn match elixirOperator "|\|++\|--\|\*\*\|\/\/\|\\\\\|<-\|<>\|<<\|>>\|=\|\.\|::"
