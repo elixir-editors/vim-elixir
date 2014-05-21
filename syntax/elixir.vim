@@ -96,7 +96,6 @@ syn region elixirSigil matchgroup=elixirDelimiter start=+[~][SCRWscrw]\z('''\)+ 
 
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
-syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
 syn keyword elixirPrivateDefine       defp           nextgroup=elixirFunctionDeclaration    skipwhite skipnl
 syn keyword elixirModuleDefine        defmodule      nextgroup=elixirModuleDeclaration      skipwhite skipnl
 syn keyword elixirProtocolDefine      defprotocol    nextgroup=elixirProtocolDeclaration    skipwhite skipnl
