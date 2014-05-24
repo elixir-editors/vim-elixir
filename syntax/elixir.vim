@@ -24,11 +24,9 @@ syn keyword elixirInclude import require alias use
 
 syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 
-syn match elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
-syn match elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
-syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
+" This unfortunately also matches function names in function calls
+syn match elixirUnusedVariable '\<_\w*\>'
 
-syn match   elixirAlias '\<[A-Z]\w*\>'
 syn keyword elixirOperator and not or when xor in
 syn match   elixirOperator '!==\|!=\|!'
 syn match   elixirOperator '=\~\|===\|==\|='
@@ -42,11 +40,16 @@ syn match   elixirOperator '\.\.\|\.'
 syn match   elixirOperator "\^\^\^\|\^"
 syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 
-syn match elixirUnusedVariable '\<_\w*\>'
+syn match    elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
+syn match    elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
+syn match    elixirSymbol "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
+
+syn match   elixirAlias '\<[A-Z]\w*\(\.[A-Z]\w*\)*\>'
 
 syn keyword elixirBoolean true false nil
 
-syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
+syn match elixirVariable '@[a-z]\w*'
+syn match elixirVariable '&\d\+'
 
 syn keyword elixirPseudoVariable __FILE__ __DIR__ __MODULE__ __ENV__ __CALLER__
 
