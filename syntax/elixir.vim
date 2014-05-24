@@ -40,9 +40,9 @@ syn match   elixirOperator '\.\.\|\.'
 syn match   elixirOperator "\^\^\^\|\^"
 syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 
-syn match    elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
-syn match    elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
-syn match    elixirSymbol "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
+syn match   elixirAtom '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
+syn match   elixirAtom '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
+syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
 
 syn match   elixirAlias '\<[A-Z]\w*\(\.[A-Z]\w*\)*\>'
 
@@ -77,13 +77,13 @@ syn region elixirDocStringStart matchgroup=elixirDocString start=+'''+ end=+$+ o
 syn region elixirDocString     start=+\z("""\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo,elixirInterpolation fold keepend
 syn region elixirDocString     start=+\z('''\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo,elixirInterpolation fold keepend
 
-syn match elixirSymbolInterpolated ':\("\)\@=' contains=elixirString
+syn match elixirAtomInterpolated   ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
 
 syn region elixirBlock              matchgroup=elixirKeyword start="\<do\>\(:\)\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 syn region elixirAnonymousFunction  matchgroup=elixirKeyword start="\<fn\>"         end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
-syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirAlias,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirString,elixirDelimiter
+syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirAtom,elixirPseudoVariable,elixirAlias,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirAtomInterpolated,elixirRegex,elixirString,elixirDelimiter
 
 syn match elixirDelimEscape "\\[(<{\[)>}\]/\"'|]" transparent display contained contains=NONE
 
@@ -124,7 +124,7 @@ syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained con
 syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
 syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
-syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirAlias,elixirSymbol              skipwhite skipnl
+syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirAlias,elixirAtom                skipwhite skipnl
 syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration             skipwhite skipnl
@@ -156,7 +156,7 @@ hi def link elixirComment                Comment
 hi def link elixirTodo                   Todo
 hi def link elixirKeyword                Keyword
 hi def link elixirOperator               Operator
-hi def link elixirSymbol                 Constant
+hi def link elixirAtom                   Constant
 hi def link elixirPseudoVariable         Constant
 hi def link elixirAlias                  Type
 hi def link elixirBoolean                Boolean
@@ -164,7 +164,7 @@ hi def link elixirVariable               Identifier
 hi def link elixirUnusedVariable         Comment
 hi def link elixirNumber                 Number
 hi def link elixirDocString              String
-hi def link elixirSymbolInterpolated     elixirSymbol
+hi def link elixirAtomInterpolated       elixirAtom
 hi def link elixirRegex                  elixirString
 hi def link elixirRegexEscape            elixirSpecial
 hi def link elixirRegexEscapePunctuation elixirSpecial
