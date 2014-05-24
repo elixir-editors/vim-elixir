@@ -23,10 +23,7 @@ syn match   elixirKeyword '\<\%(->\)\>\s*'
 
 syn keyword elixirInclude import require alias use
 
-syn keyword elixirOperator and not or when xor in
-syn match elixirOperator "\%(<=>\|<\%(<\|=\)\@!\|>\%(<\|=\|>\)\@!\|<=\|>=\|===\|==\|=\~\|!=\|!\~\|\s?[ \t]\@=\)"
-syn match elixirOperator "!+[ \t]\@=\|&&\|||\|\^\|\*\|+\|-\|/"
-syn match elixirOperator "|\|++\|--\|\*\*\|\/\/\|\\\\\|<-\|<>\|<<\|>>\|=\|\.\|::"
+syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 
 syn match elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
 syn match elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
@@ -34,6 +31,18 @@ syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
 
 syn keyword elixirName nil
 syn match   elixirName '\<[A-Z]\w*\>'
+syn keyword elixirOperator and not or when xor in
+syn match   elixirOperator '!==\|!=\|!'
+syn match   elixirOperator '=\~\|===\|==\|='
+syn match   elixirOperator '<<<\|<<\|<=\|<-\|<'
+syn match   elixirOperator '>>>\|>>\|>=\|>'
+syn match   elixirOperator '->\|--\|-'
+syn match   elixirOperator '++\|+'
+syn match   elixirOperator '&&&\|&&\|&'
+syn match   elixirOperator '|||\|||\||>\||'
+syn match   elixirOperator '\.\.\|\.'
+syn match   elixirOperator "\^\^\^\|\^"
+syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 
 syn match elixirUnusedVariable '\<_\w*\>'
 
