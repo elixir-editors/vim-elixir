@@ -28,7 +28,6 @@ syn match elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\
 syn match elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
 syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
 
-syn keyword elixirName nil
 syn match   elixirName '\<[A-Z]\w*\>'
 syn keyword elixirOperator and not or when xor in
 syn match   elixirOperator '!==\|!=\|!'
@@ -45,7 +44,7 @@ syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 
 syn match elixirUnusedVariable '\<_\w*\>'
 
-syn keyword elixirBoolean true false
+syn keyword elixirBoolean true false nil
 
 syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
 
