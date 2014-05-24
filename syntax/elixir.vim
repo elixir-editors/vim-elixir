@@ -107,6 +107,7 @@ syn keyword elixirDelegateDefine      defdelegate    nextgroup=elixirDelegateDec
 syn keyword elixirOverridableDefine   defoverridable nextgroup=elixirOverridableDeclaration skipwhite skipnl
 syn keyword elixirExceptionDefine     defexception   nextgroup=elixirExceptionDeclaration   skipwhite skipnl
 syn keyword elixirCallbackDefine      defcallback    nextgroup=elixirCallbackDeclaration    skipwhite skipnl
+syn keyword elixirStructDefine        defstruct      nextgroup=elixirStructDeclaration      skipwhite skipnl
 
 " Declarations
 syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName nextgroup=elixirBlock     skipwhite skipnl
@@ -120,8 +121,9 @@ syn region elixirDelegateDeclaration    start='\['     end='\]'    contained con
 syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
 syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
+syn match  elixirStructDeclaration      "[^[:space:];#<]\+"        contained                     nextgroup=elixirArguments skipwhite skipnl
 
-syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration
+syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
 
 hi def link elixirDefine                 Define
 hi def link elixirPrivateDefine          Define
@@ -136,6 +138,7 @@ hi def link elixirDelegateDefine         Define
 hi def link elixirOverridableDefine      Define
 hi def link elixirExceptionDefine        Define
 hi def link elixirCallbackDefine         Define
+hi def link elixirStructDefine           Define
 hi def link elixirFunctionDeclaration    Function
 hi def link elixirMacroDeclaration       Macro
 hi def link elixirInclude                Include
