@@ -28,7 +28,7 @@ syn match elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\
 syn match elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
 syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
 
-syn match   elixirName '\<[A-Z]\w*\>'
+syn match   elixirAlias '\<[A-Z]\w*\>'
 syn keyword elixirOperator and not or when xor in
 syn match   elixirOperator '!==\|!=\|!'
 syn match   elixirOperator '=\~\|===\|==\|='
@@ -80,7 +80,7 @@ syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|
 syn region elixirBlock              matchgroup=elixirKeyword start="\<do\>\(:\)\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 syn region elixirAnonymousFunction  matchgroup=elixirKeyword start="\<fn\>"         end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
-syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirName,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirString,elixirDelimiter
+syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirAlias,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirString,elixirDelimiter
 
 syn match elixirDelimEscape "\\[(<{\[)>}\]/\"'|]" transparent display contained contains=NONE
 
@@ -117,18 +117,18 @@ syn keyword elixirCallbackDefine      defcallback    nextgroup=elixirCallbackDec
 syn keyword elixirStructDefine        defstruct      nextgroup=elixirStructDeclaration      skipwhite skipnl
 
 " Declarations
-syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName nextgroup=elixirBlock     skipwhite skipnl
-syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
-syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName,elixirSymbol              skipwhite skipnl
-syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
-syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
-syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration            skipwhite skipnl
-syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
-syn match  elixirStructDeclaration      "[^[:space:];#<]\+"        contained                     nextgroup=elixirArguments skipwhite skipnl
+syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained contains=elixirAlias nextgroup=elixirBlock     skipwhite skipnl
+syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
+syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirAlias,elixirSymbol              skipwhite skipnl
+syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
+syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
+syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration             skipwhite skipnl
+syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
+syn match  elixirStructDeclaration      "[^[:space:];#<]\+"        contained                      nextgroup=elixirArguments skipwhite skipnl
 
 syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
 
@@ -155,7 +155,7 @@ hi def link elixirKeyword                Keyword
 hi def link elixirOperator               Operator
 hi def link elixirSymbol                 Constant
 hi def link elixirPseudoVariable         Constant
-hi def link elixirName                   Type
+hi def link elixirAlias                  Type
 hi def link elixirBoolean                Boolean
 hi def link elixirVariable               Identifier
 hi def link elixirUnusedVariable         Comment
