@@ -16,30 +16,40 @@ syn match elixirComment '#.*' contains=elixirTodo
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
 syn keyword elixirKeyword is_atom is_binary is_bitstring is_boolean is_float is_function is_integer is_list is_number is_pid is_port is_record is_reference is_tuple is_exception
-syn keyword elixirKeyword case cond for if unless try receive
+syn keyword elixirKeyword case cond for if unless try receive send
 syn keyword elixirKeyword exit raise throw after rescue catch else do end
 syn keyword elixirKeyword quote unquote super
-syn match   elixirKeyword '\<\%(->\)\>\s*'
 
 syn keyword elixirInclude import require alias use
 
-syn keyword elixirOperator and not or when xor in
-syn match elixirOperator "\%(<=>\|<\%(<\|=\)\@!\|>\%(<\|=\|>\)\@!\|<=\|>=\|===\|==\|=\~\|!=\|!\~\|\s?[ \t]\@=\)"
-syn match elixirOperator "!+[ \t]\@=\|&&\|||\|\^\|\*\|+\|-\|/"
-syn match elixirOperator "|\|++\|--\|\*\*\|\/\/\|\\\\\|<-\|<>\|<<\|>>\|=\|\.\|::"
+syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 
-syn match elixirSymbol '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
-syn match elixirSymbol '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
-syn match elixirSymbol "\%([a-zA-Z_]\w*\([?!]\)\?\):\(:\)\@!"
-
-syn keyword elixirName nil
-syn match   elixirName '\<[A-Z]\w*\>'
-
+" This unfortunately also matches function names in function calls
 syn match elixirUnusedVariable '\<_\w*\>'
 
-syn keyword elixirBoolean true false
+syn keyword elixirOperator and not or when xor in
+syn match   elixirOperator '!==\|!=\|!'
+syn match   elixirOperator '=\~\|===\|==\|='
+syn match   elixirOperator '<<<\|<<\|<=\|<-\|<'
+syn match   elixirOperator '>>>\|>>\|>=\|>'
+syn match   elixirOperator '->\|--\|-'
+syn match   elixirOperator '++\|+'
+syn match   elixirOperator '&&&\|&&\|&'
+syn match   elixirOperator '|||\|||\||>\||'
+syn match   elixirOperator '\.\.\|\.'
+syn match   elixirOperator "\^\^\^\|\^"
+syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 
-syn match elixirVariable '@[a-zA-Z_]\w*\|&\d'
+syn match   elixirAtom '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
+syn match   elixirAtom '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
+syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
+
+syn match   elixirAlias '\<[A-Z]\w*\(\.[A-Z]\w*\)*\>'
+
+syn keyword elixirBoolean true false nil
+
+syn match elixirVariable '@[a-z]\w*'
+syn match elixirVariable '&\d\+'
 
 syn keyword elixirPseudoVariable __FILE__ __DIR__ __MODULE__ __ENV__ __CALLER__
 
@@ -67,13 +77,13 @@ syn region elixirDocStringStart matchgroup=elixirDocString start=+'''+ end=+$+ o
 syn region elixirDocString     start=+\z("""\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo,elixirInterpolation fold keepend
 syn region elixirDocString     start=+\z('''\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo,elixirInterpolation fold keepend
 
-syn match elixirSymbolInterpolated ':\("\)\@=' contains=elixirString
+syn match elixirAtomInterpolated   ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
 
 syn region elixirBlock              matchgroup=elixirKeyword start="\<do\>\(:\)\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 syn region elixirAnonymousFunction  matchgroup=elixirKeyword start="\<fn\>"         end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
-syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirSymbol,elixirPseudoVariable,elixirName,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirSymbolInterpolated,elixirRegex,elixirString,elixirDelimiter
+syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirAtom,elixirPseudoVariable,elixirAlias,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirAtomInterpolated,elixirRegex,elixirString,elixirDelimiter
 
 syn match elixirDelimEscape "\\[(<{\[)>}\]/\"'|]" transparent display contained contains=NONE
 
@@ -110,18 +120,18 @@ syn keyword elixirCallbackDefine      defcallback    nextgroup=elixirCallbackDec
 syn keyword elixirStructDefine        defstruct      nextgroup=elixirStructDeclaration      skipwhite skipnl
 
 " Declarations
-syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName nextgroup=elixirBlock     skipwhite skipnl
-syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
-syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirName,elixirSymbol              skipwhite skipnl
-syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                     nextgroup=elixirArguments skipwhite skipnl
-syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
-syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration            skipwhite skipnl
-syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirName                           skipwhite skipnl
-syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration            skipwhite skipnl
-syn match  elixirStructDeclaration      "[^[:space:];#<]\+"        contained                     nextgroup=elixirArguments skipwhite skipnl
+syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained contains=elixirAlias nextgroup=elixirBlock     skipwhite skipnl
+syn match  elixirFunctionDeclaration    "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
+syn match  elixirProtocolDeclaration    "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirImplDeclaration        "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained contains=elixirAlias,elixirAtom                skipwhite skipnl
+syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
+syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
+syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration             skipwhite skipnl
+syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
+syn match  elixirStructDeclaration      "[^[:space:];#<]\+"        contained                      nextgroup=elixirArguments skipwhite skipnl
 
 syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
 
@@ -146,15 +156,15 @@ hi def link elixirComment                Comment
 hi def link elixirTodo                   Todo
 hi def link elixirKeyword                Keyword
 hi def link elixirOperator               Operator
-hi def link elixirSymbol                 Constant
+hi def link elixirAtom                   Constant
 hi def link elixirPseudoVariable         Constant
-hi def link elixirName                   Type
+hi def link elixirAlias                  Type
 hi def link elixirBoolean                Boolean
 hi def link elixirVariable               Identifier
 hi def link elixirUnusedVariable         Comment
 hi def link elixirNumber                 Number
 hi def link elixirDocString              String
-hi def link elixirSymbolInterpolated     elixirSymbol
+hi def link elixirAtomInterpolated       elixirAtom
 hi def link elixirRegex                  elixirString
 hi def link elixirRegexEscape            elixirSpecial
 hi def link elixirRegexEscapePunctuation elixirSpecial
