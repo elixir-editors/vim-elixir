@@ -93,7 +93,7 @@ syn region elixirSigil matchgroup=elixirDelimiter start="\~\u<"                e
 syn region elixirSigil matchgroup=elixirDelimiter start="\~\u\["               end="\]"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
 syn region elixirSigil matchgroup=elixirDelimiter start="\~\u("                end=")"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
 
-syn region elixirSigil matchgroup=elixirDelimiter start="\~\u\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" fold
+syn region elixirSigil matchgroup=elixirDelimiter start="\~\l\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" fold
 syn region elixirSigil matchgroup=elixirDelimiter start="\~\l{"                end="}"   skip="\\\\\|\\}"   fold contains=@elixirStringContained,elixirRegexEscapePunctuation
 syn region elixirSigil matchgroup=elixirDelimiter start="\~\l<"                end=">"   skip="\\\\\|\\>"   fold contains=@elixirStringContained,elixirRegexEscapePunctuation
 syn region elixirSigil matchgroup=elixirDelimiter start="\~\l\["               end="\]"  skip="\\\\\|\\\]"  fold contains=@elixirStringContained,elixirRegexEscapePunctuation
