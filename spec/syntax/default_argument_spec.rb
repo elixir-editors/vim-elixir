@@ -2,12 +2,14 @@ require 'spec_helper'
 
 describe "Default argument syntax" do
   it "default argument" do
-    assert_correct_syntax 'elixirOperator', '\\', <<-'EOF'
+    <<-'EOF'
       def foo(bar \\ :baz)
     EOF
+    .should include_elixir_syntax('elixirOperator', '\\')
 
-    assert_correct_syntax 'elixirOperator', '\/', <<-EOF
+    <<-EOF
       def foo(bar // :baz)
     EOF
+    .should include_elixir_syntax('elixirOperator', '\/')
   end
 end

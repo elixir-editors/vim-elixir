@@ -3,8 +3,9 @@ require 'spec_helper'
 
 describe "Record syntax" do
   it "private record symbol" do
-    assert_correct_syntax 'elixirAtom', ':user', <<-EOF
+    <<-EOF
       defrecordp :user, name: "José", age: 25
     EOF
+    .should include_elixir_syntax('elixirAtom', ':user')
   end
 end
