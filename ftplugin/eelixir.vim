@@ -5,7 +5,9 @@
 if exists("b:did_ftplugin")
   finish
 endif
-let b:did_ftplugin = 1
+
+let s:save_cpo = &cpo
+set cpo-=C
 
 let s:undo_ftplugin = ""
 let s:browsefilter = "All Files (*.*)\t*.*\n"
@@ -85,3 +87,5 @@ setlocal commentstring=<%#\ %s\ %>
 
 let b:undo_ftplugin = "setl cms< "
       \ " | unlet! b:browsefilter b:match_words | " . s:undo_ftplugin
+
+let &cpo = s:save_cpo

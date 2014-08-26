@@ -96,6 +96,7 @@ RSpec.configure do |config|
     VIM = Vimrunner.start_gvim
     VIM.prepend_runtimepath(File.expand_path('../..', __FILE__))
     VIM.command('runtime ftdetect/elixir.vim')
+    VIM.command('runtime ftdetect/eelixir.vim')
   end
 
   config.after(:suite) do
