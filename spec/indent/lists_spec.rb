@@ -2,36 +2,39 @@ require 'spec_helper'
 
 describe "Indenting" do
   specify "lists" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
       def example do
         [ :foo,
           :bar,
           :baz ]
       end
     EOF
+    .should be_elixir_indentation
   end
 
   specify "keyword list" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
       def project do
         [ name: "mix",
           version: "0.1.0",
           deps: deps ]
       end
     EOF
+    .should be_elixir_indentation
   end
 
   specify "keyword" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
       def config do
         [ name:
           "John" ]
       end
     EOF
+    .should be_elixir_indentation
   end
 
   specify "list of tuples" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     def test do
       [ { :cowboy, github: "extend/cowboy" },
         { :dynamo, "0.1.0-dev", github: "elixir-lang/dynamo" },
@@ -39,19 +42,21 @@ describe "Indenting" do
         { :pgsql, github: "semiocast/pgsql" } ]
     end
     EOF
+    .should be_elixir_indentation
   end
 
   specify "list of lists" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     def test do
       [ [:a, :b, :c],
         [:d, :e, :f] ]
     end
     EOF
+    .should be_elixir_indentation
   end
 
   specify "complex list" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     def test do
       [ app: :first,
         version: "0.0.1",
@@ -62,10 +67,11 @@ describe "Indenting" do
         deps: deps ]
     end
     EOF
+    .should be_elixir_indentation
   end
 
   specify "lists with break line after square brackets" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     def project do
       deps: [
         { :bar, path: "deps/umbrella/apps/bar" },
@@ -73,5 +79,6 @@ describe "Indenting" do
       ]
     end
     EOF
+    .should be_elixir_indentation
   end
 end

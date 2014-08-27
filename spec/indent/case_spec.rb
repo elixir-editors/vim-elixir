@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Indenting" do
   specify "case statements" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
       case some_function do
         :ok ->
           :ok
@@ -10,5 +10,6 @@ describe "Indenting" do
           { :error, :message }
       end
     EOF
+    .should be_elixir_indentation
   end
 end

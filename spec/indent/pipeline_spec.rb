@@ -2,23 +2,25 @@ require 'spec_helper'
 
 describe "Indenting" do
   it "using multiline pipeline" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     "a,b,c,d"
     |> String.split(",")
     |> Enum.reverse
     EOF
+    .should be_elixir_indentation
   end
 
   it "attribuition using multline pipeline operator" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     [ h | t ] = "a,b,c,d"
                 |> String.split(",")
                 |> Enum.reverse
     EOF
+    .should be_elixir_indentation
   end
 
   it "function with pipeline operator" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     def test do
       [ h | t ] = "a,b,c,d"
                   |> String.split(",")
@@ -27,10 +29,11 @@ describe "Indenting" do
       { :ok, h }
     end
     EOF
+    .should be_elixir_indentation
   end
 
   it "pipeline operator with block open" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     def test do
       "a,b,c,d"
       |> String.split(",")
@@ -41,14 +44,16 @@ describe "Indenting" do
       end
     end
     EOF
+    .should be_elixir_indentation
   end
 
   it "using a record with pipeline" do
-    assert_correct_indenting <<-EOF
+    <<-EOF
     defrecord RECORD, field_a: nil, field_b: nil
 
     rec = RECORD.new
           |> IO.inspect
     EOF
+    .should be_elixir_indentation
   end
 end
