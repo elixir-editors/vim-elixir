@@ -75,7 +75,7 @@ end
     buffer = Buffer.new(VIM, type)
 
     match do |code|
-      actual = cleanup(code)
+      cleanup(code)
       buffer.syntax(code, pattern).include? syntax
     end
 
