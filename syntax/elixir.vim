@@ -1,6 +1,6 @@
 " Vim syntax file
-" Language: Elixir
-" Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
+" language: elixir
+" maintainer: carlos galdino <carloshsgaldino@gmail.com>
 " Last Change: 2013 Apr 24
 
 if exists("b:current_syntax")
@@ -68,7 +68,7 @@ syn region elixirRegex matchgroup=elixirRegexDelimiter start="%r/" end="/[uiomxf
 syn cluster elixirRegexSpecial    contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
 syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
 
-syn region elixirString        matchgroup=elixirStringDelimiter start="'" end="'" skip="\\'"
+syn region elixirString        matchgroup=elixirStringDelimiter start="'" end="'" skip="\\'|\\\\"
 syn region elixirString        matchgroup=elixirStringDelimiter start='"' end='"' skip='\\"' contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment,@elixirNotTop
 
