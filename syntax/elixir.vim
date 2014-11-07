@@ -172,7 +172,7 @@ hi def link elixirRegexQuantifier        elixirSpecial
 hi def link elixirSpecial                Special
 hi def link elixirString                 String
 hi def link elixirSigil                  String
-hi def link elixirStringDelimiter        String
+hi def link elixirStringDelimiter        Delimiter
 hi def link elixirRegexDelimiter         Delimiter
-hi def link elixirInterpolationDelimiter PreProc
+hi def link elixirInterpolationDelimiter Delimiter
 hi def link elixirSigilDelimiter         Delimiter
