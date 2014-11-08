@@ -1,6 +1,6 @@
 " Vim syntax file
-" language: elixir
-" maintainer: carlos galdino <carloshsgaldino@gmail.com>
+" Language: Elixir
+" Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
 " Last Change: 2013 Apr 24
 
 if exists("b:current_syntax")
