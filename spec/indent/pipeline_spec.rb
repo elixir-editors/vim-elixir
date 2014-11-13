@@ -32,6 +32,18 @@ describe "Indenting" do
     .should be_elixir_indentation
   end
 
+  it "do not breaks on `==`" do
+    <<-EOF
+    def test do
+      my_post = Post
+                |> where([p], p.id == 10)
+                |> where([p], u.user_id == 1)
+                |> select([p], p)
+    end
+    EOF
+    .should be_elixir_indentation
+  end
+
   it "pipeline operator with block open" do
     <<-EOF
     def test do
