@@ -22,6 +22,8 @@ syn keyword elixirKeyword quote unquote super
 
 syn keyword elixirInclude import require alias use
 
+syn keyword elixirSelf self
+
 syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 
 " This unfortunately also matches function names in function calls
@@ -160,6 +162,7 @@ hi def link elixirPseudoVariable         Constant
 hi def link elixirAlias                  Type
 hi def link elixirBoolean                Boolean
 hi def link elixirVariable               Identifier
+hi def link elixirSelf                   Identifier
 hi def link elixirUnusedVariable         Comment
 hi def link elixirNumber                 Number
 hi def link elixirDocString              String
