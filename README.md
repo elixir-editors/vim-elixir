@@ -18,6 +18,8 @@ So far it's included:
 
 * If you use vim-pathogen you can clone this repo into `~/.vim/bundle`
 
+* If you use vundle, add `Plugin 'elixir-lang/vim-elixir'` to your .vimrc and run `:PluginInstall` inside vim.
+
 ## Snippets
 
 If you are looking for snipmate snippets take a look at: [elixir-snippets](https://github.com/carlosgaldino/elixir-snippets)
