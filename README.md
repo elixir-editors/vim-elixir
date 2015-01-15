@@ -2,25 +2,46 @@
 
 [![Build Status](https://travis-ci.org/elixir-lang/vim-elixir.png?branch=master)](https://travis-ci.org/elixir-lang/vim-elixir)
 
-This project contains some Vim configuration files to work with [Elixir](http://elixir-lang.org).
+[Elixir](http://elixir-lang.org) support for vim. This plugin also adds support
+for Elixir's templating language, EEx.
 
-So far it's included:
+Features included so far:
 
-* Syntax highlighting
+* Syntax highlighting for Elixir and EEx
+* Filetype detection for `.ex`, `.exs` and `.eex` files
+* Automatic indentation
 
-* Filetype detection
 
-* Auto indentation
+## Installation
 
-## Install
+### Plugin managers
 
-* Copy the files to your `~/.vim` directory.
+The most common plugin managers include [vim-plug][vim-plug],
+[NeoBundle][neobundle], [Vundle][vundle] and [pathogen.vim][pathogen].
 
-* If you use vim-pathogen you can clone this repo into `~/.vim/bundle`
+With pathogen.vim, just clone this repository inside `~/.vim/bundle`:
 
-## Snippets
+```bash
+git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/bundle
+```
 
-If you are looking for snipmate snippets take a look at: [elixir-snippets](https://github.com/carlosgaldino/elixir-snippets)
+With the other plugin managers, just follow the instructions on the homepage of
+each plugin. In general, you have to add a line to your `~/.vimrc`:
+
+```viml
+" vim-plug
+Plug 'elixir-lang/vim-elixir'
+" NeoBundle
+NeoBundle 'elixir-lang/vim-elixir'
+" Vundle
+Plugin 'elixir-lang/vim-elixir'
+```
+
+### Manual installation
+
+Copy the contents of each directory in the respective directories inside
+`~/.vim`.
+
 
 ---
 
@@ -32,3 +53,8 @@ If you are looking for snipmate snippets take a look at: [elixir-snippets](https
 > **If your version of Syntastic is below `3.4.0-107` (16 July 2014), you should update to a newer version.**
 
 ---
+
+[vim-plug]: https://github.com/junegunn/vim-plug
+[vundle]: https://github.com/gmarik/Vundle.vim
+[neobundle]: https://github.com/Shougo/neobundle.vim
+[pathogen]: https://github.com/tpope/vim-pathogen
