@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/elixir-lang/vim-elixir.svg?branch=master)](https://travis-ci.org/elixir-lang/vim-elixir)
 
-[Elixir](elixir-website) support for vim. This plugin also adds support
+[Elixir](http://elixir-lang.org) support for vim. This plugin also adds support
 for Elixir's templating language, EEx.
 
 Features included so far:
@@ -54,9 +54,6 @@ Copy the contents of each directory in the respective directories inside
 > **If your version of Syntastic is below `3.4.0-107` (16 July 2014), you should
 > update to a newer version.**
 
-
-
-[elixir-website]: http://elixir-lang.org
 [vim-plug]: https://github.com/junegunn/vim-plug
 [vundle]: https://github.com/gmarik/Vundle.vim
 [neobundle]: https://github.com/Shougo/neobundle.vim
