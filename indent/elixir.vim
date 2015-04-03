@@ -59,7 +59,7 @@ function! GetElixirIndent()
 
     let ind += opened_symbol * &sw
 
-    if current_line =~ '^\s*\(\]\|}\)'
+    if last_line !~ '^\s*\(\]\|}\)' && current_line =~ '^\s*\(\]\|}\)'
       let ind -= &sw
     endif
 
