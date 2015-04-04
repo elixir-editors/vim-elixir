@@ -93,14 +93,26 @@ describe "Indenting" do
     .should be_elixir_indentation
   end
 
-  specify "lists with multiline elements" do
+  specify "multiple lists with multiline elements" do
     <<-EOF
       def test do
-        [
+        a = [
           %{
             foo: 1,
             bar: 2
           }
+        ]
+
+        b = %{
+          [
+            :foo,
+            :bar
+          ]
+        }
+
+        [
+          a,
+          b
         ]
       end
     EOF
