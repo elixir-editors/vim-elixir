@@ -12,6 +12,17 @@ describe "Indenting" do
     .should be_elixir_indentation
   end
 
+  specify "nested list" do
+    <<-EOF
+      [
+        [
+          :foo
+        ]
+      ]
+    EOF
+    .should be_elixir_indentation
+  end
+
   specify "keyword list" do
     <<-EOF
       def project do
@@ -70,7 +81,7 @@ describe "Indenting" do
     .should be_elixir_indentation
   end
 
-  specify "lists with break line after square brackets" do
+  specify "lists with line break after square brackets" do
     <<-EOF
     def project do
       deps: [
@@ -78,6 +89,32 @@ describe "Indenting" do
         { :umbrella, path: "deps/umbrella" }
       ]
     end
+    EOF
+    .should be_elixir_indentation
+  end
+
+  specify "multiple lists with multiline elements" do
+    <<-EOF
+      def test do
+        a = [
+          %{
+            foo: 1,
+            bar: 2
+          }
+        ]
+
+        b = %{
+          [
+            :foo,
+            :bar
+          ]
+        }
+
+        [
+          a,
+          b
+        ]
+      end
     EOF
     .should be_elixir_indentation
   end
