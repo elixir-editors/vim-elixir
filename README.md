@@ -22,7 +22,7 @@ The most common plugin managers include [vim-plug][vim-plug],
 With pathogen.vim, just clone this repository inside `~/.vim/bundle`:
 
 ```bash
-git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/bundle
+git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/bundle/vim-elixir
 ```
 
 With the other plugin managers, just follow the instructions on the homepage of
