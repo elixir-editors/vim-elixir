@@ -18,6 +18,7 @@ syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 syn keyword elixirKeyword case when cond for if unless try receive send
 syn keyword elixirKeyword exit raise throw after rescue catch else do end
 syn keyword elixirKeyword quote unquote super
+syn keyword elixirKeyword spawn spawn_link spawn_monitor monitor demonitor
 
 " Functions used on guards
 syn keyword elixirKeyword contained is_atom is_binary is_bitstring is_boolean
