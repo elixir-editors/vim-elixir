@@ -16,7 +16,13 @@ let s:cpo_save = &cpo
 set cpo-=C
 
 CompilerSet makeprg=mix\ test
-CompilerSet errorformat=%A\ \ %.)\ %m(%.%#),%C\ \ \ \ \ **%m,%C\ \ \ \ \ \ \ %m,%Z\ \ \ \ \ at\ %f:%l,%-G%.%#
+CompilerSet errorformat=
+  \**\ (%\\w%\\+)\ %f:%l:\ %m,
+  \%+Z\ \ \ \ \ \ \ %f:%l,
+  \%+G%>\ \ \ \ \ \ \ (%\\w%\\+)\ %f:%l:\ %m,
+  \%E\ \ %n)\ %m,
+  \%C\ \ \ \ \ %f:%l,
+  \%+G%.%#
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
