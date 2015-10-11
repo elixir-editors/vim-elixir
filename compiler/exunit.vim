@@ -14,15 +14,15 @@ endif
 
 let s:cpo_save = &cpo
 set cpo-=C
-
 CompilerSet makeprg=mix\ test
 CompilerSet errorformat=
-  \**\ (%\\w%\\+)\ %f:%l:\ %m,
-  \%+Z\ \ \ \ \ \ \ %f:%l,
-  \%+G%>\ \ \ \ \ \ \ (%\\w%\\+)\ %f:%l:\ %m,
   \%E\ \ %n)\ %m,
+  \%+G\ \ \ \ \ **\ %m,
+  \%+G\ \ \ \ \ stacktrace:,
   \%C\ \ \ \ \ %f:%l,
-  \%+G%.%#
+  \%+G\ \ \ \ \ \ \ (%\\w%\\+)\ %f:%l:\ %m,
+  \%+G\ \ \ \ \ \ \ %f:%l:\ %.%#,
+  \**\ (%\\w%\\+)\ %f:%l:\ %m
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
