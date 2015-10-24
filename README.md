@@ -11,6 +11,7 @@ Features included so far:
 * Filetype detection for `.ex`, `.exs` and `.eex` files
 * Automatic indentation
 
+This plugin contributes to [vim-polyglot](https://github.com/sheerun/vim-polyglot) language pack.
 
 ## Installation
 
