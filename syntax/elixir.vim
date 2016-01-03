@@ -19,9 +19,6 @@ syn keyword elixirKeyword case when cond for if unless try receive send
 syn keyword elixirKeyword exit raise throw after rescue catch else
 syn keyword elixirKeyword quote unquote super spawn spawn_link spawn_monitor
 
-" Block definition
-syn keyword elixirBlockDefinition do end
-
 " Functions used on guards
 syn keyword elixirKeyword contained is_atom is_binary is_bitstring is_boolean
 syn keyword elixirKeyword contained is_float is_function is_integer is_list
