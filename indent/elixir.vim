@@ -97,7 +97,7 @@ function! GetElixirIndent()
     endif
 
     if current_line =~ s:deindent_keywords
-      let bslnum = searchpair( '\<\%(' . s:block_start . '\):\@!\>',
+      let bslnum = searchpair( '\<:\@<!\%(' . s:block_start . '\):\@!\>',
             \ '\<\%(' . s:block_middle . '\):\@!\>\zs',
             \ '\<:\@<!' . s:block_end . '\>\zs',
             \ 'nbW',

@@ -29,4 +29,13 @@ describe "Indenting" do
     EOF
     .should be_elixir_indentation
   end
+
+  it "do not mislead atom ':do'" do
+    <<-EOF
+      def f do
+        x = :do
+      end
+    EOF
+    .should be_elixir_indentation
+  end
 end
