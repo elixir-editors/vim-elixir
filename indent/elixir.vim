@@ -60,16 +60,12 @@ function! GetElixirIndent()
 
     let ind += opened_symbol * &sw
 
-    if last_line =~ '^\s*\(' . s:symbols_end . '\)'
+    if last_line =~ '^\s*\(' . s:symbols_end . '\)' || last_line =~ s:indent_keywords
       let ind += &sw
     endif
 
     if current_line =~ '^\s*\(' . s:symbols_end . '\)'
       let ind -= &sw
-    endif
-
-    if last_line =~ s:indent_keywords
-      let ind += &sw
     endif
 
     " if line starts with pipeline
