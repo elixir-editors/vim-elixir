@@ -145,7 +145,7 @@ syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained con
 
 syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
 
-hi def link elixirBlockDefinition        Define
+hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define
 hi def link elixirPrivateDefine          Define
 hi def link elixirModuleDefine           Define
