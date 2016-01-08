@@ -22,9 +22,9 @@ syn keyword elixirKeyword quote unquote super spawn spawn_link spawn_monitor
 " Functions used on guards
 syn keyword elixirKeyword contained is_atom is_binary is_bitstring is_boolean
 syn keyword elixirKeyword contained is_float is_function is_integer is_list
-syn keyword elixirKeyword contained is_map is_number is_pid is_port is_record
-syn keyword elixirKeyword contained is_reference is_tuple is_exception abs
-syn keyword elixirKeyword contained bit_size byte_size div elem hd length
+syn keyword elixirKeyword contained is_map is_nil is_number is_pid is_port
+syn keyword elixirKeyword contained is_record is_reference is_tuple is_exception
+syn keyword elixirKeyword contained abs bit_size byte_size div elem hd length
 syn keyword elixirKeyword contained map_size node rem round tl trunc tuple_size
 
 syn match elixirGuard '.*when.*' contains=ALLBUT,@elixirNotTop
