@@ -1,7 +1,3 @@
-" Vim syntax file
-" Language: Embedded Elixir
-" URL:      https://github.com/elixir-lang/vim-elixir
-
 if exists("b:current_syntax")
   finish
 endif
@@ -63,4 +59,3 @@ let b:current_syntax = 'eelixir'
 if main_syntax == 'eelixir'
   unlet main_syntax
 endif
-

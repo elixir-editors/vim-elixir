@@ -1,8 +1,3 @@
-" Vim compiler file
-" Language:     ExUnit
-" Maintainer:   Rein Henrichs <rein.henrichs@gmail.com>
-" URL:          https://github.com/elixir-lang/vim-elixir
-
 if exists("current_compiler")
   finish
 endif

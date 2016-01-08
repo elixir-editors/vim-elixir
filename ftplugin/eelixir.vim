@@ -1,7 +1,3 @@
-" Vim filetype plugin
-" Language: Embedded Elixir
-" URL:      https://github.com/elixir-lang/vim-elixir
-
 if exists("b:did_ftplugin")
   finish
 endif

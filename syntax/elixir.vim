@@ -1,8 +1,3 @@
-" Vim syntax file
-" Language: Elixir
-" Maintainer: Carlos Galdino <carloshsgaldino@gmail.com>
-" Last Change: 2013 Apr 24
-
 if exists("b:current_syntax")
   finish
 endif
