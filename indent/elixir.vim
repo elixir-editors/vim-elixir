@@ -29,7 +29,7 @@ let s:symbols_end  = '\]\|}'
 let s:arrow        = '^.*->$'
 let s:pipeline     = '^\s*|>.*$'
 
-let s:indent_keywords   = '\<\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
+let s:indent_keywords   = '\<:\@<!\%(' . s:block_start . '\|' . s:block_middle . '\)$' . '\|' . s:arrow
 let s:deindent_keywords = '^\s*\<\%(' . s:block_end . '\|' . s:block_middle . '\)\>' . '\|' . s:arrow
 
 function! GetElixirIndent()
