@@ -24,7 +24,7 @@ describe "Indenting" do
   it "does not consider do: as the start of a block" do
     <<-EOF
       def f do
-        if true do: 42
+        if true, do: 42
       end
     EOF
     .should be_elixir_indentation
