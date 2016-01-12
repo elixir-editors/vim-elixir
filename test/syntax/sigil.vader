@@ -1,0 +1,144 @@
+Given elixir (delimited with braces):
+  ~S{foo bar}
+Execute (syntax):
+  AssertEqual SyntaxOf('{'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('}'), 'elixirSigilDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (delimited with parentheses):
+  ~S(foo bar)
+Execute (syntax):
+  AssertEqual SyntaxOf('('), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf(')'), 'elixirSigilDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (delimited with brackets):
+  ~S[foo bar]
+Execute (syntax):
+  AssertEqual SyntaxOf('['), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf(']'), 'elixirSigilDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (string):
+  ~S(string)
+Execute (syntax):
+  AssertEqual SyntaxOf('string'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (without escapes):
+  ~S(foo \n bar)
+Execute (syntax):
+  AssertEqual SyntaxOf('\\'), 'elixirRegexEscape'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (without interpolation):
+  ~S(foo #{bar})
+Execute (syntax):
+  AssertEqual SyntaxOf('bar'), 'elixirInterpolation'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (without escaped parans):
+  ~S(\( )
+Execute (syntax):
+  AssertEqual SyntaxOf('( '), 'elixirRegexEscapePunctuation'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (string):
+  ~s(string)
+Execute (syntax):
+  AssertEqual SyntaxOf('s'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('string'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (with escapes):
+  ~s(foo \n bar)
+Execute (syntax):
+  AssertEqual SyntaxOf('\\'), 'elixirRegexEscape'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (with interpolation):
+  ~s(foo #{bar})
+Execute (syntax):
+  AssertEqual SyntaxOf('bar'), 'elixirInterpolation'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (with escaped parans):
+  ~s(\( )
+Execute (syntax):
+  AssertEqual SyntaxOf('( '), 'elixirRegexEscapePunctuation'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (character list):
+  ~C(charlist)
+Execute (syntax):
+  AssertEqual SyntaxOf('C'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('charlist'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (character list):
+  ~c(charlist)
+Execute (syntax):
+  AssertEqual SyntaxOf('c'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('charlist'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (regular expression):
+  ~R(regex)
+Execute (syntax):
+  AssertEqual SyntaxOf('R'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('regex'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (regular expression):
+  ~r(regex)
+Execute (syntax):
+  AssertEqual SyntaxOf('r'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('regex'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (escapes double quotes unless only preceded by whitespace):
+    ~r"""
+    foo """
+    """
+Execute (syntax):
+  AssertEqual SyntaxOf(%q(^\s*\zs""")), 'elixirSigilDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (escapes single quotes unless only preceded by whitespace):
+    ~r'''
+    foo '''
+    '''
+Execute (syntax):
+  AssertEqual(%q(^\s*\zs''')), 'elixirSigilDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (list of words):
+  ~W(list of words)
+Execute (syntax):
+  AssertEqual SyntaxOf('W'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('list'), 'elixirSigil'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (list of words):
+  ~w(list of words)
+Execute (syntax):
+  AssertEqual SyntaxOf('w'), 'elixirSigilDelimiter'
+  AssertEqual SyntaxOf('list'), 'elixirSigil'

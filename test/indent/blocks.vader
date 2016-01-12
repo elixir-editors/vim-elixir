@@ -1,0 +1,53 @@
+Given elixir ('do' indenting):
+  do
+  something
+  end
+Do (indenting):
+  gg=G
+Expect:
+  do
+    something
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (does not consider :end as end):
+  defmodule Test do
+  def lol do
+  IO.inspect :end
+  end
+  end
+Do (indenting):
+  gg=G
+Expect:
+  defmodule Test do
+    def lol do
+      IO.inspect :end
+    end
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (does not consider do: as the start of a block):
+  def f do
+  if true, do: 42
+  end
+Do (indenting):
+  gg=G
+Expect:
+  def f do
+    if true, do: 42
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (do not mislead atom ':do'):
+  def f do
+  x = :do
+  end
+Do (indenting):
+  gg=G
+Expect:
+  def f do
+    x = :do
+  end

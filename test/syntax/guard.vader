@@ -1,0 +1,23 @@
+Given elixir (guard in function):
+  def fun(a) when is_atom(a) do
+  end
+Execute (syntax):
+  AssertEqual SyntaxOf('is_atom'), 'elixirKeyword'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (guard in case):
+  case
+    a when is_atom(a) -> {:ok, a}
+  end
+Execute (syntax):
+  AssertEqual SyntaxOf('is_atom'), 'elixirKeyword'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (does not highlight outside guards):
+    if is_atom(a) do
+      {:ok, a}
+    end
+Execute (syntax):
+  AssertEqual SyntaxOf('is_atom'), 'elixirKeyword'

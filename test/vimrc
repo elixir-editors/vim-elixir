@@ -1,0 +1,5 @@
+filetype off
+set rtp+=../
+set rtp+=$VADER_PATH
+filetype plugin indent on
+syntax enable

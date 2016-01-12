@@ -1,0 +1,6 @@
+Given elixir (should properly handle "\\\\" inside):
+  '"\\\\'
+  var = 1
+Execute (syntax):
+  AssertEqual SyntaxOf('var'), 'elixirId'
+  AssertEqual SyntaxOf('var'), 'elixirString'

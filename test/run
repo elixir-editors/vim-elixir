@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+old_path=$PWD
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+export VADER_PATH=${VADER_PATH:-"../../vader.vim"}
+vader_repo="git@github.com:junegunn/vader.vim.git"
+vader_plugin="$VADER_PATH/plugin/vader.vim"
+
+if [ ! -e $VADER_PATH ]
+then
+  git clone $vader_repo vader.vim
+fi
+
+vim --noplugin -nNu vimrc \
+  -c "source $vader_plugin" \
+  -c 'Vader! **/*'
+
+cd $old_path
