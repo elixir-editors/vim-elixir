@@ -6,13 +6,11 @@ au FileType elixir,eelixir setl sw=2 sts=2 et iskeyword+=!,?
 au BufNewFile,BufRead * call s:DetectElixir()
 
 function! s:setf(filetype) abort
-    if &filetype !=# a:filetype
-        let &filetype = a:filetype
-    endif
+  let &filetype = a:filetype
 endfunction
 
 function! s:DetectElixir()
-    if getline(1) =~ '^#!.*\<elixir\>'
-        call s:setf('elixir')
-    endif
+  if getline(1) =~ '^#!.*\<elixir\>'
+    call s:setf('elixir')
+  endif
 endfunction
