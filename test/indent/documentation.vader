@@ -1,0 +1,14 @@
+Given elixir (with end keyword):
+  defmodule Test do
+  @doc """
+  end
+  """
+  end
+Do:
+  gg=G
+Expect:
+  defmodule Test do
+    @doc """
+    end
+    """
+  end

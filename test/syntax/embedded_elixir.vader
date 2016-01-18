@@ -1,0 +1,34 @@
+Given eelixir (embedded delimiters):
+  <% anything %>
+Execute (check delimiters syntax):
+  AssertEqual SyntaxOf('<%'), 'eelixirDelimiter'
+  AssertEqual SyntaxOf('%>'), 'eelixirDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given eelixir (embedded expression delimiters):
+  <%= anything %>
+Execute (check expression delimiters syntax):
+  AssertEqual SyntaxOf('<%='), 'eelixirDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given eelixir (embedded quote delimiters):
+  <%% anything %>
+Execute (check quote delimiters syntax):
+  AssertEqual SyntaxOf('<%%'), 'eelixirDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given eelixir (embedded comment delimiters):
+  <%# anything %>
+Execute (check comment delimiters syntax):
+  AssertEqual SyntaxOf('<%#'), 'eelixirDelimiter'
+
+#-------------------------------------------------------------------------------
+
+Given eelixir (embedded elixir):
+  <%= if true do %>
+Execute (elixir syntax embedded):
+  AssertIncludes AllSyntaxesOf('if'), 'eelixirExpression'
+  AssertIncludes AllSyntaxesOf('if'), 'elixirKeyword'

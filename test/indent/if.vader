@@ -1,0 +1,27 @@
+Given elixir (if-clauses):
+  if foo do
+  bar
+  end
+Do:
+  gg=G
+Expect:
+  if foo do
+    bar
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (if-else-clauses):
+  if foo do
+  bar
+  else
+  baz
+  end
+Do:
+  gg=G
+Expect:
+  if foo do
+    bar
+  else
+    baz
+  end

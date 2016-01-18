@@ -1,0 +1,50 @@
+Given elixir (with multiline content):
+  @doc """
+  foo
+  """
+Execute (syntax):
+  AssertEqual SyntaxOf('foo'), 'elixirDocString'
+
+Given elixir (escapes quotes unless only preceded by whitespace):
+  @doc """
+  foo """
+  """
+Execute (syntax):
+  AssertEqual SyntaxOf%q(^\s*\zs"""), 'elixirDocString'
+
+Given elixir (does not include content on initial line):
+    String.at """, 0
+    foo
+    end
+Execute (syntax):
+  AssertEqual SyntaxOf('0'), 'elixirNumber'
+
+Given elixir (with interpolation):
+    @doc """
+    foo \#{bar}
+    """
+Execute (syntax):
+  AssertEqual SyntaxOf('bar'), 'elixirInterpolation'
+
+Given elixir (with multiline content):
+    @doc """
+    foo
+    """
+Execute (syntax):
+  AssertEqual SyntaxOf('foo'), 'elixirDocString'
+
+Given elixir (escapes quotes unless only preceded by whitespace):
+    @doc '''
+    foo '''
+    '''
+Execute (syntax):
+  AssertEqual %q(^\s*\zs'''), 'elixirDocString'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (with interpolation):
+  @doc '''
+  foo \#{bar}
+  '''
+Execute (syntax):
+  AssertEqual SyntaxOf('bar'), 'elixirInterpolation'

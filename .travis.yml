@@ -1,0 +1,3 @@
+language: vim
+
+script: VADER_PATH=vader.vim test/run

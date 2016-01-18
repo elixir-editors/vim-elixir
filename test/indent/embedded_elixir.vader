@@ -1,0 +1,25 @@
+Given eelixir (if-clauses):
+  <%= if true do %>
+  It is obviously true
+  <% end %>
+Do:
+  gg=G
+Expect:
+  <%= if true do %>
+    It is obviously true
+  <% end %>
+
+Given eelixir (if-else-clauses):
+  <%= if true do %>
+  It is obviously true
+  <% else %>
+  This will never appear
+  <% end %>
+Do:
+  gg=G
+Expect:
+  <%= if true do %>
+    It is obviously true
+  <% else %>
+    This will never appear
+  <% end %>

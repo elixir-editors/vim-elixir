@@ -1,0 +1,6 @@
+Given elixir (unused):
+  def handle_call(:pop, _from, [h|stack]) do
+    { :reply, h, stack }
+  end
+Execute (syntax):
+  AssertEqual SyntaxOf('_from'), 'elixirUnusedVariable'
