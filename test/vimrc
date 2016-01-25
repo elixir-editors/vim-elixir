@@ -1,0 +1,24 @@
+filetype off
+set rtp+=../
+let &rtp.=",".(empty($VADER_PATH) ? "../../vader.vim" : $VADER_PATH)
+filetype plugin indent on
+syntax enable
+
+function! AssertIncludes(list, value, ...)
+  if a:0 > 0
+    let message = a:1
+  else
+    let message = a:value . ' not found in ' . string(a:list)
+  end
+
+  let assertion = index(a:list, a:value) >= 0
+
+  call vader#assert#true(assertion, message)
+endfunction
+command! -nargs=+ AssertIncludes call AssertIncludes(<args>)
+
+function! AllSyntaxesOf(pattern)
+  let [lnum, col] = searchpos(a:pattern)
+
+  return map(synstack(lnum, col), 'synIDattr(v:val, "name")')
+endfunction

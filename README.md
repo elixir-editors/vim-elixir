@@ -42,7 +42,6 @@ Plugin 'elixir-lang/vim-elixir'
 Copy the contents of each directory in the respective directories inside
 `~/.vim`.
 
-
 ## Syntastic integration
 
 > :warning: **Warning:** older versions (`<= 3.4.0-106`) of
@@ -53,6 +52,23 @@ Copy the contents of each directory in the respective directories inside
 >
 > **If your version of Syntastic is below `3.4.0-107` (16 July 2014), you should
 > update to a newer version.**
+
+## Plugin tests
+
+All the tests are written with [vader.vim](https://github.com/junegunn/vader.vim).
+To run them just run `test/run` in the console, this will expect a `vader.vim`
+repository on the same level of `vim-elixir`:
+```
+/
+▾ _deps/
+  ▸ vader.vim/
+  ▸ vim-elixir/
+```
+
+To use `vader.vim` in another path change the `VADER_PATH` environment variable:
+```console
+$ VADER_PATH=/tmp/vader.vim test/run
+```
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 [vundle]: https://github.com/gmarik/Vundle.vim

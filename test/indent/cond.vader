@@ -1,0 +1,12 @@
+Given elixir (it):
+  cond do
+  foo -> 1
+  bar -> 2
+  end
+Do:
+  gg=G
+Expect:
+  cond do
+    foo -> 1
+    bar -> 2
+  end

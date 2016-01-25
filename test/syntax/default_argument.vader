@@ -1,0 +1,4 @@
+Given elixir (default argument):
+  def foo(bar \\ :baz)
+Execute (syntax):
+  AssertEqual SyntaxOf('\\'), 'elixirOperator'

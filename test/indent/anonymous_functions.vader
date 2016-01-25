@@ -1,0 +1,67 @@
+Given elixir (single body functions inside do block):
+  def func do
+  some_func = fn  x -> x end
+  end
+Do (indenting):
+  gg=G
+Expect:
+  def func do
+    some_func = fn  x -> x end
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (spans in multiple lines):
+  def test do
+  assert_raise Queue.Empty, fn ->
+  Q.new |> Q.deq!
+  end
+  end
+Do (indenting):
+  gg=G
+Expect:
+  def test do
+    assert_raise Queue.Empty, fn ->
+      Q.new |> Q.deq!
+    end
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (spans in multiple lines inside parentheses):
+  defmodule Test do
+  def lol do
+  Enum.map([1,2,3], fn x ->
+  x * 3
+  end)
+  end
+  end
+Do (indenting):
+  gg=G
+Expect:
+  defmodule Test do
+    def lol do
+      Enum.map([1,2,3], fn x ->
+        x * 3
+      end)
+    end
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (multiple body functions declaring with fn syntax):
+  fizzbuzz = fn
+  0, 0, _ -> "FizzBuzz"
+  0, _, _ -> "Fizz"
+  _, 0, _ -> "Buzz"
+  _, _, x -> x
+  end
+Do (indenting):
+  gg=G
+Expect:
+  fizzbuzz = fn
+    0, 0, _ -> "FizzBuzz"
+    0, _, _ -> "Fizz"
+    _, 0, _ -> "Buzz"
+    _, _, x -> x
+  end

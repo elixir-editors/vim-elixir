@@ -1,0 +1,107 @@
+Given elixir (using multiline pipeline):
+  "a,b,c,d"
+  |> String.split(",")
+  |> Enum.reverse
+Do:
+  gg=G
+Expect:
+  "a,b,c,d"
+  |> String.split(",")
+  |> Enum.reverse
+
+#-------------------------------------------------------------------------------
+
+Given elixir (attribuition using multline pipeline operator):
+  [ h | t ] = "a,b,c,d"
+  |> String.split(",")
+  |> Enum.reverse
+Do:
+  gg=G
+Expect:
+  [ h | t ] = "a,b,c,d"
+              |> String.split(",")
+              |> Enum.reverse
+
+#-------------------------------------------------------------------------------
+
+Given elixir (function with pipeline operator):
+  def test do
+  [ h | t ] = "a,b,c,d"
+  |> String.split(",")
+  |> Enum.reverse
+
+  { :ok, h }
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    [ h | t ] = "a,b,c,d"
+                |> String.split(",")
+                |> Enum.reverse
+
+    { :ok, h }
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (do not breaks on `==`):
+  def test do
+  my_post = Post
+  |> where([p], p.id == 10)
+  |> where([p], u.user_id == 1)
+  |> select([p], p)
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    my_post = Post
+              |> where([p], p.id == 10)
+              |> where([p], u.user_id == 1)
+              |> select([p], p)
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (pipeline operator with block open):
+  def test do
+  "a,b,c,d"
+  |> String.split(",")
+  |> Enum.first
+  |> case do
+  "a" -> "A"
+  _ -> "Z"
+  end
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    "a,b,c,d"
+    |> String.split(",")
+    |> Enum.first
+    |> case do
+    "a" -> "A"
+    _ -> "Z"
+    end
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (using a record with pipeline):
+  defmodule Recmodule do
+  defrecord RECORD, field_a: nil, field_b: nil
+
+  rec = RECORD.new
+  |> IO.inspect
+  end
+Do:
+  gg=G
+Expect:
+  defmodule Recmodule do
+    defrecord RECORD, field_a: nil, field_b: nil
+
+    rec = RECORD.new
+          |> IO.inspect
+  end
