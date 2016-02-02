@@ -143,7 +143,7 @@ syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDec
 
 hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define
-hi def link elixirDefMemoDefine                 Define
+hi def link elixirDefMemoDefine          Define
 hi def link elixirPrivateDefine          Define
 hi def link elixirModuleDefine           Define
 hi def link elixirProtocolDefine         Define
