@@ -112,6 +112,7 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
 syn keyword elixirPrivateDefine       defp           nextgroup=elixirFunctionDeclaration    skipwhite skipnl
+syn keyword elixirDefMemoDefine       defmemo        nextgroup=elixirFunctionDeclaration    skipwhite skipnl
 syn keyword elixirModuleDefine        defmodule      nextgroup=elixirModuleDeclaration      skipwhite skipnl
 syn keyword elixirProtocolDefine      defprotocol    nextgroup=elixirProtocolDeclaration    skipwhite skipnl
 syn keyword elixirImplDefine          defimpl        nextgroup=elixirImplDeclaration        skipwhite skipnl
@@ -142,6 +143,7 @@ syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDec
 
 hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define
+hi def link elixirDefMemoDefine          Define
 hi def link elixirPrivateDefine          Define
 hi def link elixirModuleDefine           Define
 hi def link elixirProtocolDefine         Define
