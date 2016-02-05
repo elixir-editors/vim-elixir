@@ -18,3 +18,6 @@ endif
 
 setlocal comments=:#
 setlocal commentstring=#\ %s
+
+setlocal iskeyword+=.
+setlocal keywordprg=iex\ -e\ 'Code.eval_string(\"import\ IEx.Helpers;\ h\ \"\ <>\ hd(System.argv));\ System.halt(0)'\ --
