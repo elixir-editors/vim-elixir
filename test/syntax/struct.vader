@@ -1,0 +1,11 @@
+Given elixir (without defaults):
+  defstruct [:name, :age]
+Execute (syntax):
+  AssertEqual SyntaxOf(':name'), 'elixirAtom'
+
+#-------------------------------------------------------------------------------
+
+Given elixir (with defaults):
+  defstruct name: "john", age: 27
+Execute (syntax):
+  AssertEqual SyntaxOf('name:'), 'elixirAtom'

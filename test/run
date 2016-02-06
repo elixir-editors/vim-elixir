@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+subfolder=${1:-"**"}
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
+export VADER_PATH="../${VADER_PATH:-"../vader.vim"}"
+vader_repo="https://github.com/junegunn/vader.vim.git"
+vader_plugin="$VADER_PATH/plugin/vader.vim"
+
+if [ ! -e $VADER_PATH ]
+then
+  git clone $vader_repo $VADER_PATH
+fi
+
+vim --noplugin -nNu vimrc \
+  -c "source $vader_plugin" \
+  -c "Vader! $subfolder/*.vader"

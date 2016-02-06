@@ -1,0 +1,4 @@
+Given elixir (private record symbol):
+  defrecordp :user, name: "José", age: 25
+Execute (syntax):
+  AssertEqual SyntaxOf(':user'), 'elixirAtom'

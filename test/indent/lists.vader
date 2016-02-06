@@ -1,0 +1,188 @@
+Given elixir (lists):
+  def example do
+  [ :foo,
+  :bar,
+  :baz ]
+  end
+Do:
+  gg=G
+Expect:
+  def example do
+    [ :foo,
+      :bar,
+      :baz ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (nested list):
+  [
+  [
+  :foo
+  ]
+  ]
+Do:
+  gg=G
+Expect:
+  [
+    [
+      :foo
+    ]
+  ]
+
+#-------------------------------------------------------------------------------
+
+Given elixir (keyword list):
+  def project do
+  [ name: "mix",
+  version: "0.1.0",
+  deps: deps ]
+  end
+Do:
+  gg=G
+Expect:
+  def project do
+    [ name: "mix",
+      version: "0.1.0",
+      deps: deps ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (keyword):
+  def config do
+  [ name:
+  "John" ]
+  end
+Do:
+  gg=G
+Expect:
+  def config do
+    [ name:
+      "John" ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (list of tuples):
+  def test do
+  [ { :cowboy, github: "extend/cowboy" },
+  { :dynamo, "0.1.0-dev", github: "elixir-lang/dynamo" },
+  { :ecto, github: "elixir-lang/ecto" },
+  { :pgsql, github: "semiocast/pgsql" } ]
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    [ { :cowboy, github: "extend/cowboy" },
+      { :dynamo, "0.1.0-dev", github: "elixir-lang/dynamo" },
+      { :ecto, github: "elixir-lang/ecto" },
+      { :pgsql, github: "semiocast/pgsql" } ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (list of lists):
+  def test do
+  [ [:a, :b, :c],
+  [:d, :e, :f] ]
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    [ [:a, :b, :c],
+      [:d, :e, :f] ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (complex list):
+  def test do
+  [ app: :first,
+  version: "0.0.1",
+  dynamos: [First.Dynamo],
+  compilers: [:elixir, :dynamo, :ecto, :app],
+  env: [prod: [compile_path: "ebin"]],
+  compile_path: "tmp/first/ebin",
+  deps: deps ]
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    [ app: :first,
+      version: "0.0.1",
+      dynamos: [First.Dynamo],
+      compilers: [:elixir, :dynamo, :ecto, :app],
+      env: [prod: [compile_path: "ebin"]],
+      compile_path: "tmp/first/ebin",
+      deps: deps ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (lists with line break after square brackets):
+  def project do
+  deps: [
+  { :bar, path: "deps/umbrella/apps/bar" },
+  { :umbrella, path: "deps/umbrella" }
+  ]
+  end
+Do:
+  gg=G
+Expect:
+  def project do
+    deps: [
+      { :bar, path: "deps/umbrella/apps/bar" },
+      { :umbrella, path: "deps/umbrella" }
+    ]
+  end
+
+#-------------------------------------------------------------------------------
+
+Given elixir (multiple lists with multiline elements):
+  def test do
+  a = [
+  %{
+  foo: 1,
+  bar: 2
+  }
+  ]
+
+  b = %{
+  [
+  :foo,
+  :bar
+  ]
+  }
+
+  [
+  a,
+  b
+  ]
+  end
+Do:
+  gg=G
+Expect:
+  def test do
+    a = [
+      %{
+        foo: 1,
+        bar: 2
+      }
+    ]
+
+    b = %{
+      [
+        :foo,
+        :bar
+      ]
+    }
+
+    [
+      a,
+      b
+    ]
+  end

@@ -1,0 +1,32 @@
+Given elixir (multiline tuple):
+  def xpto do
+  { :a,
+  :b,
+  :c }
+  end
+Do:
+  gg=G
+Expect:
+  def xpto do
+    { :a,
+      :b,
+      :c }
+  end
+
+
+Given elixir (tuples with break line after square brackets):
+  def method do
+  {
+  :bar,
+  path: "deps/umbrella/apps/bar"
+  }
+  end
+Do:
+  gg=G
+Expect:
+  def method do
+    {
+      :bar,
+      path: "deps/umbrella/apps/bar"
+    }
+  end
