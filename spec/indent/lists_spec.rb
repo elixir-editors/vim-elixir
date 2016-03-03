@@ -81,10 +81,20 @@ describe "Indenting" do
     .should be_elixir_indentation
   end
 
+  specify "lists without whitespace" do
+    <<-EOF
+    def project do
+      [{:bar, path: "deps/umbrella/apps/bar"},
+       {:umbrella, path: "deps/umbrella"}]
+    end
+    EOF
+    .should be_elixir_indentation
+  end
+
   specify "lists with line break after square brackets" do
     <<-EOF
     def project do
-      deps: [
+      [
         { :bar, path: "deps/umbrella/apps/bar" },
         { :umbrella, path: "deps/umbrella" }
       ]
