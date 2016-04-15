@@ -184,3 +184,5 @@ hi def link elixirStringDelimiter        Delimiter
 hi def link elixirRegexDelimiter         Delimiter
 hi def link elixirInterpolationDelimiter Delimiter
 hi def link elixirSigilDelimiter         Delimiter
+
+let b:current_syntax = "elixir"
