@@ -2,7 +2,6 @@ if (exists("b:did_ftplugin"))
   finish
 endif
 let b:did_ftplugin = 1
-
 " Matchit support
 if exists("loaded_matchit") && !exists("b:match_words")
   let b:match_ignorecase = 0
@@ -55,3 +54,5 @@ setlocal includeexpr=GetElixirFilename(v:fname)
 setlocal suffixesadd=.ex,.exs,.eex,.erl,.yrl,.hrl
 
 setlocal formatoptions-=t formatoptions+=croqlj
+
+command! TestFile :call elixir#test#run('%')
