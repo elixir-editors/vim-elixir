@@ -17,8 +17,8 @@ set cpo&vim
 
 let s:no_colon_before = ':\@<!'
 let s:no_colon_after  = ':\@!'
-let s:symbols_end     = '\]\|}'
-let s:symbols_start   = '\[\|{'
+let s:symbols_end     = '\]\|}\|)'
+let s:symbols_start   = '\[\|{\|('
 let s:arrow           = '^.*->$'
 let s:pipeline        = '^\s*|>.*$'
 let s:skip_syntax     = '\%(Comment\|String\)$'
@@ -55,10 +55,13 @@ function! GetElixirIndent()
     let current_line = getline(v:lnum)
     let last_line = getline(lnum)
 
-    let split_line = split(last_line, '\zs')
-    let opened_symbol = 0
-    let opened_symbol += count(split_line, '[') - count(split_line, ']')
-    let opened_symbol += count(split_line, '{') - count(split_line, '}')
+    if last_line !~ s:arrow
+      let split_line = split(last_line, '\zs')
+      let opened_symbol = 0
+      let opened_symbol += count(split_line, '(') - count(split_line, ')')
+      let opened_symbol += count(split_line, '[') - count(split_line, ']')
+      let opened_symbol += count(split_line, '{') - count(split_line, '}')
+    end
 
     " if start symbol is followed by a character, indent based on the
     " whitespace after the symbol, otherwise use the default shiftwidth
