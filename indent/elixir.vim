@@ -15,17 +15,18 @@ endif
 let s:cpo_save = &cpo
 set cpo&vim
 
-let s:no_colon_before = ':\@<!'
-let s:no_colon_after  = ':\@!'
-let s:symbols_end     = '\]\|}\|)'
-let s:symbols_start   = '\[\|{\|('
-let s:arrow           = '^.*->$'
-let s:pipeline        = '^\s*|>.*$'
-let s:skip_syntax     = '\%(Comment\|String\)$'
-let s:block_skip      = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
-let s:block_start     = 'do\|fn'
-let s:block_middle    = 'else\|match\|elsif\|catch\|after\|rescue'
-let s:block_end       = 'end'
+let s:no_colon_before        = ':\@<!'
+let s:no_colon_after         = ':\@!'
+let s:symbols_end            = '\]\|}\|)'
+let s:symbols_start          = '\[\|{\|('
+let s:arrow                  = '^.*->$'
+let s:skip_syntax            = '\%(Comment\|String\)$'
+let s:block_skip             = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
+let s:block_start            = '\<\%(do\|fn\)\>'
+let s:block_middle           = 'else\|match\|elsif\|catch\|after\|rescue'
+let s:block_end              = 'end'
+let s:starts_with_pipeline   = '^\s*|>.*$'
+let s:ending_with_assignment = '=\s*$'
 
 let s:indent_keywords   = '\<'.s:no_colon_before.'\%('.s:block_start.'\|'.s:block_middle.'\)$'.'\|'.s:arrow
 let s:deindent_keywords = '^\s*\<\%('.s:block_end.'\|'.s:block_middle.'\)\>'.'\|'.s:arrow
@@ -34,14 +35,20 @@ let s:pair_start  = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_af
 let s:pair_middle = '\<\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
 let s:pair_end    = '\<\%('.s:no_colon_before.s:block_end.'\)\>\zs'
 
+let s:inside_block = 0
+
 function! GetElixirIndent()
   let lnum = prevnonblank(v:lnum - 1)
-  let ind  = indent(lnum)
 
   " At the start of the file use zero indent.
   if lnum == 0
     return 0
   endif
+
+  let opened_symbol = 0
+  let current_line  = getline(v:lnum)
+  let last_line     = getline(lnum)
+  let ind           = indent(lnum)
 
   " TODO: Remove these 2 lines
   " I don't know why, but for the test on spec/indent/lists_spec.rb:24.
@@ -52,12 +59,9 @@ function! GetElixirIndent()
   syntax sync fromstart
 
   if synIDattr(synID(v:lnum, 1, 1), "name") !~ s:skip_syntax
-    let current_line = getline(v:lnum)
-    let last_line = getline(lnum)
 
     if last_line !~ s:arrow
       let split_line = split(last_line, '\zs')
-      let opened_symbol = 0
       let opened_symbol += count(split_line, '(') - count(split_line, ')')
       let opened_symbol += count(split_line, '[') - count(split_line, ']')
       let opened_symbol += count(split_line, '{') - count(split_line, '}')
@@ -80,27 +84,35 @@ function! GetElixirIndent()
       let ind -= &sw
     endif
 
+    if last_line =~ s:ending_with_assignment && opened_symbol == 0
+      let b:old_ind = indent(lnum)
+      let ind += &sw
+    end
+
     " if line starts with pipeline
-    " and last line contains pipeline(s)
+    " and last line ends with a pipeline,
     " align them
     if last_line =~ '|>.*$' &&
-          \ current_line =~ s:pipeline
+          \ current_line =~ s:starts_with_pipeline
       let ind = float2nr(match(last_line, '|>') / &sw) * &sw
 
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
-    elseif current_line =~ s:pipeline &&
+    elseif current_line =~ s:starts_with_pipeline &&
           \ last_line =~ '^[^=]\+=.\+$'
-      let b:old_ind = ind
+
+      if !exists('b:old_ind') || b:old_ind == 0
+        let b:old_ind = indent(lnum)
+      end
       let ind = float2nr(matchend(last_line, '=\s*[^ ]') / &sw) * &sw
     endif
 
     " if last line starts with pipeline
     " and current line doesn't start with pipeline
     " returns the indentation before the pipeline
-    if last_line =~ s:pipeline &&
-          \ current_line !~ s:pipeline
+    if last_line =~ s:starts_with_pipeline &&
+          \ current_line !~ s:starts_with_pipeline
       let ind = b:old_ind
     endif
 
