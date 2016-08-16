@@ -1,19 +1,18 @@
 require 'spec_helper'
 
-describe "Indenting" do
-  specify "multiline tuple" do
-    <<-EOF
+describe 'Indenting' do
+  specify 'multiline tuple' do
+    expect(<<-EOF).to be_elixir_indentation
     def xpto do
       { :a,
         :b,
         :c }
     end
     EOF
-    .should be_elixir_indentation
   end
 
-  specify "tuples with break line after square brackets" do
-    <<-EOF
+  specify 'tuples with break line after square brackets' do
+    expect(<<-EOF).to be_elixir_indentation
     def method do
       {
         :bar,
@@ -21,6 +20,5 @@ describe "Indenting" do
       }
     end
     EOF
-    .should be_elixir_indentation
   end
 end

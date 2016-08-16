@@ -1,38 +1,35 @@
 require 'spec_helper'
 
-describe "Indenting" do
-  context "single body functions inside do block" do
-    it "is declared with fn syntax" do
-      <<-EOF
+describe 'Indenting' do
+  context 'single body functions inside do block' do
+    it 'is declared with fn syntax' do
+      expect(<<-EOF).to be_elixir_indentation
         def do
           some_func = fn  x -> x end
         end
       EOF
-      .should be_elixir_indentation
     end
 
-    it "is declared with function syntax" do
-      <<-EOF
+    it 'is declared with function syntax' do
+      expect(<<-EOF).to be_elixir_indentation
         def do
           some_func = function do x -> x end
         end
       EOF
-      .should be_elixir_indentation
     end
 
-    it "spans in multiple lines" do
-      <<-EOF
+    it 'spans in multiple lines' do
+      expect(<<-EOF).to be_elixir_indentation
         def test do
           assert_raise Queue.Empty, fn ->
             Q.new |> Q.deq!
           end
         end
       EOF
-      .should be_elixir_indentation
     end
 
-    it "spans in multiple lines inside parentheses" do
-      <<-EOF
+    it 'spans in multiple lines inside parentheses' do
+      expect(<<-EOF).to be_elixir_indentation
         defmodule Test do
           def lol do
             Enum.map([1,2,3], fn x ->
@@ -41,13 +38,12 @@ describe "Indenting" do
           end
         end
       EOF
-      .should be_elixir_indentation
     end
   end
 
-  context "multiple body functions declaring" do
-    it "it with fn syntax" do
-      <<-EOF
+  context 'multiple body functions declaring' do
+    it 'it with fn syntax' do
+      expect(<<-EOF).to be_elixir_indentation
         fizzbuzz = fn
           0, 0, _ -> "FizzBuzz"
           0, _, _ -> "Fizz"
@@ -55,11 +51,10 @@ describe "Indenting" do
           _, _, x -> x
         end
       EOF
-      .should be_elixir_indentation
     end
 
-    it "it with function syntax" do
-      <<-EOF
+    it 'it with function syntax' do
+      expect(<<-EOF).to be_elixir_indentation
         fizzbuzz = function do
           0, 0, _ -> "FizzBuzz"
           0, _, _ -> "Fizz"
@@ -67,7 +62,6 @@ describe "Indenting" do
           _, _, x -> x
         end
       EOF
-      .should be_elixir_indentation
     end
   end
 end

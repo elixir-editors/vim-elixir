@@ -1,20 +1,19 @@
 require 'spec_helper'
 
-describe "Indenting" do
-  describe "Embedded Elixir" do
-    it "if-clauses" do
-      <<-EOF
+describe 'Indenting' do
+  describe 'Embedded Elixir' do
+    it 'if-clauses' do
+      expect(<<-EOF).to be_eelixir_indentation
       # An Example
       <%= if true do %>
         It is obviously true
       <% end %>
       ---
       EOF
-      .should be_eelixir_indentation
     end
 
-    it "if-else-clauses" do
-      <<-EOF
+    it 'if-else-clauses' do
+      expect(<<-EOF).to be_eelixir_indentation
       # An Example
       <%= if true do %>
         It is obviously true
@@ -23,7 +22,6 @@ describe "Indenting" do
       <% end %>
       ---
       EOF
-      .should be_eelixir_indentation
     end
   end
 end

@@ -1,104 +1,102 @@
 require 'spec_helper'
 
-describe "Sigil syntax" do
-  describe "upper case" do
-    it "string" do
-      '~S(string)'.should include_elixir_syntax('elixirSigilDelimiter', 'S')
-      '~S(string)'.should include_elixir_syntax('elixirSigil', 'foo')
+describe 'Sigil syntax' do
+  describe 'upper case' do
+    it 'string' do
+      expect('~S(string)').to include_elixir_syntax('elixirSigilDelimiter', 'S')
+      expect('~S(string)').to include_elixir_syntax('elixirSigil', 'foo')
     end
 
-    it "character list" do
-      '~C(charlist)'.should include_elixir_syntax('elixirSigilDelimiter', 'C')
-      '~C(charlist)'.should include_elixir_syntax('elixirSigil', 'charlist')
+    it 'character list' do
+      expect('~C(charlist)').to include_elixir_syntax('elixirSigilDelimiter', 'C')
+      expect('~C(charlist)').to include_elixir_syntax('elixirSigil', 'charlist')
     end
 
-    it "regular expression" do
-      '~R(regex)'.should include_elixir_syntax('elixirSigilDelimiter', 'R')
-      '~R(regex)'.should include_elixir_syntax('elixirSigil', 'regex')
+    it 'regular expression' do
+      expect('~R(regex)').to include_elixir_syntax('elixirSigilDelimiter', 'R')
+      expect('~R(regex)').to include_elixir_syntax('elixirSigil', 'regex')
     end
 
-    it "list of words" do
-      '~W(list of words)'.should include_elixir_syntax('elixirSigilDelimiter', 'W')
-      '~W(list of words)'.should include_elixir_syntax('elixirSigil', 'list')
+    it 'list of words' do
+      expect('~W(list of words)').to include_elixir_syntax('elixirSigilDelimiter', 'W')
+      expect('~W(list of words)').to include_elixir_syntax('elixirSigil', 'list')
     end
 
-    it "delimited with parans" do
-      '~S(foo bar)'.should include_elixir_syntax('elixirSigilDelimiter', '(')
-      '~S(foo bar)'.should include_elixir_syntax('elixirSigilDelimiter', ')')
+    it 'delimited with parans' do
+      expect('~S(foo bar)').to include_elixir_syntax('elixirSigilDelimiter', '(')
+      expect('~S(foo bar)').to include_elixir_syntax('elixirSigilDelimiter', ')')
     end
 
-    it "delimited with braces" do
-      '~S{foo bar}'.should include_elixir_syntax('elixirSigilDelimiter', '{')
-      '~S{foo bar}'.should include_elixir_syntax('elixirSigilDelimiter', '}')
+    it 'delimited with braces' do
+      expect('~S{foo bar}').to include_elixir_syntax('elixirSigilDelimiter', '{')
+      expect('~S{foo bar}').to include_elixir_syntax('elixirSigilDelimiter', '}')
     end
 
-    it "delimited with brackets" do
-      '~S[foo bar]'.should include_elixir_syntax('elixirSigilDelimiter', '[')
-      '~S[foo bar]'.should include_elixir_syntax('elixirSigilDelimiter', ']')
+    it 'delimited with brackets' do
+      expect('~S[foo bar]').to include_elixir_syntax('elixirSigilDelimiter', '[')
+      expect('~S[foo bar]').to include_elixir_syntax('elixirSigilDelimiter', ']')
     end
 
-    it "escapes double quotes unless only preceded by whitespace" do
-      <<-EOF
+    it 'escapes double quotes unless only preceded by whitespace' do
+      expect(<<-EOF).to include_elixir_syntax('elixirSigilDelimiter', %q(^\s*\zs'"'))
         ~r"""
         foo """
         """
       EOF
-      .should include_elixir_syntax('elixirSigilDelimiter', %q(^\s*\zs"""))
     end
 
-    it "escapes single quotes unless only preceded by whitespace" do
-      <<-EOF
+    it 'escapes single quotes unless only preceded by whitespace' do
+      expect(<<-EOF).to include_elixir_syntax('elixirSigilDelimiter', %q(^\s*\zs'''))
         ~r'''
         foo '''
         '''
       EOF
-      .should include_elixir_syntax('elixirSigilDelimiter', %q(^\s*\zs'''))
     end
 
-    it "without escapes" do
-      '~S(foo \n bar)'.should_not include_elixir_syntax('elixirRegexEscape', '\\')
+    it 'without escapes' do
+      expect('~S(foo \n bar)').not_to include_elixir_syntax('elixirRegexEscape', '\\')
     end
 
-    it "without interpolation" do
-      '~S(foo #{bar})'.should_not include_elixir_syntax('elixirInterpolation', 'bar')
+    it 'without interpolation' do
+      expect('~S(foo #{bar})').not_to include_elixir_syntax('elixirInterpolation', 'bar')
     end
 
-    it "without escaped parans" do
-      '~S(\( )'.should_not include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
+    it 'without escaped parans' do
+      expect('~S(\( )').not_to include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
     end
   end
 
-  describe "lower case" do
-    it "string" do
-      '~s(string)'.should include_elixir_syntax('elixirSigilDelimiter', 's')
-      '~s(string)'.should include_elixir_syntax('elixirSigil', 'foo')
+  describe 'lower case' do
+    it 'string' do
+      expect('~s(string)').to include_elixir_syntax('elixirSigilDelimiter', 's')
+      expect('~s(string)').to include_elixir_syntax('elixirSigil', 'foo')
     end
 
-    it "character list" do
-      '~c(charlist)'.should include_elixir_syntax('elixirSigilDelimiter', 'c')
-      '~c(charlist)'.should include_elixir_syntax('elixirSigil', 'charlist')
+    it 'character list' do
+      expect('~c(charlist)').to include_elixir_syntax('elixirSigilDelimiter', 'c')
+      expect('~c(charlist)').to include_elixir_syntax('elixirSigil', 'charlist')
     end
 
-    it "regular expression" do
-      '~r(regex)'.should include_elixir_syntax('elixirSigilDelimiter', 'r')
-      '~r(regex)'.should include_elixir_syntax('elixirSigil', 'regex')
+    it 'regular expression' do
+      expect('~r(regex)').to include_elixir_syntax('elixirSigilDelimiter', 'r')
+      expect('~r(regex)').to include_elixir_syntax('elixirSigil', 'regex')
     end
 
-    it "list of words" do
-      '~w(list of words)'.should include_elixir_syntax('elixirSigilDelimiter', 'w')
-      '~w(list of words)'.should include_elixir_syntax('elixirSigil', 'list')
+    it 'list of words' do
+      expect('~w(list of words)').to include_elixir_syntax('elixirSigilDelimiter', 'w')
+      expect('~w(list of words)').to include_elixir_syntax('elixirSigil', 'list')
     end
 
-    it "with escapes" do
-      '~s(foo \n bar)'.should include_elixir_syntax('elixirRegexEscape', '\\')
+    it 'with escapes' do
+      expect('~s(foo \n bar)').to include_elixir_syntax('elixirRegexEscape', '\\')
     end
 
-    it "with interpolation" do
-      '~s(foo #{bar})'.should include_elixir_syntax('elixirInterpolation', 'bar')
+    it 'with interpolation' do
+      expect('~s(foo #{bar})').to include_elixir_syntax('elixirInterpolation', 'bar')
     end
 
-    it "with escaped parans" do
-      '~s(\( )'.should include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
+    it 'with escaped parans' do
+      expect('~s(\( )').to include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
     end
   end
 end

@@ -50,7 +50,8 @@ def cleanup(string)
   string.gsub(/^#{whitespace}/, '')
 end
 
-{ be_elixir_indentation:  :ex,
+{
+  be_elixir_indentation:  :ex,
   be_eelixir_indentation: :eex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do
@@ -61,14 +62,15 @@ end
       buffer.reindent(actual) == actual
     end
 
-    failure_message_for_should do |code|
+    failure_message do |code|
       actual = cleanup(code)
-      "expected:\n\n#{actual}\n     got:\n\n#{ buffer.reindent(actual) }\n  after elixir indentation"
+      "expected:\n\n#{actual}\n     got:\n\n#{buffer.reindent(actual)}\n  after elixir indentation"
     end
   end
 end
 
-{ include_elixir_syntax:  :ex,
+{
+  include_elixir_syntax:  :ex,
   include_eelixir_syntax: :eex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do |syntax, pattern|
@@ -79,12 +81,12 @@ end
       buffer.syntax(code, pattern).include? syntax
     end
 
-    failure_message_for_should do |code|
+    failure_message do |code|
       actual = cleanup(code)
       "expected #{buffer.syntax(code, pattern)} to include syntax #{syntax}\nfor pattern: /#{pattern}/\n         in:\n\n#{actual}"
     end
 
-    failure_message_for_should_not do |code|
+    failure_message_when_negated do |code|
       actual = cleanup(code)
       "expected #{buffer.syntax(code, pattern)} not to include syntax #{syntax}\nfor pattern: /#{pattern}/\n         in:\n\n#{actual}"
     end

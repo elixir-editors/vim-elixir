@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe "Indenting" do
-  it "conditional" do
-    <<-EOF
+describe 'Indenting' do
+  it 'conditional' do
+    expect(<<-EOF).to be_elixir_indentation
       cond do
         foo -> 1
         bar -> 2
       end
     EOF
-    .should be_elixir_indentation
   end
 end

@@ -1,46 +1,42 @@
 require 'spec_helper'
 
-describe "Indenting" do
+describe 'Indenting' do
   specify "'do' indenting" do
-    <<-EOF
+    expect(<<-EOF).to be_elixir_indentation
       do
         something
       end
     EOF
-    .should be_elixir_indentation
   end
 
-  it "does not consider :end as end" do
-    <<-EOF
+  it 'does not consider :end as end' do
+    expect(<<-EOF).to be_elixir_indentation
       defmodule Test do
         def lol do
           IO.inspect :end
         end
       end
     EOF
-    .should be_elixir_indentation
   end
 
-  it "does not consider do: as the start of a block" do
-    <<-EOF
+  it 'does not consider do: as the start of a block' do
+    expect(<<-EOF).to be_elixir_indentation
       def f do
         if true, do: 42
       end
     EOF
-    .should be_elixir_indentation
   end
 
   it "do not mislead atom ':do'" do
-    <<-EOF
+    expect(<<-EOF).to be_elixir_indentation
       def f do
         x = :do
       end
     EOF
-    .should be_elixir_indentation
   end
 
-  it "multiline assignment" do
-    <<-EOF
+  it 'multiline assignment' do
+    expect(<<-EOF) .to be_elixir_indentation
     defmodule Test do
       def test do
         one =
@@ -55,6 +51,5 @@ describe "Indenting" do
       end
     end
     EOF
-    .should be_elixir_indentation
   end
 end

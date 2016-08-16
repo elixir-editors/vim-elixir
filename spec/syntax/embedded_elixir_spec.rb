@@ -1,26 +1,26 @@
 require 'spec_helper'
 
-describe "Embedded Elixir syntax" do
-  it "elixir" do
-    '<%= if true do %>'.should include_eelixir_syntax('elixirKeyword', 'if')
-    '<%= if true do %>'.should include_eelixir_syntax('elixirBoolean', 'true')
+describe 'Embedded Elixir syntax' do
+  it 'elixir' do
+    expect('<%= if true do %>').to include_eelixir_syntax('elixirKeyword', 'if')
+    expect('<%= if true do %>').to include_eelixir_syntax('elixirBoolean', 'true')
   end
 
-  it "expression" do
-    '<%= if true do %>'.should include_eelixir_syntax('eelixirExpression', 'if')
-    '<% end %>'.should include_eelixir_syntax('eelixirExpression', 'end')
+  it 'expression' do
+    expect('<%= if true do %>').to include_eelixir_syntax('eelixirExpression', 'if')
+    expect('<% end %>').to include_eelixir_syntax('eelixirExpression', 'end')
   end
 
-  it "quote" do
-    '<%% def f %>'.should include_eelixir_syntax('eelixirQuote', 'def')
+  it 'quote' do
+    expect('<%% def f %>').to include_eelixir_syntax('eelixirQuote', 'def')
   end
 
-  it "comment" do
-    '<%# foo bar baz %>'.should include_eelixir_syntax('eelixirComment', 'foo')
+  it 'comment' do
+    expect('<%# foo bar baz %>').to include_eelixir_syntax('eelixirComment', 'foo')
   end
 
-  it "delimiters" do
-    '<% end %>'.should include_eelixir_syntax('eelixirDelimiter', '<%')
-    '<% end %>'.should include_eelixir_syntax('eelixirDelimiter', '%>')
+  it 'delimiters' do
+    expect('<% end %>').to include_eelixir_syntax('eelixirDelimiter', '<%')
+    expect('<% end %>').to include_eelixir_syntax('eelixirDelimiter', '%>')
   end
 end
