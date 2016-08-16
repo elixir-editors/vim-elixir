@@ -78,8 +78,7 @@ syn region elixirString        matchgroup=elixirStringDelimiter start="'" end="'
 syn region elixirString        matchgroup=elixirStringDelimiter start='"' end='"' skip='\\"' contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment,@elixirNotTop
 
-syn region elixirDocStringStart matchgroup=elixirDocString start=+"""+ end=+$+ oneline contains=ALLBUT,@elixirNotTop
-syn region elixirDocString     start=+\z("""\)+ end=+^\s*\zs\z1+ contains=elixirDocStringStart,elixirTodo,elixirInterpolation,@Spell keepend fold
+syn match elixirDocString +\(@\w*doc\s*\)\@<=\%("""\_.\{-}\_^\s*"""\|".\{-\}"\)+ contains=elixirTodo,elixirInterpolation,@Spell fold
 
 syn match elixirAtomInterpolated   ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
