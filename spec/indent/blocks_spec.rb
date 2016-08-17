@@ -36,7 +36,7 @@ describe 'Indenting' do
   end
 
   it 'multiline assignment' do
-    expect(<<-EOF) .to be_elixir_indentation
+    expect(<<-EOF).to be_elixir_indentation
     defmodule Test do
       def test do
         one =
