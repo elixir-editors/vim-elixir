@@ -45,6 +45,7 @@ function! GetElixirIndent()
     return 0
   endif
 
+  let pending_parenthesis = 0
   let opened_symbol = 0
   let current_line  = getline(v:lnum)
   let last_line     = getline(lnum)
@@ -59,22 +60,30 @@ function! GetElixirIndent()
   syntax sync fromstart
 
   if synIDattr(synID(v:lnum, 1, 1), "name") !~ s:skip_syntax
-
     if last_line !~ s:arrow
-      let split_line = split(last_line, '\zs')
-      let opened_symbol += count(split_line, '(') - count(split_line, ')')
-      let opened_symbol += count(split_line, '[') - count(split_line, ']')
-      let opened_symbol += count(split_line, '{') - count(split_line, '}')
+      let splitted_last_line = split(last_line, '\zs')
+      let pending_parenthesis += count(splitted_last_line, '(') - count(splitted_last_line, ')')
+      let opened_symbol += pending_parenthesis
+      let opened_symbol += count(splitted_last_line, '[') - count(splitted_last_line, ']')
+      let opened_symbol += count(splitted_last_line, '{') - count(splitted_last_line, '}')
     end
 
     " if start symbol is followed by a character, indent based on the
     " whitespace after the symbol, otherwise use the default shiftwidth
-    if last_line =~ '\('.s:symbols_start.'\).'
-      let opened_prefix = matchlist(last_line, '\('.s:symbols_start.'\)\s*')[0]
-      let ind += (opened_symbol * strlen(opened_prefix))
-    else
-      let ind += (opened_symbol * &sw)
-    endif
+    if ind > 0 || opened_symbol > 0 " avoid negative indentation index
+      if last_line =~ '\('.s:symbols_start.'\).'
+        let opened_prefix = matchlist(last_line, '\('.s:symbols_start.'\)\s*')[0]
+        let ind += (opened_symbol * strlen(opened_prefix))
+      else
+        let ind += (opened_symbol * &sw)
+      endif
+    end
+
+    " Follow the first parameter indent position when breaking parameters list
+    " in many lines
+    if pending_parenthesis > 0 && last_line !~ '^\s*def' && last_line !~ s:arrow
+      return match(last_line, '(') + 1
+    end
 
     if last_line =~ '^\s*\('.s:symbols_end.'\)' || last_line =~ s:indent_keywords
       let ind += &sw

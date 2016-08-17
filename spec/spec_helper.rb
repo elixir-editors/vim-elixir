@@ -64,7 +64,7 @@ end
 
     failure_message do |code|
       actual = cleanup(code)
-      "expected:\n\n#{actual}\n     got:\n\n#{buffer.reindent(actual)}\n  after elixir indentation"
+      "got:\n\n#{buffer.reindent(actual)}\n  after elixir indentation"
     end
   end
 end

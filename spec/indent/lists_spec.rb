@@ -118,4 +118,36 @@ describe 'Indenting' do
       end
     EOF
   end
+
+  it 'indent function body even when breaking the parameter list in many lines' do
+    expect(<<-EOF).to be_elixir_indentation
+    def create(conn, %{
+      "grant_type" => "password",
+      "username" => username,
+      "password" => password
+    }) do
+      1
+    end
+    EOF
+  end
+
+  it 'parameters list in many lines' do
+    expect(<<-EOF).to be_elixir_indentation
+    def double(x) do
+      add(x,
+          y)
+    end
+    EOF
+  end
+
+  it 'long parameters list in many lines' do
+    expect(<<-EOF).to be_elixir_indentation
+    def double(x) do
+      add(x,
+          y,
+          w,
+          z)
+    end
+    EOF
+  end
 end
