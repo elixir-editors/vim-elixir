@@ -51,17 +51,16 @@ function! GetEelixirIndent(...)
   let line = getline(lnum)
   let cline = getline(v:lnum)
   if cline =~# '^\s*<%\s*\%(end\|else\|elsif\|catch\|after\|rescue\)\>.*%>'
-    let ind = ind - &sw
+    let ind -= &sw
   elseif line =~# '\S\s*<%\s*end\s*%>'
-    let ind = ind - &sw
+    let ind -= &sw
   endif
-  if line =~# '<%[=%]\=\s*.*\<do\s*%>'
-    let ind = ind + &sw
-  elseif line =~# '<%\s*\%(else\|elsif\|catch\|after\|rescue\)\>.*%>'
-    let ind = ind + &sw
+  if line =~# '<%[=%]\=\s*.*\(\<do\|->\)\s*%>' ||
+        \ line =~# '<%\s*\%(else\|elsif\|catch\|after\|rescue\)\>.*%>'
+    let ind += &sw
   endif
   if cline =~# '^\s*%>\s*$'
-    let ind = ind - &sw
+    let ind -= &sw
   endif
   return ind
 endfunction
