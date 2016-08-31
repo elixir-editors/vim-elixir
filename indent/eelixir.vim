@@ -6,6 +6,9 @@ runtime! indent/elixir.vim
 unlet! b:did_indent
 setlocal indentexpr=
 
+let s:cpo_save = &cpo
+set cpo&vim
+
 if exists("b:eelixir_subtype")
   exe "runtime! indent/".b:eelixir_subtype.".vim"
 else
@@ -64,3 +67,6 @@ function! GetEelixirIndent(...)
   endif
   return ind
 endfunction
+
+let &cpo = s:cpo_save
+unlet s:cpo_save

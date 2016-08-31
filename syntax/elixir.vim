@@ -2,6 +2,9 @@ if exists("b:current_syntax")
   finish
 endif
 
+let s:cpo_save = &cpo
+set cpo&vim
+
 " syncing starts 2000 lines before top line so docstrings don't screw things up
 syn sync minlines=2000
 
@@ -184,3 +187,6 @@ hi def link elixirInterpolationDelimiter Delimiter
 hi def link elixirSigilDelimiter         Delimiter
 
 let b:current_syntax = "elixir"
+
+let &cpo = s:cpo_save
+unlet s:cpo_save
