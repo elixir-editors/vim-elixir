@@ -145,16 +145,7 @@ function! s:indent_pipeline(ind)
 endfunction
 
 function! s:indent_after_pipeline(ind)
-  if s:metadata().last_line =~ s:starts_with_pipeline
-        \ && s:metadata().current_line !~ s:starts_with_pipeline
-        \ && s:metadata().last_line !~ s:indent_keywords
-    " if last line starts with pipeline
-    " and current line doesn't start with pipeline
-    " returns the indentation before the pipeline
-    return b:old_ind
-  else
-    return a:ind
-  end
+  return a:ind
 endfunction
 
 function! s:indent_keyword(ind)
