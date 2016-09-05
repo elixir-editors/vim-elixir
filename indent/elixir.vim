@@ -6,7 +6,7 @@ let b:did_indent = 1
 setlocal nosmartindent
 
 setlocal indentexpr=GetElixirIndent()
-setlocal indentkeys+=0),0],0=end,0=else,0=match,0=elsif,0=catch,0=after,0=rescue
+setlocal indentkeys+=0),0],0=end,0=else,0=match,0=elsif,0=catch,0=after,0=rescue,0=\|>
 
 if exists("*GetElixirIndent")
   finish
@@ -64,6 +64,12 @@ function! s:continuing_parameter_list()
         \ s:metadata().pending_parenthesis > 0
         \ && s:metadata().last_line !~ '^\s*def'
         \ && s:metadata().last_line !~ s:arrow
+endfunction
+
+function! s:continuing_pipe()
+  return
+        \ empty(s:metadata().current_line)
+        \ && s:metadata().last_line =~ s:starts_with_pipeline
 endfunction
 
 function! s:is_indentable_syntax()
@@ -189,6 +195,9 @@ function! GetElixirIndent()
   elseif s:continuing_parameter_list()
     return match(s:metadata().last_line, '(') + 1
   elseif !s:is_indentable_syntax()
+    " Current syntax is not indentable, keep last line indentation
+    return indent(s:metadata().last_line_ref)
+  elseif s:continuing_pipe()
     " Current syntax is not indentable, keep last line indentation
     return indent(s:metadata().last_line_ref)
   else
