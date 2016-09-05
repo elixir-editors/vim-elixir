@@ -130,7 +130,7 @@ function! s:indent_assignment_ending(ind)
 endfunction
 
 function! s:indent_pipeline(ind)
-  if s:metadata().last_line =~ '|>.*$'
+  if s:metadata().last_line =~ s:starts_with_pipeline
         \ && s:metadata().current_line =~ s:starts_with_pipeline
     " if line starts with pipeline
     " and last line ends with a pipeline,
