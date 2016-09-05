@@ -198,7 +198,6 @@ function! GetElixirIndent()
     " Current syntax is not indentable, keep last line indentation
     return indent(s:metadata().last_line_ref)
   elseif s:continuing_pipe()
-    " Current syntax is not indentable, keep last line indentation
     return indent(s:metadata().last_line_ref)
   else
     let ind = indent(s:metadata().last_line_ref)
