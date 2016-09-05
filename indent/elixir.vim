@@ -163,7 +163,7 @@ function! s:indent_after_pipeline(ind)
   end
 endfunction
 
-function! s:indent_keyword(ind)
+function! s:deindent_keyword(ind)
   if s:metadata().current_line =~ s:deindent_keywords
     let bslnum = searchpair(
           \ s:pair_start,
@@ -203,12 +203,12 @@ function! GetElixirIndent()
   else
     let ind = indent(s:metadata().last_line_ref)
     let ind = s:indent_opened_symbol(ind)
-    let ind = s:indent_last_line_end_symbol_or_indent_keyword(ind)
     let ind = s:indent_symbols_ending(ind)
     let ind = s:indent_assignment_ending(ind)
+    let ind = s:indent_last_line_end_symbol_or_indent_keyword(ind)
     let ind = s:indent_pipeline(ind)
     let ind = s:indent_after_pipeline(ind)
-    let ind = s:indent_keyword(ind)
+    let ind = s:deindent_keyword(ind)
     let ind = s:indent_arrow(ind)
     return ind
   end
