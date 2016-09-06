@@ -19,7 +19,7 @@ describe 'Indenting' do
     EOF
   end
 
-  pending 'does not indent string indentation words' do
+  it 'does not indent string indentation words' do
     expect(<<-EOF).to be_elixir_indentation
     def test do
       "else"

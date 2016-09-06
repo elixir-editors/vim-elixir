@@ -32,7 +32,7 @@ let s:indent_keywords = '\<'.s:no_colon_before.'\%('.s:block_start.'\|'.s:block_
 let s:deindent_keywords = '^\s*\<\%('.s:block_end.'\|'.s:block_middle.'\)\>'.'\|'.s:arrow
 
 let s:pair_start = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_after
-let s:pair_middle = '\<\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
+let s:pair_middle = '^\s*\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
 let s:pair_end = '\<\%('.s:no_colon_before.s:block_end.'\)\>\zs'
 
 function! s:metadata()
