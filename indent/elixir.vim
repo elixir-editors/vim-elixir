@@ -89,6 +89,7 @@ function! s:indent_opened_symbol(ind)
     end
   elseif s:metadata().opened_symbol < 0
     let ind = get(b:, 'old_ind', a:ind + (s:metadata().opened_symbol * &sw))
+    let ind = float2nr(ceil(floor(ind)/&sw)*&sw)
     return ind <= 0 ? 0 : ind
   else
     return a:ind
