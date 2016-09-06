@@ -152,7 +152,7 @@ describe 'Indenting' do
   end
 
   describe 'restore last indentation after multiline lists' do
-    pending 'correct indentation after long parameter list' do
+    it 'correct indentation after long parameter list' do
       expect(<<-EOF).to be_elixir_indentation
       def double(x) do
         resutl = add(x,

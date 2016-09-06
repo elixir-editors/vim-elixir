@@ -57,21 +57,6 @@ function! s:metadata()
   return metadata
 endfunction
 
-function! s:continuing_parameter_list()
-  " Follow the first parameter indent position when breaking parameters list
-  " in many lines
-  return
-        \ s:metadata().pending_parenthesis > 0
-        \ && s:metadata().last_line !~ '^\s*def'
-        \ && s:metadata().last_line !~ s:arrow
-endfunction
-
-function! s:continuing_pipe()
-  return
-        \ empty(s:metadata().current_line)
-        \ && s:metadata().last_line =~ s:starts_with_pipeline
-endfunction
-
 function! s:is_indentable_syntax()
   " TODO: Remove these 2 lines
   " I don't know why, but for the test on spec/indent/lists_spec.rb:24.
@@ -86,17 +71,25 @@ function! s:is_indentable_syntax()
 endfunction
 
 function! s:indent_opened_symbol(ind)
-  if a:ind > 0 || s:metadata().opened_symbol > 0
-    " if start symbol is followed by a character, indent based on the
-    " whitespace after the symbol, otherwise use the default shiftwidth
-    " Avoid negative indentation index
-    if s:metadata().last_line =~ '\('.s:symbols_start.'\).'
+  if s:metadata().opened_symbol > 0
+    if s:metadata().pending_parenthesis > 0
+          \ && s:metadata().last_line !~ '^\s*def'
+          \ && s:metadata().last_line !~ s:arrow
+      let b:old_ind = a:ind
+      return matchend(s:metadata().last_line, '(')
+      " if start symbol is followed by a character, indent based on the
+      " whitespace after the symbol, otherwise use the default shiftwidth
+      " Avoid negative indentation index
+    elseif s:metadata().last_line =~ '\('.s:symbols_start.'\).'
       let regex = '\('.s:symbols_start.'\)\s*'
       let opened_prefix = matchlist(s:metadata().last_line, regex)[0]
       return a:ind + (s:metadata().opened_symbol * strlen(opened_prefix))
     else
       return a:ind + (s:metadata().opened_symbol * &sw)
     end
+  elseif s:metadata().opened_symbol < 0
+    let ind = get(b:, 'old_ind', a:ind + (s:metadata().opened_symbol * &sw))
+    return ind <= 0 ? 0 : ind
   else
     return a:ind
   end
@@ -119,7 +112,7 @@ function! s:indent_symbols_ending(ind)
   end
 endfunction
 
-function! s:indent_assignment_ending(ind)
+function! s:indent_assignment(ind)
   if s:metadata().last_line =~ s:ending_with_assignment
         \ && s:metadata().opened_symbol == 0
     let b:old_ind = indent(s:metadata().last_line_ref) " FIXME: side effect
@@ -132,19 +125,14 @@ endfunction
 function! s:indent_pipeline(ind)
   if s:metadata().last_line =~ s:starts_with_pipeline
         \ && s:metadata().current_line =~ s:starts_with_pipeline
-    " if line starts with pipeline
-    " and last line ends with a pipeline,
-    " align them
-    return float2nr(match(s:metadata().last_line, '|>') / &sw) * &sw
+    indent(s:metadata().last_line_ref)
   elseif s:metadata().current_line =~ s:starts_with_pipeline
         \ && s:metadata().last_line =~ '^[^=]\+=.\+$'
-    if !exists('b:old_ind') || b:old_ind == 0 " FIXME: side effect
-      let b:old_ind = indent(s:metadata().last_line_ref)
-    end
+    let b:old_ind = indent(s:metadata().last_line_ref)
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
-    return float2nr(matchend(s:metadata().last_line, '=\s*[^ ]') / &sw) * &sw
+    return match(s:metadata().last_line, '=\s*\zs[^ ]')
   else
     return a:ind
   end
@@ -152,12 +140,14 @@ endfunction
 
 function! s:indent_after_pipeline(ind)
   if s:metadata().last_line =~ s:starts_with_pipeline
-        \ && s:metadata().current_line !~ s:starts_with_pipeline
-        \ && s:metadata().last_line !~ s:indent_keywords
-    " if last line starts with pipeline
-    " and current line doesn't start with pipeline
-    " returns the indentation before the pipeline
-    return b:old_ind
+    if empty(substitute(s:metadata().current_line, ' ', '', 'g'))
+          \ || s:metadata().current_line =~ s:starts_with_pipeline
+      return indent(s:metadata().last_line_ref)
+    elseif s:metadata().last_line !~ s:indent_keywords
+      return b:old_ind
+    else
+      return a:ind
+    end
   else
     return a:ind
   end
@@ -192,21 +182,17 @@ function! GetElixirIndent()
   if s:metadata().last_line_ref == 0
     " At the start of the file use zero indent.
     return 0
-  elseif s:continuing_parameter_list()
-    return match(s:metadata().last_line, '(') + 1
   elseif !s:is_indentable_syntax()
     " Current syntax is not indentable, keep last line indentation
-    return indent(s:metadata().last_line_ref)
-  elseif s:continuing_pipe()
     return indent(s:metadata().last_line_ref)
   else
     let ind = indent(s:metadata().last_line_ref)
     let ind = s:indent_opened_symbol(ind)
     let ind = s:indent_symbols_ending(ind)
-    let ind = s:indent_assignment_ending(ind)
-    let ind = s:indent_last_line_end_symbol_or_indent_keyword(ind)
     let ind = s:indent_pipeline(ind)
     let ind = s:indent_after_pipeline(ind)
+    let ind = s:indent_assignment(ind)
+    let ind = s:indent_last_line_end_symbol_or_indent_keyword(ind)
     let ind = s:deindent_keyword(ind)
     let ind = s:indent_arrow(ind)
     return ind
