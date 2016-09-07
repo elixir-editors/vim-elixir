@@ -6,7 +6,7 @@ GEM
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
       rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.2)
+    rspec-core (3.5.3)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -23,6 +23,9 @@ PLATFORMS
 DEPENDENCIES
   rspec
   vimrunner
+
+RUBY VERSION
+   ruby 2.3.1p112
 
 BUNDLED WITH
    1.12.5
