@@ -14,7 +14,6 @@ class Buffer
       @vim.normal 'ggVG999<<'
       # force vim to indent the file
       @vim.normal 'gg=G'
-      sleep 0.1 if ENV['CI']
     end
   end
 
