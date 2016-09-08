@@ -9,12 +9,15 @@ set cpo&vim
 syn sync minlines=2000
 
 syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@elixirDeclaration,elixirTodo,elixirArguments,elixirBlockDefinition
+syn cluster elixirRegexSpecial contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
+syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
+syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
 
-syn match elixirComment '#.*' contains=elixirTodo,@Spell
+syn match elixirComment '^\s*#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
 syn keyword elixirKeyword case when with cond for if unless try receive send
-syn keyword elixirKeyword exit raise throw after rescue catch else
+syn keyword elixirKeyword do end exit raise throw after rescue catch else
 syn keyword elixirKeyword quote unquote super spawn spawn_link spawn_monitor
 
 " Functions used on guards
@@ -74,11 +77,10 @@ syn match elixirRegexCharClass         "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|
 
 syn region elixirRegex matchgroup=elixirRegexDelimiter start="%r/" end="/[uiomxfr]*" skip="\\\\" contains=@elixirRegexSpecial
 
-syn cluster elixirRegexSpecial    contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
-syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
-
-syn region elixirString        matchgroup=elixirStringDelimiter start="'" end="'" skip="\\'\|\\\\" contains=@elixirStringContained
-syn region elixirString        matchgroup=elixirStringDelimiter start='"' end='"' skip='\\"' contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\+  contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\+  contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('''\)+ end=+^\s*\z1+ skip=+'\|\\\\+  contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("""\)+ end=+^\s*\z1+ skip=+"\|\\\\+  contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment,@elixirNotTop
 
 syn match elixirDocString +\(@\w*doc\s*\)\@<=\%("""\_.\{-}\_^\s*"""\|".\{-\}"\)+ contains=elixirTodo,elixirInterpolation,@Spell fold
@@ -87,7 +89,8 @@ syn match elixirAtomInterpolated   ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
 
 syn region elixirBlock              matchgroup=elixirBlockDefinition start="\<do\>:\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
-syn region elixirAnonymousFunction  matchgroup=elixirBlockDefinition start="\<fn\>"         end="\<end\>" contains=ALLBUT,@elixirNotTop fold
+syn region elixirElseBlock          matchgroup=elixirBlockDefinition start="\<else\>:\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
+syn region elixirAnonymousFunction  matchgroup=elixirBlockDefinition start="\<fn\>"     end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
 syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirAtom,elixirPseudoVariable,elixirAlias,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirAtomInterpolated,elixirRegex,elixirString,elixirStringDelimiter,elixirRegexDelimiter,elixirInterpolationDelimiter,elixirSigilDelimiter
 
@@ -137,8 +140,6 @@ syn region elixirDelegateDeclaration    start='\['     end='\]'    contained con
 syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
 syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
-
-syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
 
 hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define

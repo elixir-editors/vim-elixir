@@ -25,7 +25,7 @@ class Buffer
     @vim.search pattern
     # get a list of the syntax element
     @vim.echo <<~EOF
-      map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+      uniq(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'))
     EOF
   end
 

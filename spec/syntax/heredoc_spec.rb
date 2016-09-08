@@ -28,9 +28,9 @@ describe 'Heredoc syntax' do
       EOF
     end
 
-    pending 'interpolation in heredoc must be string' do
-      expect(<<~EOF).to include_elixir_syntax('elixirInterpolation', 'test')
-      def test do
+    it 'interpolation in heredoc must be string' do
+      expect(<<~EOF).to include_elixir_syntax('elixirString', 'test')
+      def function do
         """
         foo "test"
         """
@@ -38,9 +38,9 @@ describe 'Heredoc syntax' do
       EOF
     end
 
-    pending 'interpolation in heredoc' do
-      expect(<<~EOF).to include_elixir_syntax('elixirInterpolation', 'test')
-      def test do
+    it 'interpolation in heredoc' do
+      expect(<<~'EOF').to include_elixir_syntax('elixirInterpolation', '#{')
+      def function do
         """
         foo "#{test}"
         """
@@ -48,9 +48,9 @@ describe 'Heredoc syntax' do
       EOF
     end
 
-    pending 'interpolation in string in heredoc' do
-      expect(<<~EOF).to include_elixir_syntax('elixirInterpolation', 'test')
-      def test do
+    it 'interpolation in string in heredoc' do
+      expect(<<~'EOF').to include_elixir_syntax('elixirInterpolation', '#{')
+      def function do
         """
         foo #{test}
         """
