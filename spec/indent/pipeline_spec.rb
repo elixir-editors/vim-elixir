@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'Indenting' do
+describe 'Indenting pipeline' do
   it 'using multiline pipeline' do
     expect(<<~EOF).to be_elixir_indentation
     "a,b,c,d"

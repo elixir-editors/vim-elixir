@@ -2,47 +2,47 @@
 
 require 'spec_helper'
 
-describe 'Indenting' do
-  specify 'lists' do
+describe 'Indenting lists' do
+  it 'lists' do
     expect(<<~EOF).to be_elixir_indentation
-      def example do
-        [ :foo,
-          :bar,
-          :baz ]
-      end
+    def example do
+      [ :foo,
+        :bar,
+        :baz ]
+    end
     EOF
   end
 
-  specify 'nested list' do
+  it 'nested list' do
     expect(<<~EOF).to be_elixir_indentation
+    [
       [
-        [
-          :foo
-        ]
+        :foo
       ]
+    ]
     EOF
   end
 
-  specify 'keyword list' do
+  it 'keyword list' do
     expect(<<~EOF).to be_elixir_indentation
-      def project do
-        [ name: "mix",
-          version: "0.1.0",
-          deps: deps ]
-      end
+    def project do
+      [ name: "mix",
+        version: "0.1.0",
+        deps: deps ]
+    end
     EOF
   end
 
-  specify 'keyword' do
+  it 'keyword' do
     expect(<<~EOF).to be_elixir_indentation
-      def config do
-        [ name:
-          "John" ]
-      end
+    def config do
+      [ name:
+        "John" ]
+    end
     EOF
   end
 
-  specify 'list of tuples' do
+  it 'list of tuples' do
     expect(<<~EOF).to be_elixir_indentation
     def test do
       [ { :cowboy, github: "extend/cowboy" },
@@ -53,7 +53,7 @@ describe 'Indenting' do
     EOF
   end
 
-  specify 'list of lists' do
+  it 'list of lists' do
     expect(<<~EOF).to be_elixir_indentation
     def test do
       [ [:a, :b, :c],
@@ -62,7 +62,7 @@ describe 'Indenting' do
     EOF
   end
 
-  specify 'complex list' do
+  it 'complex list' do
     expect(<<~EOF).to be_elixir_indentation
     def test do
       [ app: :first,
@@ -76,7 +76,7 @@ describe 'Indenting' do
     EOF
   end
 
-  specify 'lists without whitespace' do
+  it 'lists without whitespace' do
     expect(<<~EOF).to be_elixir_indentation
     def project do
       [{:bar, path: "deps/umbrella/apps/bar"},
@@ -85,7 +85,7 @@ describe 'Indenting' do
     EOF
   end
 
-  specify 'lists with line break after square brackets' do
+  it 'lists with line break after square brackets' do
     expect(<<~EOF).to be_elixir_indentation
     def project do
       [
@@ -96,28 +96,28 @@ describe 'Indenting' do
     EOF
   end
 
-  specify 'multiple lists with multiline elements' do
+  it 'multiple lists with multiline elements' do
     expect(<<~EOF).to be_elixir_indentation
-      def test do
-        a = [
-          %{
-            foo: 1,
-            bar: 2
-          }
-        ]
-
-        b = %{
-          [
-            :foo,
-            :bar
-          ]
+    def test do
+      a = [
+        %{
+          foo: 1,
+          bar: 2
         }
+      ]
 
+      b = %{
         [
-          a,
-          b
+          :foo,
+          :bar
         ]
-      end
+      }
+
+      [
+        a,
+        b
+      ]
+    end
     EOF
   end
 

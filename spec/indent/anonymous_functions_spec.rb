@@ -2,43 +2,43 @@
 
 require 'spec_helper'
 
-describe 'Indenting' do
+describe 'Indenting anonymous functions' do
   context 'single body functions inside do block' do
     it 'is declared with fn syntax' do
       expect(<<~EOF).to be_elixir_indentation
-        def do
-          some_func = fn  x -> x end
-        end
+      def do
+        some_func = fn  x -> x end
+      end
       EOF
     end
 
     it 'is declared with function syntax' do
       expect(<<~EOF).to be_elixir_indentation
-        def do
-          some_func = function do x -> x end
-        end
+      def do
+        some_func = function do x -> x end
+      end
       EOF
     end
 
     it 'spans in multiple lines' do
       expect(<<~EOF).to be_elixir_indentation
-        def test do
-          assert_raise Queue.Empty, fn ->
-            Q.new |> Q.deq!
-          end
+      def test do
+        assert_raise Queue.Empty, fn ->
+          Q.new |> Q.deq!
         end
+      end
       EOF
     end
 
     it 'spans in multiple lines inside parentheses' do
       expect(<<~EOF).to be_elixir_indentation
-        defmodule Test do
-          def lol do
-            Enum.map([1,2,3], fn x ->
-              x * 3
-            end)
-          end
+      defmodule Test do
+        def lol do
+          Enum.map([1,2,3], fn x ->
+            x * 3
+          end)
         end
+      end
       EOF
     end
   end
@@ -46,23 +46,23 @@ describe 'Indenting' do
   context 'multiple body functions declaring' do
     it 'it with fn syntax' do
       expect(<<~EOF).to be_elixir_indentation
-        fizzbuzz = fn
-          0, 0, _ -> "FizzBuzz"
-          0, _, _ -> "Fizz"
-          _, 0, _ -> "Buzz"
-          _, _, x -> x
-        end
+      fizzbuzz = fn
+        0, 0, _ -> "FizzBuzz"
+        0, _, _ -> "Fizz"
+        _, 0, _ -> "Buzz"
+        _, _, x -> x
+      end
       EOF
     end
 
     it 'it with function syntax' do
       expect(<<~EOF).to be_elixir_indentation
-        fizzbuzz = function do
-          0, 0, _ -> "FizzBuzz"
-          0, _, _ -> "Fizz"
-          _, 0, _ -> "Buzz"
-          _, _, x -> x
-        end
+      fizzbuzz = function do
+        0, 0, _ -> "FizzBuzz"
+        0, _, _ -> "Fizz"
+        _, 0, _ -> "Buzz"
+        _, _, x -> x
+      end
       EOF
     end
   end
