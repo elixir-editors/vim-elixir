@@ -17,8 +17,8 @@ set cpo&vim
 
 let s:no_colon_before = ':\@<!'
 let s:no_colon_after = ':\@!'
-let s:symbols_end = '\]\|}\|)'
-let s:symbols_start = '\[\|{\|('
+let s:ending_symbols = '\]\|}\|)'
+let s:starting_symbols = '\[\|{\|('
 let s:arrow = '^.*->$'
 let s:skip_syntax = '\%(Comment\|String\)$'
 let s:block_skip = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
@@ -58,8 +58,8 @@ function! s:indent_opened_symbol(ind)
       " if start symbol is followed by a character, indent based on the
       " whitespace after the symbol, otherwise use the default shiftwidth
       " Avoid negative indentation index
-    elseif s:last_line =~ '\('.s:symbols_start.'\).'
-      let regex = '\('.s:symbols_start.'\)\s*'
+    elseif s:last_line =~ '\('.s:starting_symbols.'\).'
+      let regex = '\('.s:starting_symbols.'\)\s*'
       let opened_prefix = matchlist(s:last_line, regex)[0]
       return a:ind + (s:opened_symbol * strlen(opened_prefix))
     else
@@ -69,32 +69,6 @@ function! s:indent_opened_symbol(ind)
     let ind = get(b:, 'old_ind', a:ind + (s:opened_symbol * &sw))
     let ind = float2nr(ceil(floor(ind)/&sw)*&sw)
     return ind <= 0 ? 0 : ind
-  else
-    return a:ind
-  end
-endfunction
-
-function! s:indent_last_line_end_symbol_or_indent_keyword(ind)
-  if s:last_line =~ '^\s*\('.s:symbols_end.'\)'
-        \ || s:last_line =~ s:indent_keywords
-    return a:ind + &sw
-  else
-    return a:ind
-  end
-endfunction
-
-function! s:indent_symbols_ending(ind)
-  if s:current_line =~ '^\s*\('.s:symbols_end.'\)'
-    return a:ind - &sw
-  else
-    return a:ind
-  end
-endfunction
-
-function! s:indent_assignment(ind)
-  if s:last_line =~ s:ending_with_assignment
-    let b:old_ind = indent(s:last_line_ref) " FIXME: side effect
-    return a:ind + &sw
   else
     return a:ind
   end
@@ -131,7 +105,25 @@ function! s:indent_after_pipeline(ind)
   end
 endfunction
 
-function! s:deindent_keyword(ind)
+function! s:indent_assignment(ind)
+  if s:last_line =~ s:ending_with_assignment
+    let b:old_ind = indent(s:last_line_ref) " FIXME: side effect
+    return a:ind + &sw
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:indent_keywords_and_ending_symbols(ind)
+  if s:last_line =~ '^\s*\('.s:ending_symbols.'\)'
+        \ || s:last_line =~ s:indent_keywords
+    return a:ind + &sw
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:deindent_keywords(ind)
   if s:current_line =~ s:deindent_keywords
     let bslnum = searchpair(
           \ s:pair_start,
@@ -142,6 +134,14 @@ function! s:deindent_keyword(ind)
           \ )
 
     return indent(bslnum)
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:deindent_ending_symbols(ind)
+  if s:current_line =~ '^\s*\('.s:ending_symbols.'\)'
+    return a:ind - &sw
   else
     return a:ind
   end
@@ -183,12 +183,12 @@ function! GetElixirIndent()
   else
     let ind = indent(s:last_line_ref)
     let ind = s:indent_opened_symbol(ind)
-    let ind = s:indent_symbols_ending(ind)
     let ind = s:indent_pipeline(ind)
     let ind = s:indent_after_pipeline(ind)
     let ind = s:indent_assignment(ind)
-    let ind = s:indent_last_line_end_symbol_or_indent_keyword(ind)
-    let ind = s:deindent_keyword(ind)
+    let ind = s:indent_keywords_and_ending_symbols(ind)
+    let ind = s:deindent_keywords(ind)
+    let ind = s:deindent_ending_symbols(ind)
     let ind = s:indent_arrow(ind)
     return ind
   end
