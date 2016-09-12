@@ -7,7 +7,7 @@ require 'vimrunner/rspec'
 
 class Buffer
   def initialize(vim, type)
-    @file = "test.#{type}"
+    @file = ".fixture.#{type}"
     @vim  = vim
   end
 
