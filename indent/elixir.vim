@@ -48,7 +48,7 @@ function! s:is_indentable_syntax()
         \ !~ s:skip_syntax
 endfunction
 
-function! s:indent_opened_symbol(ind)
+function! s:indent_opened_symbols(ind)
   if s:opened_symbol > 0
     if s:pending_parenthesis > 0
           \ && s:last_line !~ '^\s*def'
@@ -65,7 +65,13 @@ function! s:indent_opened_symbol(ind)
     else
       return a:ind + (s:opened_symbol * &sw)
     end
-  elseif s:opened_symbol < 0
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:deindent_opened_symbols(ind)
+  if s:opened_symbol < 0
     let ind = get(b:, 'old_ind', a:ind + (s:opened_symbol * &sw))
     let ind = float2nr(ceil(floor(ind)/&sw)*&sw)
     return ind <= 0 ? 0 : ind
@@ -75,16 +81,22 @@ function! s:indent_opened_symbol(ind)
 endfunction
 
 function! s:indent_pipeline(ind)
-  if s:last_line =~ s:starts_with_pipeline
-        \ && s:current_line =~ s:starts_with_pipeline
-    indent(s:last_line_ref)
-  elseif s:current_line =~ s:starts_with_pipeline
+  if s:current_line =~ s:starts_with_pipeline
         \ && s:last_line =~ '^[^=]\+=.\+$'
     let b:old_ind = indent(s:last_line_ref)
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
     return match(s:last_line, '=\s*\zs[^ ]')
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:indent_pipeline_continuation(ind)
+  if s:last_line =~ s:starts_with_pipeline
+        \ && s:current_line =~ s:starts_with_pipeline
+    return indent(s:last_line_ref)
   else
     return a:ind
   end
@@ -182,8 +194,10 @@ function! GetElixirIndent()
     return indent(s:last_line_ref)
   else
     let ind = indent(s:last_line_ref)
-    let ind = s:indent_opened_symbol(ind)
+    let ind = s:indent_opened_symbols(ind)
+    let ind = s:deindent_opened_symbols(ind)
     let ind = s:indent_pipeline(ind)
+    let ind = s:indent_pipeline_continuation(ind)
     let ind = s:indent_after_pipeline(ind)
     let ind = s:indent_assignment(ind)
     let ind = s:indent_keywords_and_ending_symbols(ind)
