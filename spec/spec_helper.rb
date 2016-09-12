@@ -3,6 +3,7 @@
 require 'rspec/expectations'
 require 'tmpdir'
 require 'vimrunner'
+require 'vimrunner/rspec'
 
 class Buffer
   def initialize(vim, type)
@@ -26,7 +27,7 @@ class Buffer
     @vim.search pattern
     # get a list of the syntax element
     @vim.echo <<~EOF
-      uniq(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'))
+    map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
     EOF
   end
 
@@ -99,25 +100,12 @@ end
   end
 end
 
-RSpec.configure do |config|
-  config.before(:suite) do
+Vimrunner::RSpec.configure do |config|
+  config.reuse_server = true
+
+  config.start_vim do
     VIM = Vimrunner.start_gvim
-    VIM.prepend_runtimepath(File.expand_path('../..', __FILE__))
-    VIM.command('runtime ftdetect/elixir.vim')
-    VIM.command('runtime ftdetect/eelixir.vim')
-  end
-
-  config.after(:suite) do
-    VIM.kill
-  end
-
-  config.around(:each) do |example|
-    # cd into a temporary directory for every example.
-    Dir.mktmpdir do |dir|
-      Dir.chdir(dir) do
-        VIM.command("cd #{dir}")
-        example.call
-      end
-    end
+    VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
+    VIM
   end
 end

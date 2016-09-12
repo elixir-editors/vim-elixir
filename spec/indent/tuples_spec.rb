@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-describe 'Indenting' do
-  specify 'multiline tuple' do
+describe 'Indenting tuples' do
+  it 'multiline tuple' do
     expect(<<~EOF).to be_elixir_indentation
     def xpto do
       { :a,
@@ -13,7 +13,7 @@ describe 'Indenting' do
     EOF
   end
 
-  specify 'tuples with break line after square brackets' do
+  it 'tuples with break line after square brackets' do
     expect(<<~EOF).to be_elixir_indentation
     def method do
       {

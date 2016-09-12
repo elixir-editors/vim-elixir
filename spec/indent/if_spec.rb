@@ -2,26 +2,26 @@
 
 require 'spec_helper'
 
-describe 'Indenting' do
-  it 'if-clauses' do
+describe 'Indenting if clauses' do
+  it 'if..do..end' do
     expect(<<~EOF).to be_elixir_indentation
-      if foo do
-        bar
-      end
+    if foo do
+      bar
+    end
     EOF
   end
 
-  it 'if-else-clauses' do
+  it 'if..do..else..end' do
     expect(<<~EOF).to be_elixir_indentation
-      if foo do
-        bar
-      else
-        baz
-      end
+    if foo do
+      bar
+    else
+      baz
+    end
     EOF
   end
 
-  it 'does not indent string indentation words' do
+  it 'does not indent keywords in strings' do
     expect(<<~EOF).to be_elixir_indentation
     def test do
       "else"
