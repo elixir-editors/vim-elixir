@@ -109,12 +109,10 @@ function! s:indent_after_pipeline(ind)
       return indent(s:last_line_ref)
     elseif s:last_line !~ s:indent_keywords
       return b:old_ind
-    else
-      return a:ind
     end
-  else
-    return a:ind
   end
+
+  return a:ind
 endfunction
 
 function! s:indent_assignment(ind)
