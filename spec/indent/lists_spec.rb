@@ -177,4 +177,20 @@ describe 'Indenting lists' do
       EOF
     end
   end
+
+  describe 'mix of opened symbols' do
+    it 'indents every opened symbol' do
+      expect(<<~EOF).to be_elixir_indentation
+      def test_another_feature do
+        assert json_response(conn, 200) == %{
+          "results" => [
+            %{
+              "id" => result.id,
+            }
+          ]
+        }
+      end
+      EOF
+    end
+  end
 end
