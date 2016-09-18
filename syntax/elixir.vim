@@ -39,7 +39,7 @@ syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 " This unfortunately also matches function names in function calls
 syn match elixirUnusedVariable '\(([^)]*\)\@<=\<_\w*\>'
 
-syn keyword elixirOperator and not or xor in
+syn keyword elixirOperator and not or in
 syn match   elixirOperator '!==\|!=\|!'
 syn match   elixirOperator '=\~\|===\|==\|='
 syn match   elixirOperator '<<<\|<<\|<=\|<-\|<'
