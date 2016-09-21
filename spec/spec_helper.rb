@@ -76,7 +76,7 @@ end
     buffer = Buffer.new(VIM, type)
 
     match do |code|
-      buffer.syntax(code, pattern).include? syntax
+      buffer.syntax(code, pattern).include? syntax.to_s
     end
 
     failure_message do |code|
@@ -91,7 +91,8 @@ end
 
     failure_message_when_negated do |code|
       <<~EOF
-      expected #{buffer.syntax(code, pattern)} not to include syntax #{syntax}
+      expected #{buffer.syntax(code, pattern)}
+      *NOT* to include syntax #{syntax}
       for pattern: /#{pattern}/
       in:
         #{actual}
@@ -108,4 +109,8 @@ Vimrunner::RSpec.configure do |config|
     VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
     VIM
   end
+end
+
+RSpec.configure do |config|
+  config.order = :random
 end
