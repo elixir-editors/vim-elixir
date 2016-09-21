@@ -56,7 +56,7 @@ syn match   elixirAtom '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\
 syn match   elixirAtom '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
 syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
 
-syn match   elixirBlockInline "\<\(do\|else\)\>:"
+syn match   elixirBlockInline "\<\(do\|else\)\>:\@="
 
 syn match   elixirAlias '\<[!]\?[A-Z]\w*\(\.[A-Z]\w*\)*\>'
 
