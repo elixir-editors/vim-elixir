@@ -17,7 +17,7 @@ syn match elixirComment '#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
 syn keyword elixirKeyword case when with cond for if unless try receive send
-syn keyword elixirKeyword do end exit raise throw after rescue catch else
+syn keyword elixirKeyword exit raise throw after rescue catch else
 syn keyword elixirKeyword quote unquote super spawn spawn_link spawn_monitor
 
 " Functions used on guards
@@ -55,6 +55,8 @@ syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 syn match   elixirAtom '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
 syn match   elixirAtom '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
 syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
+
+syn match   elixirBlockInline "\<\(do\|else\)\>:"
 
 syn match   elixirAlias '\<[!]\?[A-Z]\w*\(\.[A-Z]\w*\)*\>'
 
@@ -141,6 +143,7 @@ syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained con
 syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 
+hi def link elixirBlockInline            Keyword
 hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define
 hi def link elixirPrivateDefine          Define
