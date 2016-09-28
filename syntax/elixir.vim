@@ -79,8 +79,8 @@ syn match elixirRegexCharClass         "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|
 
 syn region elixirRegex matchgroup=elixirRegexDelimiter start="%r/" end="/[uiomxfr]*" skip="\\\\" contains=@elixirRegexSpecial
 
-syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\+  contains=@elixirStringContained
-syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\+  contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('''\)+ end=+^\s*\z1+ skip=+'\|\\\\+  contains=@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("""\)+ end=+^\s*\z1+ skip=+"\|\\\\+  contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment,@elixirNotTop
