@@ -35,6 +35,50 @@ let s:pair_start = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_aft
 let s:pair_middle = '^\s*\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
 let s:pair_end = '\<\%('.s:no_colon_before.s:block_end.'\)\>\zs'
 
+function! GetElixirIndent()
+  call s:build_data()
+
+  if s:last_line_ref == 0
+    " At the start of the file use zero indent.
+    return 0
+  elseif !s:is_indentable_syntax()
+    " Current syntax is not indentable, keep last line indentation
+    return indent(s:last_line_ref)
+  else
+    let ind = indent(s:last_line_ref)
+    let ind = s:indent_opened_symbols(ind)
+    let ind = s:deindent_opened_symbols(ind)
+    let ind = s:indent_pipeline(ind)
+    let ind = s:indent_pipeline_continuation(ind)
+    let ind = s:indent_after_pipeline(ind)
+    let ind = s:indent_assignment(ind)
+    let ind = s:indent_keywords_and_ending_symbols(ind)
+    let ind = s:deindent_keywords(ind)
+    let ind = s:deindent_ending_symbols(ind)
+    let ind = s:indent_arrow(ind)
+    return ind
+  end
+endfunction
+
+function! s:build_data()
+  let s:current_line_ref = v:lnum
+  let s:last_line_ref = prevnonblank(s:current_line_ref - 1)
+  let s:current_line = getline(s:current_line_ref)
+  let s:last_line = getline(s:last_line_ref)
+  let s:pending_parenthesis = 0
+  let s:opened_symbol = 0
+
+  if s:last_line !~ s:arrow
+    let splitted_line = split(s:last_line, '\zs')
+    let s:pending_parenthesis =
+          \ + count(splitted_line, '(') - count(splitted_line, ')')
+    let s:opened_symbol =
+          \ + s:pending_parenthesis
+          \ + count(splitted_line, '[') - count(splitted_line, ']')
+          \ + count(splitted_line, '{') - count(splitted_line, '}')
+  end
+endfunction
+
 function! s:is_indentable_syntax()
   " TODO: Remove these 2 lines
   " I don't know why, but for the test on spec/indent/lists_spec.rb:24.
@@ -163,46 +207,6 @@ function! s:indent_arrow(ind)
     return a:ind + &sw
   else
     return a:ind
-  end
-endfunction
-
-function! GetElixirIndent()
-  let s:current_line_ref = v:lnum
-  let s:last_line_ref = prevnonblank(s:current_line_ref - 1)
-  let s:current_line = getline(s:current_line_ref)
-  let s:last_line = getline(s:last_line_ref)
-  let s:pending_parenthesis = 0
-  let s:opened_symbol = 0
-
-  if s:last_line !~ s:arrow
-    let splitted_line = split(s:last_line, '\zs')
-    let s:pending_parenthesis =
-          \ + count(splitted_line, '(') - count(splitted_line, ')')
-    let s:opened_symbol =
-          \ + s:pending_parenthesis
-          \ + count(splitted_line, '[') - count(splitted_line, ']')
-          \ + count(splitted_line, '{') - count(splitted_line, '}')
-  end
-
-  if s:last_line_ref == 0
-    " At the start of the file use zero indent.
-    return 0
-  elseif !s:is_indentable_syntax()
-    " Current syntax is not indentable, keep last line indentation
-    return indent(s:last_line_ref)
-  else
-    let ind = indent(s:last_line_ref)
-    let ind = s:indent_opened_symbols(ind)
-    let ind = s:deindent_opened_symbols(ind)
-    let ind = s:indent_pipeline(ind)
-    let ind = s:indent_pipeline_continuation(ind)
-    let ind = s:indent_after_pipeline(ind)
-    let ind = s:indent_assignment(ind)
-    let ind = s:indent_keywords_and_ending_symbols(ind)
-    let ind = s:deindent_keywords(ind)
-    let ind = s:deindent_ending_symbols(ind)
-    let ind = s:indent_arrow(ind)
-    return ind
   end
 endfunction
 
