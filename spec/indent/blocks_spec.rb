@@ -55,6 +55,17 @@ describe 'Indenting blocks' do
     EOF
   end
 
+  pending 'does not indent based on opening symbols inside strings' do
+    expect(<<~EOF).to be_elixir_indentation
+    defmodule MyMod do
+      def how_are_you do
+        IO.puts "I'm filling bad :("
+        IO.puts "really bad"
+      end
+    end
+    EOF
+  end
+
   describe 'with' do
     pending 'with..do..end' do
       expect(<<~EOF).to be_elixir_indentation
