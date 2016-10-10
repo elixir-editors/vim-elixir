@@ -41,7 +41,7 @@ function! GetElixirIndent()
   if s:last_line_ref == 0
     " At the start of the file use zero indent.
     return 0
-  elseif !s:is_indentable_syntax()
+  elseif !s:is_indentable_at(s:current_line_ref, 1)
     " Current syntax is not indentable, keep last line indentation
     return indent(s:last_line_ref)
   else
@@ -70,26 +70,35 @@ function! s:build_data()
 
   if s:last_line !~ s:arrow
     let splitted_line = split(s:last_line, '\zs')
-    let s:pending_parenthesis =
-          \ + count(splitted_line, '(') - count(splitted_line, ')')
-    let s:opened_symbol =
-          \ + s:pending_parenthesis
-          \ + count(splitted_line, '[') - count(splitted_line, ']')
-          \ + count(splitted_line, '{') - count(splitted_line, '}')
+    if s:is_indentable_match(s:last_line_ref, '(') && s:is_indentable_match(s:last_line_ref, ')')
+      let s:pending_parenthesis =
+            \ + count(splitted_line, '(') - count(splitted_line, ')')
+      let s:opened_symbol += s:pending_parenthesis
+    end
+    if s:is_indentable_match(s:last_line_ref, '[') && s:is_indentable_match(s:last_line_ref, ']')
+      let s:opened_symbol += count(splitted_line, '[') - count(splitted_line, ']')
+    end
+    if s:is_indentable_match(s:last_line_ref, '{') && s:is_indentable_match(s:last_line_ref, '}')
+      let s:opened_symbol += count(splitted_line, '{') - count(splitted_line, '}')
+    end
   end
 endfunction
 
-function! s:is_indentable_syntax()
+function! s:is_indentable_at(line, col)
   " TODO: Remove these 2 lines
   " I don't know why, but for the test on spec/indent/lists_spec.rb:24.
   " Vim is making some mess on parsing the syntax of 'end', it is being
   " recognized as 'elixirString' when should be recognized as 'elixirBlock'.
-  call synID(s:current_line_ref, 1, 1)
+  call synID(a:line, a:col, 1)
   " This forces vim to sync the syntax.
   syntax sync fromstart
 
-  return synIDattr(synID(s:current_line_ref, 1, 1), "name")
+  return synIDattr(synID(a:line, a:col, 1), "name")
         \ !~ s:skip_syntax
+endfunction
+
+function! s:is_indentable_match(line, pattern)
+  return s:is_indentable_at(a:line, match(getline(a:line), a:pattern))
 endfunction
 
 function! s:indent_opened_symbols(ind)
