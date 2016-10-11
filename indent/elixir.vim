@@ -41,8 +41,7 @@ function! GetElixirIndent()
 
   if s:last_line_ref == 0
     " At the start of the file use zero indent.
-    unlet b:old_ind
-    unlet b:arrow_old_ind
+    let b:old_ind = {}
     return 0
   elseif !s:is_indentable_at(s:current_line_ref, 1)
     " Current syntax is not indentable, keep last line indentation
@@ -111,7 +110,7 @@ function! s:indent_opened_symbols(ind)
     if s:pending_parenthesis > 0
           \ && s:last_line !~ '^\s*def'
           \ && s:last_line !~ s:arrow
-      let b:old_ind = a:ind
+      let b:old_ind.symbol = a:ind
       return matchend(s:last_line, '(')
       " if start symbol is followed by a character, indent based on the
       " whitespace after the symbol, otherwise use the default shiftwidth
@@ -130,7 +129,7 @@ endfunction
 
 function! s:deindent_opened_symbols(ind)
   if s:opened_symbol < 0
-    let ind = get(b:, 'old_ind', a:ind + (s:opened_symbol * &sw))
+    let ind = get(b:old_ind, 'symbol', a:ind + (s:opened_symbol * &sw))
     let ind = float2nr(ceil(floor(ind)/&sw)*&sw)
     return ind <= 0 ? 0 : ind
   else
@@ -141,7 +140,7 @@ endfunction
 function! s:indent_pipeline_assignment(ind)
   if s:current_line =~ s:starts_with_pipeline
         \ && s:last_line =~ '^[^=]\+=.\+$'
-    let b:old_ind = indent(s:last_line_ref)
+    let b:old_ind.pipeline = indent(s:last_line_ref)
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
@@ -166,7 +165,9 @@ function! s:indent_after_pipeline(ind)
           \ || s:current_line =~ s:starts_with_pipeline
       return indent(s:last_line_ref)
     elseif s:last_line !~ s:indent_keywords
-      return b:old_ind
+      let ind = b:old_ind.pipeline
+      let b:old_ind.pipeline = 0
+      return ind
     end
   end
 
@@ -175,7 +176,7 @@ endfunction
 
 function! s:indent_assignment(ind)
   if s:last_line =~ s:ending_with_assignment
-    let b:old_ind = indent(s:last_line_ref) " FIXME: side effect
+    let b:old_ind.pipeline = indent(s:last_line_ref) " FIXME: side effect
     return a:ind + &sw
   else
     return a:ind
@@ -223,9 +224,9 @@ function! s:deindent_ending_symbols(ind)
 endfunction
 
 function! s:deindent_case_arrow(ind)
-  if get(b:, 'arrow_old_ind', 0) > 0
-    let ind = b:arrow_old_ind
-    let b:arrow_old_ind = 0
+  if get(b:old_ind, 'arrow', 0) > 0
+    let ind = b:old_ind.arrow
+    let b:old_ind.arrow = 0
     return ind
   else
     return a:ind
@@ -234,7 +235,7 @@ endfunction
 
 function! s:indent_case_arrow(ind)
   if s:last_line =~ s:arrow && s:last_line !~ '\<fn\>'
-    let b:arrow_old_ind = a:ind
+    let b:old_ind.arrow = a:ind
     return a:ind + &sw
   else
     return a:ind
