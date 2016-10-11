@@ -28,8 +28,8 @@ let s:block_end = 'end'
 let s:starts_with_pipeline = '^\s*|>.*$'
 let s:ending_with_assignment = '=\s*$'
 
-let s:indent_keywords = '\<'.s:no_colon_before.'\%('.s:block_start.'\|'.s:block_middle.'\)$'.'\|'.s:arrow
-let s:deindent_keywords = '^\s*\<\%('.s:block_end.'\|'.s:block_middle.'\)\>'.'\|'.s:arrow
+let s:indent_keywords = s:no_colon_before.'\%('.s:block_start.'\|'.s:block_middle.'\)'
+let s:deindent_keywords = '^\s*\<\%('.s:block_end.'\|'.s:block_middle.'\)\>'
 
 let s:pair_start = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_after
 let s:pair_middle = '^\s*\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
@@ -46,16 +46,17 @@ function! GetElixirIndent()
     return indent(s:last_line_ref)
   else
     let ind = indent(s:last_line_ref)
+    let ind = s:deindent_case_arrow(ind)
     let ind = s:indent_opened_symbols(ind)
     let ind = s:deindent_opened_symbols(ind)
-    let ind = s:indent_pipeline(ind)
+    let ind = s:indent_pipeline_assignment(ind)
     let ind = s:indent_pipeline_continuation(ind)
     let ind = s:indent_after_pipeline(ind)
     let ind = s:indent_assignment(ind)
     let ind = s:indent_keywords_and_ending_symbols(ind)
     let ind = s:deindent_keywords(ind)
     let ind = s:deindent_ending_symbols(ind)
-    let ind = s:indent_arrow(ind)
+    let ind = s:indent_case_arrow(ind)
     return ind
   end
 endfunction
@@ -133,7 +134,7 @@ function! s:deindent_opened_symbols(ind)
   end
 endfunction
 
-function! s:indent_pipeline(ind)
+function! s:indent_pipeline_assignment(ind)
   if s:current_line =~ s:starts_with_pipeline
         \ && s:last_line =~ '^[^=]\+=.\+$'
     let b:old_ind = indent(s:last_line_ref)
@@ -210,9 +211,19 @@ function! s:deindent_ending_symbols(ind)
   end
 endfunction
 
-function! s:indent_arrow(ind)
-  if s:current_line =~ s:arrow
-    " indent case statements '->'
+function! s:deindent_case_arrow(ind)
+  if get(b:, 'arrow_old_ind', 0) > 0
+    let ind = b:arrow_old_ind
+    let b:arrow_old_ind = 0
+    return ind
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:indent_case_arrow(ind)
+  if s:last_line =~ s:arrow && s:last_line !~ '\<fn\>'
+    let b:arrow_old_ind = a:ind
     return a:ind + &sw
   else
     return a:ind
