@@ -22,7 +22,7 @@ let s:starting_symbols = '\[\|{\|('
 let s:arrow = '^.*->$'
 let s:skip_syntax = '\%(Comment\|String\)$'
 let s:block_skip = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
-let s:block_start = '\<\%(do\|fn\)\>'
+let s:block_start = '\<\%(do\|fn\%(.*end\)\@!\)\>'
 let s:block_middle = 'else\|match\|elsif\|catch\|after\|rescue'
 let s:block_end = 'end'
 let s:starts_with_pipeline = '^\s*|>.*$'
@@ -53,7 +53,8 @@ function! GetElixirIndent()
     let ind = s:indent_pipeline_continuation(ind)
     let ind = s:indent_after_pipeline(ind)
     let ind = s:indent_assignment(ind)
-    let ind = s:indent_keywords_and_ending_symbols(ind)
+    let ind = s:indent_ending_symbols(ind)
+    let ind = s:indent_keywords(ind)
     let ind = s:deindent_keywords(ind)
     let ind = s:deindent_ending_symbols(ind)
     let ind = s:indent_case_arrow(ind)
@@ -178,9 +179,16 @@ function! s:indent_assignment(ind)
   end
 endfunction
 
-function! s:indent_keywords_and_ending_symbols(ind)
-  if s:last_line =~ '^\s*\('.s:ending_symbols.'\)'
-        \ || s:last_line =~ s:indent_keywords
+function! s:indent_ending_symbols(ind)
+  if s:last_line =~ '^\s*\('.s:ending_symbols.'\)\s*$'
+    return a:ind + &sw
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:indent_keywords(ind)
+  if s:last_line =~ s:indent_keywords
     return a:ind + &sw
   else
     return a:ind
