@@ -23,7 +23,7 @@ let s:arrow = '^.*->$'
 let s:skip_syntax = '\%(Comment\|String\)$'
 let s:block_skip = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
 let s:block_start = '\<\%(do\|fn\%(.*end\)\@!\)\>'
-let s:block_middle = 'else\|match\|elsif\|catch\|after\|rescue'
+let s:block_middle = '\<\%(else\|match\|elsif\|catch\|after\|rescue\)\>'
 let s:block_end = 'end'
 let s:starts_with_pipeline = '^\s*|>.*$'
 let s:ending_with_assignment = '=\s*$'
@@ -32,14 +32,17 @@ let s:indent_keywords = s:no_colon_before.'\%('.s:block_start.'\|'.s:block_middl
 let s:deindent_keywords = '^\s*\<\%('.s:block_end.'\|'.s:block_middle.'\)\>'
 
 let s:pair_start = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_after
-let s:pair_middle = '^\s*\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
-let s:pair_end = '\<\%('.s:no_colon_before.s:block_end.'\)\>\zs'
+let s:pair_middle = '^\s*\%('.s:block_middle.'\)\>'.s:no_colon_after
+let s:pair_end = '\<\%('.s:no_colon_before.s:block_end.'\)\>'
+
 
 function! GetElixirIndent()
   call s:build_data()
 
   if s:last_line_ref == 0
     " At the start of the file use zero indent.
+    unlet b:old_ind
+    unlet b:arrow_old_ind
     return 0
   elseif !s:is_indentable_at(s:current_line_ref, 1)
     " Current syntax is not indentable, keep last line indentation
@@ -74,7 +77,7 @@ function! s:build_data()
     let splitted_line = split(s:last_line, '\zs')
     if s:is_indentable_match(s:last_line_ref, '(') && s:is_indentable_match(s:last_line_ref, ')')
       let s:pending_parenthesis =
-            \ + count(splitted_line, '(') - count(splitted_line, ')')
+            \ + count(splitted_line, '(') - len(filter(matchlist(s:last_line, '\%(end\s*\)\@<!)'), '!empty(v:val)'))
       let s:opened_symbol += s:pending_parenthesis
     end
     if s:is_indentable_match(s:last_line_ref, '[') && s:is_indentable_match(s:last_line_ref, ']')
