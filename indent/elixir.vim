@@ -22,13 +22,16 @@ let s:starting_symbols = '\[\|{\|('
 let s:arrow = '^.*->$'
 let s:skip_syntax = '\%(Comment\|String\)$'
 let s:block_skip = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
-let s:block_start = '\<\%(do\|fn\%(.*end\)\@!\)\>'
+let s:fn = '\<fn\>'
+let s:multiline_fn = s:fn.'\%(.*end\)\@!'
+let s:block_start = '\%(\<do\>\|'.s:fn.'\)\>'
+let s:multiline_block = '\%(\<do\>\|'.s:multiline_fn.'\)'
 let s:block_middle = '\<\%(else\|match\|elsif\|catch\|after\|rescue\)\>'
 let s:block_end = 'end'
 let s:starts_with_pipeline = '^\s*|>.*$'
 let s:ending_with_assignment = '=\s*$'
 
-let s:indent_keywords = s:no_colon_before.'\%('.s:block_start.'\|'.s:block_middle.'\)'
+let s:indent_keywords = s:no_colon_before.'\%('.s:multiline_block.'\|'.s:block_middle.'\)'
 let s:deindent_keywords = '^\s*\<\%('.s:block_end.'\|'.s:block_middle.'\)\>'
 
 let s:pair_start = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_after

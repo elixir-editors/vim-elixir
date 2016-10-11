@@ -65,7 +65,7 @@ describe 'Indenting pipeline' do
     EOF
   end
 
-  pending 'indents pipelines with blocks and symbols' do
+  it 'indents pipelines with blocks and symbols' do
     expect(<<~EOF).to be_elixir_indentation
     defmodule MyMod do
       def export_info(users) do
