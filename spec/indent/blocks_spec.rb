@@ -112,4 +112,16 @@ describe 'Indenting blocks' do
       EOF
     end
   end
+
+  describe 'indenting while typing' do
+    it 'close block' do
+      expect(<<~EOF).to be_typed_with_right_indent
+      defmodule MyMod do
+        def how_are_you do
+          "function return"
+        end
+      end
+      EOF
+    end
+  end
 end
