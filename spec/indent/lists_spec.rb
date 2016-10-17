@@ -193,14 +193,18 @@ describe 'Indenting lists' do
       EOF
     end
 
-    pending 'reset indentation on not nested lists' do
+    it 'reset indentation on not nested lists' do
       expect(<<~EOF).to be_elixir_indentation
-      foo == %{
-      }
+      defmodule Mod do
+        def test do
+          foo == %{
+          }
 
-      assert json_response == %{
-        "id" => "identifier"
-      }
+          assert json_response == %{
+            "id" => "identifier"
+          }
+        end
+      end
       EOF
     end
   end
