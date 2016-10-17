@@ -179,7 +179,7 @@ describe 'Indenting lists' do
   end
 
   describe 'mix of opened symbols' do
-    pending 'indents every opened symbol' do
+    it 'indents every opened symbol' do
       expect(<<~EOF).to be_elixir_indentation
       def test_another_feature do
         assert json_response(conn, 200) == %{
@@ -190,6 +190,17 @@ describe 'Indenting lists' do
           ]
         }
       end
+      EOF
+    end
+
+    pending 'reset indentation on not nested lists' do
+      expect(<<~EOF).to be_elixir_indentation
+      foo == %{
+      }
+
+      assert json_response == %{
+        "id" => "identifier"
+      }
       EOF
     end
   end

@@ -53,7 +53,9 @@ function! GetElixirIndent()
   else
     let ind = indent(s:last_line_ref)
     let ind = s:deindent_case_arrow(ind)
-    let ind = s:indent_opened_symbols(ind)
+    let ind = s:indent_parenthesis(ind)
+    let ind = s:indent_square_brackets(ind)
+    let ind = s:indent_brackets(ind)
     let ind = s:deindent_opened_symbols(ind)
     let ind = s:indent_pipeline_assignment(ind)
     let ind = s:indent_pipeline_continuation(ind)
@@ -73,22 +75,39 @@ function! s:build_data()
   let s:last_line_ref = prevnonblank(s:current_line_ref - 1)
   let s:current_line = getline(s:current_line_ref)
   let s:last_line = getline(s:last_line_ref)
-  let s:pending_parenthesis = 0
   let s:opened_symbol = 0
 
   if s:last_line !~ s:arrow
     let splitted_line = split(s:last_line, '\zs')
-    if s:is_indentable_match(s:last_line_ref, '(') && s:is_indentable_match(s:last_line_ref, ')')
+    if s:is_indentable_match(
+          \ s:last_line_ref, '(')
+          \ && s:is_indentable_match(s:last_line_ref, ')'
+          \ )
       let s:pending_parenthesis =
-            \ + count(splitted_line, '(') - len(filter(matchlist(s:last_line, '\%(end\s*\)\@<!)'), '!empty(v:val)'))
-      let s:opened_symbol += s:pending_parenthesis
+            \   count(splitted_line, '(')
+            \ - len(filter(matchlist(s:last_line, '\%(end\s*\)\@<!)'), '!empty(v:val)'))
     end
-    if s:is_indentable_match(s:last_line_ref, '[') && s:is_indentable_match(s:last_line_ref, ']')
-      let s:opened_symbol += count(splitted_line, '[') - count(splitted_line, ']')
+    if s:is_indentable_match(
+          \ s:last_line_ref, '[')
+          \ && s:is_indentable_match(s:last_line_ref, ']'
+          \ )
+      let s:pending_square_brackets =
+            \  count(splitted_line, '[')
+            \ - count(splitted_line, ']')
     end
-    if s:is_indentable_match(s:last_line_ref, '{') && s:is_indentable_match(s:last_line_ref, '}')
-      let s:opened_symbol += count(splitted_line, '{') - count(splitted_line, '}')
+    if s:is_indentable_match(
+          \ s:last_line_ref, '{')
+          \ && s:is_indentable_match(s:last_line_ref, '}'
+          \ )
+      let s:pending_brackets =
+            \   count(splitted_line, '{')
+            \ - count(splitted_line, '}')
     end
+
+    let s:opened_symbol =
+          \   s:pending_parenthesis
+          \ + s:pending_square_brackets
+          \ + s:pending_brackets
   end
 endfunction
 
@@ -109,23 +128,35 @@ function! s:is_indentable_match(line, pattern)
   return s:is_indentable_at(a:line, match(getline(a:line), a:pattern))
 endfunction
 
-function! s:indent_opened_symbols(ind)
-  if s:opened_symbol > 0
-    if s:pending_parenthesis > 0
-          \ && s:last_line !~ '^\s*def'
-          \ && s:last_line !~ s:arrow
-      let b:old_ind.symbol = a:ind
-      return matchend(s:last_line, '(')
+function! s:indent_parenthesis(ind)
+  if s:pending_parenthesis > 0
+        \ && s:last_line !~ '^\s*def'
+        \ && s:last_line !~ s:arrow
+    let b:old_ind.symbol = a:ind
+    return matchend(s:last_line, '(')
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:indent_square_brackets(ind)
+  if s:pending_square_brackets > 0
+    if s:last_line =~ '[\s*$'
+      return a:ind + &sw
+    else
       " if start symbol is followed by a character, indent based on the
       " whitespace after the symbol, otherwise use the default shiftwidth
       " Avoid negative indentation index
-    elseif s:last_line =~ '\('.s:starting_symbols.'\).'
-      let regex = '\('.s:starting_symbols.'\)\s*'
-      let opened_prefix = matchlist(s:last_line, regex)[0]
-      return a:ind + (s:opened_symbol * strlen(opened_prefix))
-    else
-      return a:ind + (s:opened_symbol * &sw)
+      return matchend(s:last_line, '[\s*')
     end
+  else
+    return a:ind
+  end
+endfunction
+
+function! s:indent_brackets(ind)
+  if s:pending_brackets > 0
+    return a:ind + &sw
   else
     return a:ind
   end
