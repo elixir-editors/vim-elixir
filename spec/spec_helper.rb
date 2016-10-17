@@ -126,7 +126,7 @@ end
       to include syntax #{syntax}
       for pattern: /#{pattern}/
       in:
-        #{actual}
+        #{code}
       EOF
     end
 
@@ -136,7 +136,7 @@ end
       *NOT* to include syntax #{syntax}
       for pattern: /#{pattern}/
       in:
-        #{actual}
+        #{code}
       EOF
     end
   end
