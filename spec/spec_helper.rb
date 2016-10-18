@@ -66,13 +66,25 @@ class Buffer
 end
 
 class Differ
-  def self.diff
-    RSpec::Support::Differ.new(
+  def self.diff(result, expected)
+    instance.diff(result, expected)
+  end
+
+  def self.instance
+    @instance ||= new
+  end
+
+  def initialize
+    @differ = RSpec::Support::Differ.new(
       object_preparer: -> (object) do
         RSpec::Matchers::Composable.surface_descriptions_in(object)
       end,
       color: RSpec::Matchers.configuration.color?
     )
+  end
+
+  def diff(result, expected)
+    @differ.diff_as_string(result, expected)
   end
 end
 
@@ -85,7 +97,7 @@ RSpec::Matchers.define :be_typed_with_right_indent do |syntax|
 
   failure_message do |code|
     <<~EOM
-    #{Differ.diff.diff_as_string(code, buffer.type(code))}
+    #{Differ.diff(buffer.type(code), code)}
     EOM
   end
 end
@@ -103,7 +115,7 @@ end
 
     failure_message do |code|
       <<~EOM
-      #{Differ.diff.diff_as_string(code, buffer.reindent(code))}
+      #{Differ.diff(buffer.reindent(code), code)}
       EOM
     end
   end
