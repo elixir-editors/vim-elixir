@@ -135,7 +135,7 @@ end
     failure_message do |code|
       <<~EOF
       expected #{buffer.syntax(code, pattern)}
-      to include syntax #{syntax}
+      to include syntax '#{syntax}'
       for pattern: /#{pattern}/
       in:
         #{code}
@@ -145,7 +145,7 @@ end
     failure_message_when_negated do |code|
       <<~EOF
       expected #{buffer.syntax(code, pattern)}
-      *NOT* to include syntax #{syntax}
+      *NOT* to include syntax '#{syntax}'
       for pattern: /#{pattern}/
       in:
         #{code}

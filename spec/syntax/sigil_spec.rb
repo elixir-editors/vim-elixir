@@ -100,5 +100,9 @@ describe 'Sigil syntax' do
     it 'with escaped parans' do
       expect('~s(\( )').to include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
     end
+
+    pending 'interpolation with slashed' do
+      expect('~s/foo #{bar}/').to include_elixir_syntax('elixirInterpolation', 'bar')
+    end
   end
 end
