@@ -208,4 +208,14 @@ describe 'Indenting lists' do
       EOF
     end
   end
+
+  pending 'reset indent afer long parameter list' do
+    expect(<<~EOF).to be_elixir_indentation
+    json_logger = Keyword.merge(Application.get_env(:logger, :json_logger, []), options)
+                                Application.put_env(:logger, :json_logger, json_logger)
+                                level  = Keyword.get(json_logger, :level)
+
+    %{level: level, output: :console}
+    EOF
+  end
 end
