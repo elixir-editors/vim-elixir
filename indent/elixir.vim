@@ -85,15 +85,18 @@ function! s:build_data()
           \ && s:is_indentable_match(s:last_line_ref, ')'
           \ )
       let s:pending_parenthesis =
-            \   count(splitted_line, '(')
-            \ - len(filter(matchlist(s:last_line, '\%(end\s*\)\@<!)'), '!empty(v:val)'))
+            \   s:count_pattern(s:last_line, '(')
+            \ - s:count_pattern(s:last_line, '\%(end\s*\)\@<!)')
     end
     if s:is_indentable_match(
           \ s:last_line_ref, '[')
           \ && s:is_indentable_match(s:last_line_ref, ']'
           \ )
       let s:pending_square_brackets =
-            \  count(splitted_line, '[')
+            \   s:count_pattern(s:last_line, '[')
+            \ - s:count_pattern(s:last_line, ']')
+      let s:pending_square_brackets_old =
+            \   count(splitted_line, '[')
             \ - count(splitted_line, ']')
     end
     if s:is_indentable_match(
@@ -101,8 +104,8 @@ function! s:build_data()
           \ && s:is_indentable_match(s:last_line_ref, '}'
           \ )
       let s:pending_brackets =
-            \   count(splitted_line, '{')
-            \ - count(splitted_line, '}')
+            \   s:count_pattern(s:last_line, '{')
+            \ - s:count_pattern(s:last_line, '}')
     end
 
     let s:opened_symbol =
@@ -110,6 +113,22 @@ function! s:build_data()
           \ + s:pending_square_brackets
           \ + s:pending_brackets
   end
+endfunction
+
+function! s:count_pattern(string, pattern)
+  let l = strlen(a:string)
+  let i = 0
+  let counter = 0
+  while i < l && i != -1
+    let i = match(a:string, a:pattern, i)
+    if i > -1
+      let i += 1
+      let counter +=1
+    else
+      break
+    end
+  endwhile
+  return counter
 endfunction
 
 function! s:is_indentable_at(line, col)
@@ -133,6 +152,7 @@ function! s:indent_parenthesis(ind)
   if s:pending_parenthesis > 0
         \ && s:last_line !~ '^\s*def'
         \ && s:last_line !~ s:end_with_arrow
+    echo 'pp: '.s:pending_parenthesis
     let b:old_ind.symbol = a:ind
     return matchend(s:last_line, '(')
   else
@@ -141,6 +161,7 @@ function! s:indent_parenthesis(ind)
 endfunction
 
 function! s:indent_square_brackets(ind)
+  echom s:pending_square_brackets ."-". s:pending_square_brackets_old
   if s:pending_square_brackets > 0
     if s:last_line =~ '[\s*$'
       return a:ind + &sw
