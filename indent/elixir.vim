@@ -19,7 +19,8 @@ let s:no_colon_before = ':\@<!'
 let s:no_colon_after = ':\@!'
 let s:ending_symbols = '\]\|}\|)'
 let s:starting_symbols = '\[\|{\|('
-let s:arrow = '^.*->$'
+let s:arrow = '->'
+let s:end_with_arrow = s:arrow.'$'
 let s:skip_syntax = '\%(Comment\|String\)$'
 let s:block_skip = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_syntax."'"
 let s:fn = '\<fn\>'
@@ -77,7 +78,7 @@ function! s:build_data()
   let s:last_line = getline(s:last_line_ref)
   let s:opened_symbol = 0
 
-  if s:last_line !~ s:arrow
+  if s:last_line !~ s:end_with_arrow
     let splitted_line = split(s:last_line, '\zs')
     if s:is_indentable_match(
           \ s:last_line_ref, '(')
@@ -131,7 +132,7 @@ endfunction
 function! s:indent_parenthesis(ind)
   if s:pending_parenthesis > 0
         \ && s:last_line !~ '^\s*def'
-        \ && s:last_line !~ s:arrow
+        \ && s:last_line !~ s:end_with_arrow
     let b:old_ind.symbol = a:ind
     return matchend(s:last_line, '(')
   else
@@ -260,6 +261,8 @@ endfunction
 
 function! s:deindent_case_arrow(ind)
   if get(b:old_ind, 'arrow', 0) > 0
+        \ && (s:current_line =~ s:arrow
+        \ || s:current_line =~ s:block_end)
     let ind = b:old_ind.arrow
     let b:old_ind.arrow = 0
     return ind
@@ -269,7 +272,7 @@ function! s:deindent_case_arrow(ind)
 endfunction
 
 function! s:indent_case_arrow(ind)
-  if s:last_line =~ s:arrow && s:last_line !~ '\<fn\>'
+  if s:last_line =~ s:end_with_arrow && s:last_line !~ '\<fn\>'
     let b:old_ind.arrow = a:ind
     return a:ind + &sw
   else
