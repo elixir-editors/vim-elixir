@@ -223,7 +223,7 @@ describe 'Indenting lists' do
     EOF
   end
 
-  pending 'reset the indent level after complex list of parameters' do
+  it 'reset the indent level after complex list of parameters' do
     expect(<<~EOF).to be_elixir_indentation
     defmodule Mod do
       def fun do

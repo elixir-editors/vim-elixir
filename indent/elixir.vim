@@ -76,7 +76,7 @@ function! s:build_data()
   let s:current_line = getline(s:current_line_ref)
   let s:last_line = getline(s:last_line_ref)
 
-  if s:last_line !~ s:end_with_arrow
+  if s:last_line !~ s:arrow
     let s:pending_parenthesis = s:count_indentable_symbol_diff('(', '\%(end\s*\)\@<!)')
     let s:pending_square_brackets = s:count_indentable_symbol_diff('[', ']')
     let s:pending_brackets = s:count_indentable_symbol_diff('{', '}')
