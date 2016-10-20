@@ -21,6 +21,16 @@ describe 'Indenting blocks' do
     EOF
   end
 
+  it 'guard in function' do
+    expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
+    defmodule M do
+      def fun(a) when is_atom(a) do
+        1
+      end
+    end
+    EOF
+  end
+
   it 'does not consider do: as the start of a block' do
     expect(<<~EOF).to be_elixir_indentation
     def f do
