@@ -55,7 +55,7 @@ Copy the contents of each directory in the respective directories inside
 > update to a newer version.**
 
 [vim-plug]: https://github.com/junegunn/vim-plug
-[vundle]: https://github.com/gmarik/Vundle.vim
+[vundle]: https://github.com/VundleVim/Vundle.vim
 [neobundle]: https://github.com/Shougo/neobundle.vim
 [pathogen]: https://github.com/tpope/vim-pathogen
 [syntastic]: https://github.com/scrooloose/syntastic
