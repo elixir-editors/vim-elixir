@@ -22,7 +22,7 @@ describe 'Integration among all indentation rules' do
         }
       end
 
-      def test_another_feature do
+      def nested_symbols do
         assert json_response(conn, 200) == %{
           "results" => [
             %{
@@ -32,13 +32,18 @@ describe 'Integration among all indentation rules' do
         }
       end
 
-      def double(x) do
+      def complex_list_of_parameters do
+        Enum.each(s.routing_keys, fn k -> Queue.bind(chan, s.queue, s.exchange, routing_key: k) end)
+        Basic.consume(chan, s.queue, nil, no_ack: true)
+      end
+
+      def multiline_parameters_list(x) do
         resutl = add(x,
                      z)
         div(result, 2)
       end
 
-      def create(conn, %{
+      def multiline_parameters_list_definition(conn, %{
         "grant_type" => "password",
         "username" => username,
         "password" => password
@@ -46,14 +51,14 @@ describe 'Integration among all indentation rules' do
         1
       end
 
-      def project do
+      def opened_multiline_list_of_tuples do
         [
           { :bar, path: "deps/umbrella/apps/bar" },
           { :umbrella, path: "deps/umbrella" }
         ]
       end
 
-      def project do
+      def closed_multiline_list_of_tuples do
         [{:bar, path: "deps/umbrella/apps/bar"},
          {:umbrella, path: "deps/umbrella"}]
       end

@@ -209,7 +209,7 @@ describe 'Indenting lists' do
     end
   end
 
-  it 'reset indent afer long parameter list' do
+  it 'reset the indent level afer long parameter list' do
     expect(<<~EOF).to be_elixir_indentation
     defmodule Mod do
       def fun do
@@ -218,6 +218,17 @@ describe 'Indenting lists' do
         level  = Keyword.get(json_logger, :level)
 
         %{level: level, output: :console}
+      end
+    end
+    EOF
+  end
+
+  pending 'reset the indent level after complex list of parameters' do
+    expect(<<~EOF).to be_elixir_indentation
+    defmodule Mod do
+      def fun do
+        Enum.each(s.routing_keys, fn k -> Queue.bind(chan, s.queue, s.exchange, routing_key: k) end)
+        Basic.consume(chan, s.queue, nil, no_ack: true)
       end
     end
     EOF

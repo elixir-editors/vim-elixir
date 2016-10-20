@@ -14,6 +14,19 @@ describe 'Indenting case statements' do
     EOF
   end
 
+  it 'case..do..end' do
+    expect(<<~EOF).to be_elixir_indentation
+    case Connection.open(rabbitmq) do
+      {:ok, conn} ->
+        Woody.info "CONNECTION_SUCCESSFUL"
+        {:ok, chan} = Channel.open(conn)
+      {:error, error} ->
+        Woody.info "CONNECTION_FAILED"
+        :timer.sleep(10000)
+    end
+    EOF
+  end
+
   it 'with long bodies' do
     expect(<<~'EOF').to be_elixir_indentation
     decoded_msg = case JSON.decode(msg) do
