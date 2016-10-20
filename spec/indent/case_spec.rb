@@ -27,7 +27,7 @@ describe 'Indenting case statements' do
     EOF
   end
 
-  pending 'type case..do..end' do
+  it 'type case..do..end' do
     expect(<<~EOF).to be_typed_with_right_indent
     case Connection.open(rabbitmq) do
       {:ok, conn} ->
