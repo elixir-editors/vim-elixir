@@ -39,7 +39,6 @@ let s:pair_start = '\<\%('.s:no_colon_before.s:block_start.'\)\>'.s:no_colon_aft
 let s:pair_middle = '^\s*\%('.s:block_middle.'\)\>'.s:no_colon_after.'\zs'
 let s:pair_end = '\<\%('.s:no_colon_before.s:block_end.'\)\>\zs'
 
-
 function! GetElixirIndent()
   call s:build_data()
   let b:old_ind = get(b:, 'old_ind', {})
@@ -76,39 +75,22 @@ function! s:build_data()
   let s:last_line_ref = prevnonblank(s:current_line_ref - 1)
   let s:current_line = getline(s:current_line_ref)
   let s:last_line = getline(s:last_line_ref)
-  let s:opened_symbol = 0
 
   if s:last_line !~ s:end_with_arrow
-    let splitted_line = split(s:last_line, '\zs')
-    if s:is_indentable_match(
-          \ s:last_line_ref, '(')
-          \ && s:is_indentable_match(s:last_line_ref, ')'
-          \ )
-      let s:pending_parenthesis =
-            \   s:count_pattern(s:last_line, '(')
-            \ - s:count_pattern(s:last_line, '\%(end\s*\)\@<!)')
-    end
-    if s:is_indentable_match(
-          \ s:last_line_ref, '[')
-          \ && s:is_indentable_match(s:last_line_ref, ']'
-          \ )
-      let s:pending_square_brackets =
-            \   s:count_pattern(s:last_line, '[')
-            \ - s:count_pattern(s:last_line, ']')
-    end
-    if s:is_indentable_match(
-          \ s:last_line_ref, '{')
-          \ && s:is_indentable_match(s:last_line_ref, '}'
-          \ )
-      let s:pending_brackets =
-            \   s:count_pattern(s:last_line, '{')
-            \ - s:count_pattern(s:last_line, '}')
-    end
+    let s:pending_parenthesis = s:count_indentable_symbol_diff('(', '\%(end\s*\)\@<!)')
+    let s:pending_square_brackets = s:count_indentable_symbol_diff('[', ']')
+    let s:pending_brackets = s:count_indentable_symbol_diff('{', '}')
+  end
+endfunction
 
-    let s:opened_symbol =
-          \   s:pending_parenthesis
-          \ + s:pending_square_brackets
-          \ + s:pending_brackets
+function! s:count_indentable_symbol_diff(open, close)
+  if s:is_indentable_match(s:last_line_ref, a:open)
+        \ && s:is_indentable_match(s:last_line_ref, a:close)
+    return
+          \   s:count_pattern(s:last_line, a:open)
+          \ - s:count_pattern(s:last_line, a:close)
+  else
+    return 0
   end
 endfunction
 
@@ -182,6 +164,11 @@ function! s:indent_brackets(ind)
 endfunction
 
 function! s:deindent_opened_symbols(ind)
+  let s:opened_symbol =
+        \   s:pending_parenthesis
+        \ + s:pending_square_brackets
+        \ + s:pending_brackets
+
   if s:opened_symbol < 0
     let ind = get(b:old_ind, 'symbol', a:ind + (s:opened_symbol * &sw))
     let ind = float2nr(ceil(floor(ind)/&sw)*&sw)
