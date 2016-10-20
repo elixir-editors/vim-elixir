@@ -95,9 +95,6 @@ function! s:build_data()
       let s:pending_square_brackets =
             \   s:count_pattern(s:last_line, '[')
             \ - s:count_pattern(s:last_line, ']')
-      let s:pending_square_brackets_old =
-            \   count(splitted_line, '[')
-            \ - count(splitted_line, ']')
     end
     if s:is_indentable_match(
           \ s:last_line_ref, '{')
