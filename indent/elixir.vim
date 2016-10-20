@@ -26,7 +26,7 @@ let s:block_skip = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:skip_
 let s:fn = '\<fn\>'
 let s:multiline_fn = s:fn.'\%(.*end\)\@!'
 let s:block_start = '\%(\<do\>\|'.s:fn.'\)\>'
-let s:multiline_block = '\%(\<do\>\|'.s:multiline_fn.'\)'
+let s:multiline_block = '\%(\<do\>'.s:no_colon_after.'\|'.s:multiline_fn.'\)'
 let s:block_middle = '\<\%(else\|match\|elsif\|catch\|after\|rescue\)\>'
 let s:block_end = 'end'
 let s:starts_with_pipeline = '^\s*|>.*$'

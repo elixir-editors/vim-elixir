@@ -34,7 +34,7 @@ describe 'Indenting blocks' do
     EOF
   end
 
-  pending 'type inline functions' do
+  it 'type inline functions' do
     expect(<<~EOF).to be_typed_with_right_indent
     defmodule Hello do
       def name, do: IO.puts "bobmarley"
