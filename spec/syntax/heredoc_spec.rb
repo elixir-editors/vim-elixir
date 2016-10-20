@@ -12,7 +12,7 @@ describe 'Heredoc syntax' do
       EOF
     end
 
-    pending 'doc with sigil_S triple double-quoted multiline content' do
+    it 'doc with sigil_S triple double-quoted multiline content' do
       expect(<<~EOF).to include_elixir_syntax('elixirDocString', 'foo')
         @doc ~S"""
         foo
@@ -20,19 +20,11 @@ describe 'Heredoc syntax' do
       EOF
     end
 
-    pending 'doc with sigil_S triple single-quoted multiline content' do
+    it 'doc with sigil_S triple single-quoted multiline content' do
       expect(<<~EOF).to include_elixir_syntax('elixirDocString', 'foo')
         @doc ~S'''
         foo
         '''
-      EOF
-    end
-
-    it 'doc escapes quotes unless only preceded by whitespace' do
-      expect(<<~EOF).to include_elixir_syntax('elixirDocString', %q(^\s*\zs"""))
-        @doc """
-        foo """
-        """
       EOF
     end
 
