@@ -21,6 +21,31 @@ describe 'Indenting blocks' do
     EOF
   end
 
+  it 'indent inline functions' do
+    expect(<<~EOF).to be_elixir_indentation
+    defmodule Hello do
+      def name, do: IO.puts "bobmarley"
+      # expect next line starting here
+
+      def name(param) do
+        param
+      end
+    end
+    EOF
+  end
+
+  pending 'type inline functions' do
+    expect(<<~EOF).to be_typed_with_right_indent
+    defmodule Hello do
+      def name, do: IO.puts "bobmarley"
+
+      def name(param) do
+        param
+      end
+    end
+    EOF
+  end
+
   it 'guard in function' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
     defmodule M do

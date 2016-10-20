@@ -92,12 +92,13 @@ RSpec::Matchers.define :be_typed_with_right_indent do |syntax|
   buffer = Buffer.new(VIM, syntax || :ex)
 
   match do |code|
-    buffer.type(code) == code
+    @typed = buffer.type(code)
+    @typed == code
   end
 
   failure_message do |code|
     <<~EOM
-    #{Differ.diff(buffer.type(code), code)}
+    #{Differ.diff(@typed, code)}
     EOM
   end
 end
