@@ -27,6 +27,23 @@ describe 'Indenting case statements' do
     EOF
   end
 
+  pending 'nested case statements' do
+    expect(<<~EOF).to be_elixir_indentation
+    defmodule M do
+      defp _fetch(result, key, deep_key) do
+        case _fetch(result, key) do
+          {:ok, val} ->
+            case _fetch(val, deep_key) do
+              :error -> {:error, :deep}
+              res -> res
+            end
+
+          :error -> {:error, :shallow}
+        end
+      end
+    EOF
+  end
+
   it 'type case..do..end' do
     expect(<<~EOF).to be_typed_with_right_indent
     case Connection.open(rabbitmq) do
