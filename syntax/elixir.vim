@@ -143,6 +143,9 @@ syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained con
 syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 
+" ExUnit
+syn match  elixirExUnitMacro "\(^\s*\)\@<=\<\(test\|describe\)\>"
+
 hi def link elixirBlockInline            Keyword
 hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define
@@ -159,6 +162,7 @@ hi def link elixirOverridableDefine      Define
 hi def link elixirExceptionDefine        Define
 hi def link elixirCallbackDefine         Define
 hi def link elixirStructDefine           Define
+hi def link elixirExUnitMacro            Define
 hi def link elixirModuleDeclaration      Type
 hi def link elixirFunctionDeclaration    Function
 hi def link elixirMacroDeclaration       Macro
