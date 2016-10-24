@@ -20,4 +20,28 @@ describe 'ExUnit syntax' do
     end
     EOF
   end
+
+  it 'setup macro' do
+    expect(<<~EOF).to include_elixir_syntax('elixirExUnitMacro', 'setup')
+    setup do
+      IO.puts "hi mom"
+    end
+
+    test 'that stuff works' do
+      assert true
+    end
+    EOF
+  end
+
+  it 'setup_all macro' do
+    expect(<<~EOF).to include_elixir_syntax('elixirExUnitMacro', 'setup_all')
+    setup_all do
+      IO.puts "hi mom"
+    end
+
+    test 'that stuff works' do
+      assert true
+    end
+    EOF
+  end
 end

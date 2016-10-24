@@ -144,7 +144,7 @@ syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained con
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 
 " ExUnit
-syn match  elixirExUnitMacro "\(^\s*\)\@<=\<\(test\|describe\)\>"
+syn match  elixirExUnitMacro "\(^\s*\)\@<=\<\(test\|describe\|setup\|setup_all\)\>"
 
 hi def link elixirBlockInline            Keyword
 hi def link elixirBlockDefinition        Keyword
