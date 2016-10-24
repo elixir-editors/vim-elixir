@@ -112,7 +112,8 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l("            
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\zs\z1\s*$+ skip=+\\"+ fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\zs\z1\s*$+ skip=+\\'+ fold
 
-syn match elixirDocString +\%(@\w*doc\s*\)\@<=\%(\%(\%(\~[Ss]\)\?\("""\|'''\)\)\_.\{-}\_^\s*\1\|".\{-\}"\)+ contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\|"""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
 
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl

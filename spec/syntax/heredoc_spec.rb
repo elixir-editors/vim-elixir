@@ -21,6 +21,7 @@ describe 'Heredoc syntax' do
         """
       EOF
       expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirSigilDelimiter', 'S"""')
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
     end
 
@@ -31,7 +32,17 @@ describe 'Heredoc syntax' do
         '''
       EOF
       expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirSigilDelimiter', "S'''")
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
+    end
+
+    it 'doc with triple single-quoted multiline content is not a doc string' do
+      ex = <<~EOF
+        @doc '''
+        foo
+        '''
+      EOF
+      expect(ex).not_to include_elixir_syntax('elixirDocString', 'foo')
     end
 
     it 'doc with interpolation' do
@@ -41,6 +52,7 @@ describe 'Heredoc syntax' do
         """
       EOF
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
+      expect(ex).to include_elixir_syntax('elixirStringDelimiter', '"""')
       expect(ex).to include_elixir_syntax('elixirInterpolation', 'bar')
     end
 
