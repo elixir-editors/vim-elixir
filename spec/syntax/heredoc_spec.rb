@@ -5,27 +5,33 @@ require 'spec_helper'
 describe 'Heredoc syntax' do
   describe 'binary' do
     it 'doc with multiline content' do
-      expect(<<~EOF).to include_elixir_syntax('elixirDocString', 'foo')
-        @doc """
+      ex = <<~EOF
+        @callbackdoc """
         foo
         """
       EOF
+      expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
     end
 
     it 'doc with sigil_S triple double-quoted multiline content' do
-      expect(<<~EOF).to include_elixir_syntax('elixirDocString', 'foo')
+      ex = <<~EOF
         @doc ~S"""
         foo
         """
       EOF
+      expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
     end
 
     it 'doc with sigil_S triple single-quoted multiline content' do
-      expect(<<~EOF).to include_elixir_syntax('elixirDocString', 'foo')
+      ex = <<~EOF
         @doc ~S'''
         foo
         '''
       EOF
+      expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
     end
 
     it 'doc with interpolation' do
