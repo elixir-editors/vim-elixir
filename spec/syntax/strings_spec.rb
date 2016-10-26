@@ -22,4 +22,38 @@ describe 'String syntax' do
       expect('do_something "foo #{test}"').to include_elixir_syntax('elixirInterpolation', 'test')
     end
   end
+
+  describe 'heredoc' do
+    it 'heredoc must be string' do
+      ex = <<~EOF
+      def function do
+        """
+        foo "test"
+        """
+      end
+      EOF
+      expect(ex).to include_elixir_syntax('elixirString', 'foo')
+      expect(ex).to include_elixir_syntax('elixirString', 'test')
+    end
+
+    it 'interpolation in string in heredoc' do
+      expect(<<~'EOF').to include_elixir_syntax('elixirInterpolation', '#{')
+      def function do
+        """
+        foo "#{test}"
+        """
+      end
+      EOF
+    end
+
+    it 'interpolation in heredoc' do
+      expect(<<~'EOF').to include_elixir_syntax('elixirInterpolation', '#{')
+      def function do
+        """
+        foo #{test}
+        """
+      end
+      EOF
+    end
+  end
 end

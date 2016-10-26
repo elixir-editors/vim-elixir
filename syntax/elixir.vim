@@ -109,12 +109,19 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\["           
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l("                end=")"   skip="\\\\\|\\)"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\/"               end="\/"  skip="\\\\\|\\\/"  contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 
-" Sigils surrounded with docString
+" Sigils surrounded with heredoc
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\zs\z1\s*$+ skip=+\\"+ fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\zs\z1\s*$+ skip=+\\'+ fold
 
-syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\|"""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
+" Documentation
+syn region elixirDocString matchgroup=elixirSigilDelimiter   start="\%(@\w*doc\s\+\)\@<=\~S\z(/\|\"\|'\||\){1}" end="\z1" skip="\\\\\|\\\z1" contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter   start="\%(@\w*doc\s\+\)\@<=\~S{"                end="}"   skip="\\\\\|\\}"   contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter   start="\%(@\w*doc\s\+\)\@<=\~S<"                end=">"   skip="\\\\\|\\>"   contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter   start="\%(@\w*doc\s\+\)\@<=\~S\["               end="\]"  skip="\\\\\|\\\]"  contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter   start="\%(@\w*doc\s\+\)\@<=\~S("                end=")"   skip="\\\\\|\\)"   contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString  matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=elixirTodo,elixirInterpolation,@Spell
+syn region elixirDocString matchgroup=elixirStringDelimiter  start=+\%(@\w*doc\s\+\)\@<=\z("""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter   start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\|"""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
 
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl

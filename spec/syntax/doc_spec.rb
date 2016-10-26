@@ -2,8 +2,18 @@
 
 require 'spec_helper'
 
-describe 'Heredoc syntax' do
-  describe 'binary' do
+describe 'documentation syntax' do
+  describe 'string' do
+    it 'doc in double quotes' do
+      expect('@doc "foo"').to include_elixir_syntax('elixirDocString', 'foo')
+    end
+
+    it 'doc in sigil_S' do
+      expect('@doc ~S(foo)').to include_elixir_syntax('elixirDocString', 'foo')
+    end
+  end
+
+  describe 'heredoc' do
     it 'doc with multiline content' do
       ex = <<~EOF
         @callbackdoc """
@@ -54,36 +64,6 @@ describe 'Heredoc syntax' do
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
       expect(ex).to include_elixir_syntax('elixirStringDelimiter', '"""')
       expect(ex).to include_elixir_syntax('elixirInterpolation', 'bar')
-    end
-
-    it 'interpolation in heredoc must be string' do
-      expect(<<~EOF).to include_elixir_syntax('elixirString', 'test')
-      def function do
-        """
-        foo "test"
-        """
-      end
-      EOF
-    end
-
-    it 'interpolation in heredoc' do
-      expect(<<~'EOF').to include_elixir_syntax('elixirInterpolation', '#{')
-      def function do
-        """
-        foo "#{test}"
-        """
-      end
-      EOF
-    end
-
-    it 'interpolation in string in heredoc' do
-      expect(<<~'EOF').to include_elixir_syntax('elixirInterpolation', '#{')
-      def function do
-        """
-        foo #{test}
-        """
-      end
-      EOF
     end
   end
 end
