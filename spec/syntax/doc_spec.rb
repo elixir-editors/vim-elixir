@@ -15,7 +15,7 @@ describe 'documentation syntax' do
 
   describe 'heredoc' do
     it 'doc with multiline content' do
-      ex = <<~EOF
+      ex = <<~'EOF'
         @callbackdoc """
         foo
         """
@@ -25,7 +25,7 @@ describe 'documentation syntax' do
     end
 
     it 'doc with sigil_S triple double-quoted multiline content' do
-      ex = <<~EOF
+      ex = <<~'EOF'
         @doc ~S"""
         foo
         """
@@ -36,7 +36,7 @@ describe 'documentation syntax' do
     end
 
     it 'doc with sigil_S triple single-quoted multiline content' do
-      ex = <<~EOF
+      ex = <<~'EOF'
         @doc ~S'''
         foo
         '''
@@ -47,7 +47,7 @@ describe 'documentation syntax' do
     end
 
     it 'doc with triple single-quoted multiline content is not a doc string' do
-      ex = <<~EOF
+      ex = <<~'EOF'
         @doc '''
         foo
         '''
@@ -55,10 +55,10 @@ describe 'documentation syntax' do
       expect(ex).not_to include_elixir_syntax('elixirDocString', 'foo')
     end
 
-    it 'doc with interpolation' do
-      ex = <<~EOF
+    it 'doc skip interpolation' do
+      ex = <<~'EOF'
         @doc """
-        foo \#{bar}
+        foo #{bar}
         """
       EOF
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
