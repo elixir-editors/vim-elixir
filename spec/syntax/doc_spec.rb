@@ -61,9 +61,37 @@ describe 'documentation syntax' do
         foo #{bar}
         """
       EOF
-      expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
-      expect(ex).to include_elixir_syntax('elixirStringDelimiter', '"""')
-      expect(ex).to include_elixir_syntax('elixirInterpolation', 'bar')
+      expect(ex).to     include_elixir_syntax('elixirDocString',       'foo')
+      expect(ex).to     include_elixir_syntax('elixirStringDelimiter', '"""')
+      expect(ex).not_to include_elixir_syntax('elixirInterpolation',   'bar')
+    end
+
+    it 'doc with doctest' do
+      ex = <<~'EOF'
+      @doc """
+      doctest
+
+      iex> Enum.map [1, 2, 3], fn(x) ->
+      ...>   x * 2
+      ...> end
+      [2, 4, 6]
+
+      """
+      EOF
+      expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+      expect(ex).to include_elixir_syntax('markdownCodeBlock',   'map')
+      expect(ex).to include_elixir_syntax('markdownCodeBlock',   'x * 2')
+      expect(ex).to include_elixir_syntax('markdownCodeBlock',   '2, 4, 6')
+    end
+
+    it 'doc with inline code' do
+      ex = <<~'EOF'
+      @doc """
+      doctest with inline code `List.wrap([])`
+      """
+      EOF
+      expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+      expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
     end
   end
 end
