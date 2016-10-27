@@ -59,7 +59,7 @@ class Buffer
   end
 
   def edit_file(content)
-    File.open(@file, 'w') { |f| f.write content } if content
+    File.write(@file, content) if content
 
     @vim.edit @file
   end
