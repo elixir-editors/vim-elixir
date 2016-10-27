@@ -10,4 +10,38 @@ describe 'Variable syntax' do
       end
     EOF
   end
+
+  it 'unused in function body' do
+    expect(<<~EOF).not_to include_elixir_syntax('elixirUnusedVariable', '_from')
+    def handle_call(:pop)
+      Hello._from
+    end
+    EOF
+  end
+
+  pending 'unused, multiple lines' do
+    expect(<<~EOF).to include_elixir_syntax('elixirUnusedVariable', '_from')
+      def handle_call(:pop,
+                      _from,
+                      [h|stack]) do
+        { :reply, h, stack }
+      end
+    EOF
+  end
+
+  pending 'unused in pattern_match' do
+    str = <<~EOF
+    def sign_in(conn, %{
+      "data" => %{
+        "type" => "doctor",
+        "attributes" => %{
+          "institution_code" => institution_code,
+          "password" => password,
+          "email_or_phone" => email_or_phone}}}, _user, _claims) do
+      :ok
+    end
+    EOF
+    expect(str).to include_elixir_syntax('elixirUnusedVariable', '_user')
+    expect(str).to include_elixir_syntax('elixirUnusedVariable', '_claims')
+  end
 end
