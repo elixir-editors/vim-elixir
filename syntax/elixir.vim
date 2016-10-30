@@ -20,7 +20,7 @@ syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 
 syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|send\)\>'
 syn match elixirKeyword '\(\.\)\@<!\<\(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>'
-syn match elixirKeyword '\(\.\)\@<!\<\(quote\|unquote\|super\|spawn\|spawn_link\|spawn_monitor\)\>'
+syn match elixirKeyword '\(\.\)\@<!\<\(quote\|super\|spawn\|spawn_link\|spawn_monitor\)\>'
 
 " Functions used on guards
 syn keyword elixirKeyword contained is_atom is_binary is_bitstring is_boolean
@@ -117,19 +117,19 @@ syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\
 syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\|"""\)+ end=+\z1+ contains=elixirTodo,elixirInterpolation,@Spell fold
 
 " Defines
-syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
-syn keyword elixirPrivateDefine       defp           nextgroup=elixirFunctionDeclaration    skipwhite skipnl
-syn keyword elixirModuleDefine        defmodule      nextgroup=elixirModuleDeclaration      skipwhite skipnl
-syn keyword elixirProtocolDefine      defprotocol    nextgroup=elixirProtocolDeclaration    skipwhite skipnl
-syn keyword elixirImplDefine          defimpl        nextgroup=elixirImplDeclaration        skipwhite skipnl
-syn keyword elixirRecordDefine        defrecord      nextgroup=elixirRecordDeclaration      skipwhite skipnl
-syn keyword elixirPrivateRecordDefine defrecordp     nextgroup=elixirRecordDeclaration      skipwhite skipnl
-syn keyword elixirMacroDefine         defmacro       nextgroup=elixirMacroDeclaration       skipwhite skipnl
-syn keyword elixirPrivateMacroDefine  defmacrop      nextgroup=elixirMacroDeclaration       skipwhite skipnl
-syn keyword elixirDelegateDefine      defdelegate    nextgroup=elixirDelegateDeclaration    skipwhite skipnl
-syn keyword elixirOverridableDefine   defoverridable nextgroup=elixirOverridableDeclaration skipwhite skipnl
-syn keyword elixirExceptionDefine     defexception   nextgroup=elixirExceptionDeclaration   skipwhite skipnl
-syn keyword elixirCallbackDefine      defcallback    nextgroup=elixirCallbackDeclaration    skipwhite skipnl
+syn keyword elixirDefine              def            nextgroup=elixirUnquoteKeyword,elixirFunctionDeclaration skipwhite skipnl
+syn keyword elixirPrivateDefine       defp           nextgroup=elixirUnquoteKeyword,elixirFunctionDeclaration                          skipwhite skipnl
+syn keyword elixirModuleDefine        defmodule      nextgroup=elixirModuleDeclaration                            skipwhite skipnl
+syn keyword elixirProtocolDefine      defprotocol    nextgroup=elixirProtocolDeclaration                          skipwhite skipnl
+syn keyword elixirImplDefine          defimpl        nextgroup=elixirImplDeclaration                              skipwhite skipnl
+syn keyword elixirRecordDefine        defrecord      nextgroup=elixirRecordDeclaration                            skipwhite skipnl
+syn keyword elixirPrivateRecordDefine defrecordp     nextgroup=elixirRecordDeclaration                            skipwhite skipnl
+syn keyword elixirMacroDefine         defmacro       nextgroup=elixirMacroDeclaration                             skipwhite skipnl
+syn keyword elixirPrivateMacroDefine  defmacrop      nextgroup=elixirMacroDeclaration                             skipwhite skipnl
+syn keyword elixirDelegateDefine      defdelegate    nextgroup=elixirDelegateDeclaration                          skipwhite skipnl
+syn keyword elixirOverridableDefine   defoverridable nextgroup=elixirOverridableDeclaration                       skipwhite skipnl
+syn keyword elixirExceptionDefine     defexception   nextgroup=elixirExceptionDeclaration                         skipwhite skipnl
+syn keyword elixirCallbackDefine      defcallback    nextgroup=elixirCallbackDeclaration                          skipwhite skipnl
 syn keyword elixirStructDefine        defstruct      skipwhite skipnl
 
 " Declarations
@@ -145,9 +145,14 @@ syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained con
 syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 
+" Unquote
+syn match elixirUnquoteKeyword '\<unquote\>' nextgroup=elixirUnquoteBody
+syn match elixirUnquoteBody '(.*)' contains=ALLBUT,@elixirNotTop
+
 " ExUnit
 syn match  elixirExUnitMacro "\(^\s*\)\@<=\<\(test\|describe\|setup\|setup_all\)\>"
 
+hi def link elixirUnquoteKeyword         Keyword
 hi def link elixirBlockInline            Keyword
 hi def link elixirBlockDefinition        Keyword
 hi def link elixirDefine                 Define
