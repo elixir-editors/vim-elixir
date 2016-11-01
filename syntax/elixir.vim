@@ -8,7 +8,7 @@ set cpo&vim
 " syncing starts 2000 lines before top line so docstrings don't screw things up
 syn sync minlines=2000
 
-syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@elixirDeclaration,elixirTodo,elixirArguments,elixirBlockDefinition
+syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@elixirDeclaration,elixirTodo,elixirArguments,elixirBlockDefinition,elixirUnusedVariable
 syn cluster elixirRegexSpecial contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
 syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
 syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
@@ -37,7 +37,7 @@ syn keyword elixirInclude import require alias use
 syn keyword elixirSelf self
 
 " This unfortunately also matches function names in function calls
-syn match elixirUnusedVariable '\(([^)]*\)\@<=\<_\w*\>'
+syn match elixirUnusedVariable contained '\<_\w*\>'
 
 syn keyword elixirOperator and not or in
 syn match   elixirOperator '!==\|!=\|!'

@@ -19,7 +19,7 @@ describe 'Variable syntax' do
     EOF
   end
 
-  pending 'unused, multiple lines' do
+  it 'unused, multiple lines' do
     expect(<<~EOF).to include_elixir_syntax('elixirUnusedVariable', '_from')
       def handle_call(:pop,
                       _from,
@@ -29,7 +29,15 @@ describe 'Variable syntax' do
     EOF
   end
 
-  pending 'unused in pattern_match' do
+  it 'unused, single char' do
+    expect(<<~EOF).to include_elixir_syntax('elixirUnusedVariable', '_')
+      def call(:pop, _, [h|stack]) do
+        { :reply, h, stack }
+      end
+    EOF
+  end
+
+  it 'unused in pattern_match' do
     str = <<~EOF
     def sign_in(conn, %{
       "data" => %{
