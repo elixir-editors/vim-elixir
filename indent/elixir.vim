@@ -17,12 +17,12 @@ function! elixir#indent()
   " initialtes the `line` dictionary
   let line = s:build_line(v:lnum)
 
-  if line.last.num == 0
+  if s:is_beginning_of_file(line)
     " Reset `old_ind` dictionary at the beginning of the file
     let b:old_ind = {}
     " At the start of the file use zero indent.
     return 0
-  elseif !elixir#util#is_indentable_at(line.current.num, 1)
+  elseif !s:is_indentable_line(line)
     " Keep last line indentation if the current line does not have an
     " indentable syntax
     return indent(line.last.num)
@@ -46,6 +46,14 @@ function! elixir#indent()
     let ind = elixir#indent#indent_case_arrow(ind, line)
     return ind
   end
+endfunction
+
+function! s:is_beginning_of_file(line)
+  return a:line.last.num == 0
+endfunction
+
+function! s:is_indentable_line(line)
+  return elixir#util#is_indentable_at(a:line.current.num, 1)
 endfunction
 
 function! s:build_line(line)
