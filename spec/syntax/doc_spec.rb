@@ -90,9 +90,22 @@ describe 'documentation syntax' do
       doctest with inline code `List.wrap([])`
       """
       EOF
-      VIM.command("let g:elixir_use_markdown_for_docs=1")
       expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
-      expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
+      expect(ex).to include_elixir_syntax('elixirDocString',   'wrap')
+    end
+
+    describe "use markdown for docs" do
+      before(:each) { VIM.command("let g:elixir_use_markdown_for_docs = 1") }
+
+      it 'doc with inline code' do
+	ex = <<~'EOF'
+	@doc """
+	doctest with inline code `List.wrap([])`
+	"""
+	EOF
+	expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+	expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
+      end
     end
   end
 end
