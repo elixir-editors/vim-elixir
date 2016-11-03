@@ -114,18 +114,29 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\zs\z1\s*$+ skip=+\\'+ fold
 
 " Documentation
-syn include @markdown syntax/markdown.vim
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S\z(/\|\"\|'\||\){1}" end="\z1" skip="\\\\\|\\\z1" contains=@markdown,@Spell fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S{"                   end="}"   skip="\\\\\|\\}"   contains=@markdown,@Spell fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S<"                   end=">"   skip="\\\\\|\\>"   contains=@markdown,@Spell fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S\["                  end="\]"  skip="\\\\\|\\\]"  contains=@markdown,@Spell fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S("                   end=")"   skip="\\\\\|\\)"   contains=@markdown,@Spell fold
-syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+  contains=@markdown,@Spell
-syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+\z1+ contains=@markdown,@Spell fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\|"""\)+    end=+\z1+ contains=@markdown,@Spell fold
+if exists('g:elixir_use_markdown_for_docs') && g:elixir_use_markdown_for_docs
+  syn include @markdown syntax/markdown.vim
+  syn cluster elixirDocStringContained contains=@markdown,@Spell
 
-" doctests
-syn region markdownCodeBlock start="^\s*\%(iex\|\.\.\.\)\%((\d*)\)\?>\s" end="^\s*$" contained
+  " doctests
+  syn region markdownCodeBlock start="^\s*\%(iex\|\.\.\.\)\%((\d*)\)\?>\s" end="^\s*$" contained
+else
+  let g:elixir_use_markdown_for_docs = 0
+  syn cluster elixirDocStringContained contains=elixirDocTest,elixirTodo,@Spell
+
+  " doctests
+  syn region elixirDocTest start="^\s*\%(iex\|\.\.\.\)>\s" end="^\s*$" contained
+endif
+
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S\z(/\|\"\|'\||\){1}" end="\z1" skip="\\\\\|\\\z1" contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S{"                   end="}"   skip="\\\\\|\\}"   contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S<"                   end=">"   skip="\\\\\|\\>"   contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S\["                  end="\]"  skip="\\\\\|\\\]"  contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S("                   end=")"   skip="\\\\\|\\)"   contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+  contains=@markdown,@Spell
+syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+\z1+ contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\)+ end=+\z1+ skip=+\\'+ contains=@elixirDocStringContained fold
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+ end=+\z1+ skip=+\\"+ contains=@elixirDocStringContained fold
 
 " Defines
 syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
@@ -193,6 +204,7 @@ hi def link elixirSelf                   Identifier
 hi def link elixirUnusedVariable         Comment
 hi def link elixirNumber                 Number
 hi def link elixirDocString              Comment
+hi def link elixirDocTest                elixirKeyword
 hi def link elixirAtomInterpolated       elixirAtom
 hi def link elixirRegex                  elixirString
 hi def link elixirRegexEscape            elixirSpecial

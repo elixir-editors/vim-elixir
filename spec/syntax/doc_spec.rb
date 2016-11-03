@@ -79,9 +79,9 @@ describe 'documentation syntax' do
       """
       EOF
       expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
-      expect(ex).to include_elixir_syntax('markdownCodeBlock',   'map')
-      expect(ex).to include_elixir_syntax('markdownCodeBlock',   'x * 2')
-      expect(ex).to include_elixir_syntax('markdownCodeBlock',   '2, 4, 6')
+      expect(ex).to include_elixir_syntax('elixirDocTest',   'map')
+      expect(ex).to include_elixir_syntax('elixirDocTest',   'x * 2')
+      expect(ex).to include_elixir_syntax('elixirDocTest',   '2, 4, 6')
     end
 
     it 'doc with inline code' do
@@ -90,6 +90,7 @@ describe 'documentation syntax' do
       doctest with inline code `List.wrap([])`
       """
       EOF
+      VIM.command("let g:elixir_use_markdown_for_docs=1")
       expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
       expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
     end
