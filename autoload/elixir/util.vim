@@ -1,4 +1,4 @@
-let s:SKIP_SYNTAX = '\%(Comment\|String\)$'
+let s:SKIP_SYNTAX = '\%(Comment\|String\|elixirFold\)$'
 let s:BLOCK_SKIP = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:SKIP_SYNTAX."'"
 
 function! elixir#util#is_indentable_at(line, col)

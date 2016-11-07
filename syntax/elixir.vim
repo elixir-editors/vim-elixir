@@ -16,6 +16,9 @@ syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDec
 syn match elixirComment '#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
+syn match elixirFold "# {{{"
+syn match elixirFold "# }}}"
+
 syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
 
 syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|send\)\>'
@@ -215,6 +218,7 @@ hi def link elixirStringDelimiter        Delimiter
 hi def link elixirRegexDelimiter         Delimiter
 hi def link elixirInterpolationDelimiter Delimiter
 hi def link elixirSigilDelimiter         Delimiter
+hi def link elixirFold                   Comment
 
 let b:current_syntax = "elixir"
 
