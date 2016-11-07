@@ -7,8 +7,9 @@ function! elixir#util#is_indentable_at(line, col)
   " Vim is making some mess on parsing the syntax of 'end', it is being
   " recognized as 'elixirString' when should be recognized as 'elixirBlock'.
   call synID(a:line, a:col, 1)
-  " This forces vim to sync the syntax.
-  syntax sync fromstart
+  " This forces vim to sync the syntax. Using fromstart is very slow on files
+  " over 1k lines
+  syntax sync minlines=20 maxlines=150
 
   return synIDattr(synID(a:line, a:col, 1), "name")
         \ !~ s:SKIP_SYNTAX
