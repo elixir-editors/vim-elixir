@@ -136,20 +136,20 @@ syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\
 syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+ end=+\z1+ skip=+\\"+ contains=@elixirDocStringContained fold
 
 " Defines
-syn keyword elixirDefine              def            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
-syn keyword elixirPrivateDefine       defp           nextgroup=elixirFunctionDeclaration    skipwhite skipnl
-syn keyword elixirModuleDefine        defmodule      nextgroup=elixirModuleDeclaration      skipwhite skipnl
-syn keyword elixirProtocolDefine      defprotocol    nextgroup=elixirProtocolDeclaration    skipwhite skipnl
-syn keyword elixirImplDefine          defimpl        nextgroup=elixirImplDeclaration        skipwhite skipnl
-syn keyword elixirRecordDefine        defrecord      nextgroup=elixirRecordDeclaration      skipwhite skipnl
-syn keyword elixirPrivateRecordDefine defrecordp     nextgroup=elixirRecordDeclaration      skipwhite skipnl
-syn keyword elixirMacroDefine         defmacro       nextgroup=elixirMacroDeclaration       skipwhite skipnl
-syn keyword elixirPrivateMacroDefine  defmacrop      nextgroup=elixirMacroDeclaration       skipwhite skipnl
-syn keyword elixirDelegateDefine      defdelegate    nextgroup=elixirDelegateDeclaration    skipwhite skipnl
-syn keyword elixirOverridableDefine   defoverridable nextgroup=elixirOverridableDeclaration skipwhite skipnl
-syn keyword elixirExceptionDefine     defexception   nextgroup=elixirExceptionDeclaration   skipwhite skipnl
-syn keyword elixirCallbackDefine      defcallback    nextgroup=elixirCallbackDeclaration    skipwhite skipnl
-syn keyword elixirStructDefine        defstruct      skipwhite skipnl
+syn match elixirDefine              '\<def\>\(:\)\@!'             nextgroup=elixirFunctionDeclaration    skipwhite skipnl
+syn match elixirPrivateDefine       '\<defp\>\(:\)\@!'            nextgroup=elixirFunctionDeclaration    skipwhite skipnl
+syn match elixirModuleDefine        '\<defmodule\>\(:\)\@!'       nextgroup=elixirModuleDeclaration      skipwhite skipnl
+syn match elixirProtocolDefine      '\<defprotocol\>\(:\)\@!'     nextgroup=elixirProtocolDeclaration    skipwhite skipnl
+syn match elixirImplDefine          '\<defimpl\>\(:\)\@!'         nextgroup=elixirImplDeclaration        skipwhite skipnl
+syn match elixirRecordDefine        '\<defrecord\>\(:\)\@!'       nextgroup=elixirRecordDeclaration      skipwhite skipnl
+syn match elixirPrivateRecordDefine '\<defrecordp\>\(:\)\@!'      nextgroup=elixirRecordDeclaration      skipwhite skipnl
+syn match elixirMacroDefine         '\<defmacro\>\(:\)\@!'        nextgroup=elixirMacroDeclaration       skipwhite skipnl
+syn match elixirPrivateMacroDefine  '\<defmacrop\>\(:\)\@!'       nextgroup=elixirMacroDeclaration       skipwhite skipnl
+syn match elixirDelegateDefine      '\<defdelegate\>\(:\)\@!'     nextgroup=elixirDelegateDeclaration    skipwhite skipnl
+syn match elixirOverridableDefine   '\<defoverridable\>\(:\)\@!'  nextgroup=elixirOverridableDeclaration skipwhite skipnl
+syn match elixirExceptionDefine     '\<defexception\>\(:\)\@!'    nextgroup=elixirExceptionDeclaration   skipwhite skipnl
+syn match elixirCallbackDefine      '\<defcallback\>\(:\)\@!'     nextgroup=elixirCallbackDeclaration    skipwhite skipnl
+syn match elixirStructDefine        '\<defstruct\>\(:\)\@!'       skipwhite skipnl
 
 " Declarations
 syn match  elixirModuleDeclaration      "[^[:space:];#<]\+"        contained                      nextgroup=elixirBlock     skipwhite skipnl
