@@ -23,19 +23,19 @@ let s:PAIR_END = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_END.'\)\>\zs'
 
 function! s:pending_parenthesis(line)
   if a:line.last.text !~ s:ARROW
-    return elixir#util#count_indentable_symbol_diff(a:line, '(', '\%(end\s*\)\@<!)')
+    return elixir#util#count_indentable_symbol_diff(a:line.last, '(', '\%(end\s*\)\@<!)')
   end
 endfunction
 
 function! s:pending_square_brackets(line)
   if a:line.last.text !~ s:ARROW
-    return elixir#util#count_indentable_symbol_diff(a:line, '[', ']')
+    return elixir#util#count_indentable_symbol_diff(a:line.last, '[', ']')
   end
 endfunction
 
 function! s:pending_brackets(line)
   if a:line.last.text !~ s:ARROW
-    return elixir#util#count_indentable_symbol_diff(a:line, '{', '}')
+    return elixir#util#count_indentable_symbol_diff(a:line.last, '{', '}')
   end
 endfunction
 

@@ -23,11 +23,11 @@ function! elixir#util#is_indentable_match(line, pattern)
 endfunction
 
 function! elixir#util#count_indentable_symbol_diff(line, open, close)
-  if elixir#util#is_indentable_match(a:line.last, a:open)
-        \ && elixir#util#is_indentable_match(a:line.last, a:close)
+  if elixir#util#is_indentable_match(a:line, a:open)
+        \ && elixir#util#is_indentable_match(a:line, a:close)
     return
-          \   s:match_count(a:line.last.text, a:open)
-          \ - s:match_count(a:line.last.text, a:close)
+          \   s:match_count(a:line.text, a:open)
+          \ - s:match_count(a:line.text, a:close)
   else
     return 0
   end
