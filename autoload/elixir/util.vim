@@ -2,6 +2,9 @@ let s:SKIP_SYNTAX = '\%(Comment\|String\)$'
 let s:BLOCK_SKIP = "synIDattr(synID(line('.'),col('.'),1),'name') =~? '".s:SKIP_SYNTAX."'"
 
 function! elixir#util#is_indentable_at(line, col)
+  if a:col == -1 " skip synID lookup for not found match
+    return 1
+  end
   " TODO: Remove these 2 lines
   " I don't know why, but for the test on spec/indent/lists_spec.rb:24.
   " Vim is making some mess on parsing the syntax of 'end', it is being
@@ -16,12 +19,12 @@ function! elixir#util#is_indentable_at(line, col)
 endfunction
 
 function! elixir#util#is_indentable_match(line, pattern)
-  return elixir#util#is_indentable_at(a:line, match(getline(a:line), a:pattern))
+  return elixir#util#is_indentable_at(a:line.num, match(a:line.text, a:pattern))
 endfunction
 
 function! elixir#util#count_indentable_symbol_diff(line, open, close)
-  if elixir#util#is_indentable_match(a:line.last.num, a:open)
-        \ && elixir#util#is_indentable_match(a:line.last.num, a:close)
+  if elixir#util#is_indentable_match(a:line.last, a:open)
+        \ && elixir#util#is_indentable_match(a:line.last, a:close)
     return
           \   s:match_count(a:line.last.text, a:open)
           \ - s:match_count(a:line.last.text, a:close)
