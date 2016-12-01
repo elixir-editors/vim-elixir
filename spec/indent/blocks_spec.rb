@@ -47,7 +47,7 @@ describe 'Indenting blocks' do
   end
 
   it 'guard in function' do
-    expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
+    expect(<<~EOF).to include_elixir_syntax('elixirKernelFunction', 'is_atom')
     defmodule M do
       def fun(a) when is_atom(a) do
         1
