@@ -31,7 +31,7 @@ describe 'Atom syntax' do
     end
   end
 
-  it '`:atom =>` style keyword used as an atom', focus: true do
+  it '`:atom =>` style keyword used as an atom' do
     KEYWORDS.each do |kw|
       expect(<<~EOF).to include_elixir_syntax('elixirAtom', kw), "expected #{kw} to be an elixirAtom"
       defmodule XmlElement do
