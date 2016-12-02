@@ -84,6 +84,21 @@ describe 'documentation syntax' do
       expect(ex).to include_elixir_syntax('elixirDocTest',   '2, 4, 6')
     end
 
+    it 'doctest finishes when not followed by blank line' do
+      ex = <<~'EOF'
+      @doc """
+      doctest
+
+      iex> 1 + 2
+      3
+      """
+      def some_fun(x), do: x
+      EOF
+      expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+      expect(ex).to include_elixir_syntax('elixirDocTest',   '1 + 2')
+      expect(ex).to include_elixir_syntax('elixirDefine',    'def')
+    end
+
     it 'doc with inline code' do
       ex = <<~'EOF'
       @doc """
