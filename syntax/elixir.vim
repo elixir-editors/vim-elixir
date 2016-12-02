@@ -121,12 +121,12 @@ else
   syn region elixirDocTest start="^\s*\%(iex\|\.\.\.\)\%((\d*)\)\?>\s" end="^\s*$" contained
 endif
 
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S\z(/\|\"\|'\||\){1}" end="\z1" skip="\\\\\|\\\z1" contains=@elixirDocStringContained fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S{"                   end="}"   skip="\\\\\|\\}"   contains=@elixirDocStringContained fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S<"                   end=">"   skip="\\\\\|\\>"   contains=@elixirDocStringContained fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S\["                  end="\]"  skip="\\\\\|\\\]"  contains=@elixirDocStringContained fold
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~S("                   end=")"   skip="\\\\\|\\)"   contains=@elixirDocStringContained fold
-syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+  contains=@markdown,@Spell
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]{"                   end="}"   skip="\\\\\|\\}"   contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]<"                   end=">"   skip="\\\\\|\\>"   contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\["                  end="\]"  skip="\\\\\|\\\]"  contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]("                   end=")"   skip="\\\\\|\\)"   contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirDocStringContained keepend
 syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+\z1+ contains=@elixirDocStringContained fold keepend
 syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\)+ end=+\z1+ skip=+\\'+ contains=@elixirDocStringContained fold keepend
 syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+ end=+\z1+ skip=+\\"+ contains=@elixirDocStringContained fold keepend
