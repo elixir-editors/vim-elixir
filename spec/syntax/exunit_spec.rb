@@ -163,4 +163,12 @@ describe 'ExUnit syntax' do
     end
     EOF
   end
+
+  it 'doctest' do
+    expect(<<~EOF).to include_elixir_syntax('elixirExUnitMacro', 'doctest')
+    module MyTest do
+      doctest MyModule
+    end
+    EOF
+  end
 end
