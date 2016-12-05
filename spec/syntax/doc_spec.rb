@@ -71,10 +71,10 @@ describe 'documentation syntax' do
       @doc """
       doctest
 
-      iex> Enum.map [1, 2, 3], fn(x) ->
-      ...>   x * 2
-      ...> end
-      [2, 4, 6]
+          iex> Enum.map [1, 2, 3], fn(x) ->
+          ...>   x * 2
+          ...> end
+          [2, 4, 6]
 
       """
       EOF
@@ -84,19 +84,66 @@ describe 'documentation syntax' do
       expect(ex).to include_elixir_syntax('elixirDocTest',   '2, 4, 6')
     end
 
-    it 'doctest finishes when not followed by blank line' do
-      ex = <<~'EOF'
-      @doc """
-      doctest
+    describe 'doctest without newline after' do
+      it 'with heredoc' do
+        ex = <<~'EOF'
+        @doc """
+        doctest
 
-      iex> 1 + 2
-      3
-      """
-      def some_fun(x), do: x
-      EOF
-      expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
-      expect(ex).to include_elixir_syntax('elixirDocTest',   '1 + 2')
-      expect(ex).to include_elixir_syntax('elixirDefine',    'def')
+            iex> 1 + 2
+            3
+        """
+        def some_fun(x), do: x
+        EOF
+        expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+        expect(ex).to include_elixir_syntax('elixirDocTest',   '1 + 2')
+        expect(ex).to include_elixir_syntax('elixirDefine',    'def')
+      end
+
+      it 'with double quote' do
+        ex = <<~'EOF'
+	@doc "
+        doctest
+
+            iex> \"bob\"
+            \"bob\"
+        "
+        def some_fun(x), do: x
+        EOF
+        expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+        expect(ex).to include_elixir_syntax('elixirDocTest',   'bob')
+        expect(ex).to include_elixir_syntax('elixirDefine',    'def')
+      end
+
+      it 'with sigil_S' do
+        ex = <<~'EOF'
+	@doc ~S(
+        doctest
+
+            iex> to_string("bob"\)
+            "bob"
+        )
+        def some_fun(x), do: x
+        EOF
+        expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+        expect(ex).to include_elixir_syntax('elixirDocTest',   'bob')
+        expect(ex).to include_elixir_syntax('elixirDefine',    'def')
+      end
+
+      it 'with sigil_s' do
+        ex = <<~'EOF'
+	@doc ~s(
+        doctest
+
+            iex> to_string("bob"\)
+            "bob"
+        )
+        def some_fun(x), do: x
+        EOF
+        expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+        expect(ex).to include_elixir_syntax('elixirDocTest',   'bob')
+        expect(ex).to include_elixir_syntax('elixirDefine',    'def')
+      end
     end
 
     it 'doc with inline code' do
@@ -111,14 +158,15 @@ describe 'documentation syntax' do
 
     describe "use markdown for docs" do
       before(:each) { VIM.command("let g:elixir_use_markdown_for_docs = 1") }
+      after(:each) { VIM.command("let g:elixir_use_markdown_for_docs = 0") }
 
       it 'doc with inline code' do
 	ex = <<~'EOF'
 	@doc """
-	doctest with inline code `List.wrap([])`
+	doc with inline code `List.wrap([])`
 	"""
 	EOF
-	expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
+	expect(ex).to include_elixir_syntax('elixirDocString', 'inline')
 	expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
       end
     end
