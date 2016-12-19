@@ -77,8 +77,8 @@ syn region elixirRegex matchgroup=elixirRegexDelimiter start="%r/" end="/[uiomxf
 
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
-syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('''\)+ end=+^\s*\z1+ skip=+'\|\\\\+  contains=@elixirStringContained
-syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("""\)+ end=+^\s*\z1+ skip=+"\|\\\\+  contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('''\)+ end=+^\s*\z1+ contains=@elixirStringContained
+syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("""\)+ end=+^\s*\z1+ contains=@elixirStringContained
 syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirKernelFunction,elixirComment,@elixirNotTop
 
 syn match elixirAtomInterpolated   ':\("\)\@=' contains=elixirString
