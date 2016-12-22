@@ -14,7 +14,7 @@ set cpo&vim
 function! elixir#indent()
   " initiates the `old_ind` dictionary
   let b:old_ind = get(b:, 'old_ind', {})
-  " initialtes the `line` dictionary
+  " initiates the `line` dictionary
   let line = s:build_line(v:lnum)
 
   if s:is_beginning_of_file(line)
@@ -28,7 +28,7 @@ function! elixir#indent()
     return indent(line.last.num)
   else
     " Calculates the indenation level based on the rules
-    " All the rules are defined in `autoload/indent.vim`
+    " All the rules are defined in `autoload/elixir/indent.vim`
     let ind = indent(line.last.num)
     let ind = elixir#indent#deindent_case_arrow(ind, line)
     let ind = elixir#indent#indent_parenthesis(ind, line)
@@ -44,6 +44,7 @@ function! elixir#indent()
     let ind = elixir#indent#deindent_keywords(ind, line)
     let ind = elixir#indent#deindent_ending_symbols(ind, line)
     let ind = elixir#indent#indent_case_arrow(ind, line)
+    let ind = elixir#indent#indent_ecto_queries(ind, line)
     return ind
   end
 endfunction
