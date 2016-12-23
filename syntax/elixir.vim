@@ -54,7 +54,7 @@ syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
 
 syn match   elixirBlockInline "\<\(do\|else\)\>:\@="
 
-syn match   elixirAlias '\<[!]\?[A-Z]\w*\(\.[A-Z]\w*\)*\>'
+syn match   elixirAlias '\([a-z]\)\@<![A-Z][A-Za-z]*'
 
 syn keyword elixirBoolean true false nil
 
