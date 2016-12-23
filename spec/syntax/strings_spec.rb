@@ -55,5 +55,29 @@ describe 'String syntax' do
       end
       EOF
     end
+
+    it 'interpolation with a tuple' do
+      str = <<~'EOF'
+      "Failed sending tasks #{inspect {:unexpected_status_code, s}}"
+      EOF
+      expect(str).not_to include_elixir_syntax('elixirInterpolationDelimiter', '}}"$')
+      expect(str).to include_elixir_syntax('elixirInterpolationDelimiter', '}"$')
+    end
+
+    it 'interpolation with a tuple' do
+      str = <<~'EOF'
+      "Failed sending tasks #{inspect %{unexpected_status_code: s}}"
+      EOF
+      expect(str).not_to include_elixir_syntax('elixirInterpolationDelimiter', '}}"$')
+      expect(str).to include_elixir_syntax('elixirInterpolationDelimiter', '}"$')
+    end
+
+    it 'interpolation with a struct' do
+      str = <<~'EOF'
+      "Failed sending tasks #{inspect %ResponseStruct{unexpected_status_code: s}}"
+      EOF
+      expect(str).not_to include_elixir_syntax('elixirInterpolationDelimiter', '}}"$')
+      expect(str).to include_elixir_syntax('elixirInterpolationDelimiter', '}"$')
+    end
   end
 end
