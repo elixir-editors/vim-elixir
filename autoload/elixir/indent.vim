@@ -14,7 +14,7 @@ let s:MULTILINE_BLOCK = '\%(\<do\>'.s:NO_COLON_AFTER.'\|'.s:MULTILINE_FN.'\)'
 let s:BLOCK_MIDDLE = '\<\%(else\|match\|elsif\|catch\|after\|rescue\)\>'
 let s:BLOCK_END = 'end'
 let s:STARTS_WITH_PIPELINE = '^\s*|>.*$'
-let s:FROM = '^\s*from\s*'
+let s:QUERY_FROM = '^\s*from\s*.*\s*in\s*.*,'
 let s:ENDING_WITH_ASSIGNMENT = '=\s*$'
 let s:INDENT_KEYWORDS = s:NO_COLON_BEFORE.'\%('.s:MULTILINE_BLOCK.'\|'.s:BLOCK_MIDDLE.'\)'
 let s:DEINDENT_KEYWORDS = '^\s*\<\%('.s:BLOCK_END.'\|'.s:BLOCK_MIDDLE.'\)\>'
@@ -209,7 +209,7 @@ function! elixir#indent#deindent_case_arrow(ind, line)
 endfunction
 
 function! elixir#indent#indent_ecto_queries(ind, line)
-  if a:line.last.text =~ s:FROM
+  if a:line.last.text =~ s:QUERY_FROM
     return a:ind + &sw
   else
     return a:ind
