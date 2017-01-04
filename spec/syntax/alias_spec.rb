@@ -10,7 +10,13 @@ describe 'Alias syntax' do
   end
 
   it 'colorize the module alias even if it starts with `!`' do
-    expect(<<~EOF).to include_elixir_syntax('elixirAlias', 'aEnum')
+    expect(<<~EOF).to include_elixir_syntax('elixirAlias', 'Enum')
+      !Enum.empty?(...)
+    EOF
+  end
+
+  it 'does not colorize the preceding ! in an alias' do
+    expect(<<~EOF).not_to include_elixir_syntax('elixirAlias', '!')
       !Enum.empty?(...)
     EOF
   end
