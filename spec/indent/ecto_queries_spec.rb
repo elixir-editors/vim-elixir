@@ -22,6 +22,10 @@ describe 'Indenting Ecto queries' do
       to = 7
     end
     EOF
+
+    expect(<<~EOF).to be_elixir_indentation
+    fromin,
+    EOF
   end
 
   it 'does not affect single lined queries' do
