@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/AndrewRadev/vimrunner.git
+  revision: 2a5bb5fa6637e74796d7a943b338828453b18b0b
+  specs:
+    vimrunner (0.3.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -15,17 +21,16 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    vimrunner (0.3.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   rspec
-  vimrunner
+  vimrunner!
 
 RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
