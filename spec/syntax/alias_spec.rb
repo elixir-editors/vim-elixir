@@ -26,4 +26,11 @@ describe 'Alias syntax' do
       aEnum.empty?(...)
     EOF
   end
+
+  it 'colorizes numbers in aliases' do
+    str = "S3Manager"
+    expect(str).to include_elixir_syntax('elixirAlias', 'S')
+    expect(str).to include_elixir_syntax('elixirAlias', '3')
+    expect(str).to include_elixir_syntax('elixirAlias', 'Manager')
+  end
 end
