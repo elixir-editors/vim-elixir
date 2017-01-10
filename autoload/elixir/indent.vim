@@ -21,6 +21,7 @@ let s:DEINDENT_KEYWORDS = '^\s*\<\%('.s:BLOCK_END.'\|'.s:BLOCK_MIDDLE.'\)\>'
 let s:PAIR_START = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_START.'\)\>'.s:NO_COLON_AFTER
 let s:PAIR_MIDDLE = '^\s*\%('.s:BLOCK_MIDDLE.'\)\>'.s:NO_COLON_AFTER.'\zs'
 let s:PAIR_END = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_END.'\)\>\zs'
+let s:LINE_COMMENT = '^\s*#'
 
 function! s:pending_parenthesis(line)
   if a:line.last.text !~ s:ARROW
@@ -141,7 +142,7 @@ function! elixir#indent#indent_ending_symbols(ind, line)
 endfunction
 
 function! elixir#indent#indent_keywords(ind, line)
-  if a:line.last.text =~ s:INDENT_KEYWORDS
+  if a:line.last.text =~ s:INDENT_KEYWORDS && a:line.last.text !~ s:LINE_COMMENT
     return a:ind + &sw
   else
     return a:ind
