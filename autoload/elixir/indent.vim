@@ -196,18 +196,6 @@ function! elixir#indent#indent_square_brackets(ind, line)
   end
 endfunction
 
-function! elixir#indent#deindent_case_arrow(ind, line)
-  if get(b:old_ind, 'arrow', 0) > 0
-        \ && (a:line.current.text =~ s:ARROW
-        \ || a:line.current.text =~ s:BLOCK_END)
-    let ind = b:old_ind.arrow
-    let b:old_ind.arrow = 0
-    return ind
-  else
-    return a:ind
-  end
-endfunction
-
 function! elixir#indent#indent_ecto_queries(ind, line)
   if a:line.last.text =~ s:QUERY_FROM
     return a:ind + &sw
