@@ -14,12 +14,14 @@ let s:MULTILINE_BLOCK = '\%(\<do\>'.s:NO_COLON_AFTER.'\|'.s:MULTILINE_FN.'\)'
 let s:BLOCK_MIDDLE = '\<\%(else\|match\|elsif\|catch\|after\|rescue\)\>'
 let s:BLOCK_END = 'end'
 let s:STARTS_WITH_PIPELINE = '^\s*|>.*$'
+let s:QUERY_FROM = '^\s*\<from\>.*\<in\>.*,'
 let s:ENDING_WITH_ASSIGNMENT = '=\s*$'
 let s:INDENT_KEYWORDS = s:NO_COLON_BEFORE.'\%('.s:MULTILINE_BLOCK.'\|'.s:BLOCK_MIDDLE.'\)'
 let s:DEINDENT_KEYWORDS = '^\s*\<\%('.s:BLOCK_END.'\|'.s:BLOCK_MIDDLE.'\)\>'
 let s:PAIR_START = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_START.'\)\>'.s:NO_COLON_AFTER
 let s:PAIR_MIDDLE = '^\s*\%('.s:BLOCK_MIDDLE.'\)\>'.s:NO_COLON_AFTER.'\zs'
 let s:PAIR_END = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_END.'\)\>\zs'
+let s:LINE_COMMENT = '^\s*#'
 
 function! s:pending_parenthesis(line)
   if a:line.last.text !~ s:ARROW
@@ -140,7 +142,7 @@ function! elixir#indent#indent_ending_symbols(ind, line)
 endfunction
 
 function! elixir#indent#indent_keywords(ind, line)
-  if a:line.last.text =~ s:INDENT_KEYWORDS
+  if a:line.last.text =~ s:INDENT_KEYWORDS && a:line.last.text !~ s:LINE_COMMENT
     return a:ind + &sw
   else
     return a:ind
@@ -195,13 +197,9 @@ function! elixir#indent#indent_square_brackets(ind, line)
   end
 endfunction
 
-function! elixir#indent#deindent_case_arrow(ind, line)
-  if get(b:old_ind, 'arrow', 0) > 0
-        \ && (a:line.current.text =~ s:ARROW
-        \ || a:line.current.text =~ s:BLOCK_END)
-    let ind = b:old_ind.arrow
-    let b:old_ind.arrow = 0
-    return ind
+function! elixir#indent#indent_ecto_queries(ind, line)
+  if a:line.last.text =~ s:QUERY_FROM
+    return a:ind + &sw
   else
     return a:ind
   end

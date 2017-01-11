@@ -1,4 +1,5 @@
 #! /usr/bin/env ruby
+require 'bundler/setup'
 require 'vimrunner'
 dir = File.expand_path('..', __dir__)
 plugin = 'ftdetect/elixir.vim'
@@ -6,3 +7,5 @@ vim = Vimrunner.start_gvim
 vim.add_plugin(dir, plugin)
 vim.edit! "test.ex"
 vim.normal
+
+Process.wait vim.server.pid

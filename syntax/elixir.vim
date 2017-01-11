@@ -54,7 +54,7 @@ syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
 
 syn match   elixirBlockInline "\<\(do\|else\)\>:\@="
 
-syn match   elixirAlias '\<[!]\?[A-Z]\w*\(\.[A-Z]\w*\)*\>'
+syn match   elixirAlias '\([a-z]\)\@<![A-Z]\w*'
 
 syn keyword elixirBoolean true false nil
 
@@ -74,6 +74,10 @@ syn match elixirRegexQuantifier        "{\d\+\%(,\d*\)\=}?\=" contained display
 syn match elixirRegexCharClass         "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|digit\|graph\|lower\|print\|punct\|space\|upper\|word\|xdigit\):\]" contained display
 
 syn region elixirRegex matchgroup=elixirRegexDelimiter start="%r/" end="/[uiomxfr]*" skip="\\\\" contains=@elixirRegexSpecial
+
+syn region elixirTuple  matchgroup=elixirTupleDelimiter   start="\(#\)\@<!{"    end="}" contains=ALLBUT,@elixirNotTop
+syn region elixirMap    matchgroup=elixirMapDelimiter     start="%{"            end="}" contains=ALLBUT,@elixirNotTop
+syn region elixirStruct matchgroup=elixirStructDelimiter  start="%[A-Za-z]\+{"  end="}" contains=ALLBUT,@elixirNotTop
 
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
