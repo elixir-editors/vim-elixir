@@ -119,4 +119,36 @@ describe 'Indenting pipeline' do
       EOF
     end
   end
+
+  it 'resets the indent after a blank new line' do
+    expect(<<~EOF).to be_elixir_indentation
+      upcased_names = names
+                      |> Enum.map(fn name ->
+                        String.upcase(name)
+                      end)
+
+      IO.inspect names
+    EOF
+  end
+
+  it 'resets the indent after a blank line pt. 2' do
+    expect(<<~EOF).to be_elixir_indentation
+      upcased_names = names
+                      |> Enum.map(fn name ->
+                        String.upcase(name) end)
+
+      IO.inspect names
+    EOF
+  end
+
+  it 'keeps indent after a blank if current starts with pipe' do
+    expect(<<~EOF).to be_elixir_indentation
+      upcased_names = names
+                      |> Enum.map(fn name ->
+                        String.upcase(name)
+                      end)
+
+                      |> do_stuff
+    EOF
+  end
 end

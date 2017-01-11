@@ -25,20 +25,20 @@ let s:LINE_COMMENT = '^\s*#'
 let s:MATCH_OPERATOR = '[^!><=]=[^~=>]'
 
 function! s:pending_parenthesis(line)
-  if a:line.last.text !~ s:ARROW
-    return elixir#util#count_indentable_symbol_diff(a:line.last, '(', '\%(end\s*\)\@<!)')
+  if a:line.last_non_blank.text !~ s:ARROW
+    return elixir#util#count_indentable_symbol_diff(a:line.last_non_blank, '(', '\%(end\s*\)\@<!)')
   end
 endfunction
 
 function! s:pending_square_brackets(line)
-  if a:line.last.text !~ s:ARROW
-    return elixir#util#count_indentable_symbol_diff(a:line.last, '[', ']')
+  if a:line.last_non_blank.text !~ s:ARROW
+    return elixir#util#count_indentable_symbol_diff(a:line.last_non_blank, '[', ']')
   end
 endfunction
 
 function! s:pending_brackets(line)
-  if a:line.last.text !~ s:ARROW
-    return elixir#util#count_indentable_symbol_diff(a:line.last, '{', '}')
+  if a:line.last_non_blank.text !~ s:ARROW
+    return elixir#util#count_indentable_symbol_diff(a:line.last_non_blank, '{', '}')
   end
 endfunction
 
@@ -94,13 +94,21 @@ function! elixir#indent#deindent_opened_symbols(ind, line)
 endfunction
 
 function! elixir#indent#indent_after_pipeline(ind, line)
-  if a:line.last.text =~ s:STARTS_WITH_PIPELINE
+  if exists("b:old_ind.pipeline")
+        \ && elixir#util#is_blank(a:line.last.text)
+        \ && a:line.current.text !~ s:STARTS_WITH_PIPELINE
+    " Reset indentation in pipelines if there is a blank line between
+    " pipes
+    let ind = b:old_ind.pipeline
+    unlet b:old_ind.pipeline
+    return ind
+  elseif a:line.last_non_blank.text =~ s:STARTS_WITH_PIPELINE
     if empty(substitute(a:line.current.text, ' ', '', 'g'))
           \ || a:line.current.text =~ s:STARTS_WITH_PIPELINE
-      return indent(a:line.last.num)
-    elseif a:line.last.text !~ s:INDENT_KEYWORDS
+      return indent(a:line.last_non_blank.num)
+    elseif a:line.last_non_blank.text !~ s:INDENT_KEYWORDS
       let ind = b:old_ind.pipeline
-      let b:old_ind.pipeline = 0
+      unlet b:old_ind.pipeline
       return ind
     end
   end
@@ -109,8 +117,8 @@ function! elixir#indent#indent_after_pipeline(ind, line)
 endfunction
 
 function! elixir#indent#indent_assignment(ind, line)
-  if a:line.last.text =~ s:ENDING_WITH_ASSIGNMENT
-    let b:old_ind.pipeline = indent(a:line.last.num) " FIXME: side effect
+  if a:line.last_non_blank.text =~ s:ENDING_WITH_ASSIGNMENT
+    let b:old_ind.pipeline = indent(a:line.last_non_blank.num) " FIXME: side effect
     return a:ind + &sw
   else
     return a:ind
@@ -126,7 +134,7 @@ function! elixir#indent#indent_brackets(ind, line)
 endfunction
 
 function! elixir#indent#indent_case_arrow(ind, line)
-  if a:line.last.text =~ s:END_WITH_ARROW && a:line.last.text !~ '\<fn\>'
+  if a:line.last_non_blank.text =~ s:END_WITH_ARROW && a:line.last_non_blank.text !~ '\<fn\>'
     let b:old_ind.arrow = a:ind
     return a:ind + &sw
   else
@@ -135,7 +143,7 @@ function! elixir#indent#indent_case_arrow(ind, line)
 endfunction
 
 function! elixir#indent#indent_ending_symbols(ind, line)
-  if a:line.last.text =~ '^\s*\('.s:ENDING_SYMBOLS.'\)\s*$'
+  if a:line.last_non_blank.text =~ '^\s*\('.s:ENDING_SYMBOLS.'\)\s*$'
     return a:ind + &sw
   else
     return a:ind
@@ -143,7 +151,7 @@ function! elixir#indent#indent_ending_symbols(ind, line)
 endfunction
 
 function! elixir#indent#indent_keywords(ind, line)
-  if a:line.last.text =~ s:INDENT_KEYWORDS && a:line.last.text !~ s:LINE_COMMENT
+  if a:line.last_non_blank.text =~ s:INDENT_KEYWORDS && a:line.last_non_blank.text !~ s:LINE_COMMENT
     return a:ind + &sw
   else
     return a:ind
@@ -152,10 +160,10 @@ endfunction
 
 function! elixir#indent#indent_parenthesis(ind, line)
   if s:pending_parenthesis(a:line) > 0
-        \ && a:line.last.text !~ s:DEF
-        \ && a:line.last.text !~ s:END_WITH_ARROW
+        \ && a:line.last_non_blank.text !~ s:DEF
+        \ && a:line.last_non_blank.text !~ s:END_WITH_ARROW
     let b:old_ind.symbol = a:ind
-    return matchend(a:line.last.text, '(')
+    return matchend(a:line.last_non_blank.text, '(')
   else
     return a:ind
   end
@@ -176,9 +184,9 @@ function! elixir#indent#indent_pipeline_assignment(ind, line)
 endfunction
 
 function! elixir#indent#indent_pipeline_continuation(ind, line)
-  if a:line.last.text =~ s:STARTS_WITH_PIPELINE
+  if a:line.last_non_blank.text =~ s:STARTS_WITH_PIPELINE
         \ && a:line.current.text =~ s:STARTS_WITH_PIPELINE
-    return indent(a:line.last.num)
+    return indent(a:line.last_non_blank.num)
   else
     return a:ind
   end
@@ -186,13 +194,13 @@ endfunction
 
 function! elixir#indent#indent_square_brackets(ind, line)
   if s:pending_square_brackets(a:line) > 0
-    if a:line.last.text =~ '[\s*$'
+    if a:line.last_non_blank.text =~ '[\s*$'
       return a:ind + &sw
     else
       " if start symbol is followed by a character, indent based on the
       " whitespace after the symbol, otherwise use the default shiftwidth
       " Avoid negative indentation index
-      return matchend(a:line.last.text, '[\s*')
+      return matchend(a:line.last_non_blank.text, '[\s*')
     end
   else
     return a:ind
@@ -200,7 +208,7 @@ function! elixir#indent#indent_square_brackets(ind, line)
 endfunction
 
 function! elixir#indent#indent_ecto_queries(ind, line)
-  if a:line.last.text =~ s:QUERY_FROM
+  if a:line.last_non_blank.text =~ s:QUERY_FROM
     return a:ind + &sw
   else
     return a:ind
