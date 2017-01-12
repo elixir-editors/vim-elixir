@@ -81,4 +81,42 @@ describe 'Indenting pipeline' do
     end
     EOF
   end
+
+  it 'correctly indents pipelines on a string with "=" embedded in it' do
+    expect(<<~EOF).to be_elixir_indentation
+    def build_command(input, output) do
+      "embedded=here"
+      |>
+    end
+    EOF
+  end
+
+  it 'correctly indents pipelines on a charlist with "=" embedded in it' do
+    expect(<<~EOF).to be_elixir_indentation
+    def build_command(input, output) do
+      'embedded=here'
+      |>
+    end
+    EOF
+  end
+
+  it 'correctly indents pipelines on a map with "=>" syntax' do
+    expect(<<~EOF).to be_elixir_indentation
+    def build_command(input, output) do
+      %{:hello => :world}
+      |>
+    end
+    EOF
+  end
+
+  %w(<= >= == != === !== =~).each do |op|
+    it "ignores indents with #{op}" do
+      expect(<<~EOF).to be_elixir_indentation
+      def build_command(input, output) do
+        true #{op} false
+        |> IO.inspect
+      end
+      EOF
+    end
+  end
 end
