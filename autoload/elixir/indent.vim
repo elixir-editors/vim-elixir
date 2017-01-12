@@ -22,6 +22,7 @@ let s:PAIR_START = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_START.'\)\>'.s:NO_COLON_AFT
 let s:PAIR_MIDDLE = '^\s*\%('.s:BLOCK_MIDDLE.'\)\>'.s:NO_COLON_AFTER.'\zs'
 let s:PAIR_END = '\<\%('.s:NO_COLON_BEFORE.s:BLOCK_END.'\)\>\zs'
 let s:LINE_COMMENT = '^\s*#'
+let s:MATCH_OPERATOR = '[^!><=]=[^~=>]'
 
 function! s:pending_parenthesis(line)
   if a:line.last.text !~ s:ARROW
@@ -162,12 +163,13 @@ endfunction
 
 function! elixir#indent#indent_pipeline_assignment(ind, line)
   if a:line.current.text =~ s:STARTS_WITH_PIPELINE
-        \ && a:line.last.text =~ '^[^=]\+=.\+$'
+        \ && a:line.last.text =~ s:MATCH_OPERATOR
     let b:old_ind.pipeline = indent(a:line.last.num)
     " if line starts with pipeline
     " and last line is an attribution
     " indents pipeline in same level as attribution
-    return match(a:line.last.text, '=\s*\zs[^ ]')
+    let assign_pos = match(a:line.last.text, '=\s*\zs[^ ]')
+    return (elixir#util#is_indentable_at(a:line.last.num, assign_pos) ? assign_pos : a:ind)
   else
     return a:ind
   end
