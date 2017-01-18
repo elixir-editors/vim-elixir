@@ -8,7 +8,7 @@ set cpo&vim
 " syncing starts 2000 lines before top line so docstrings don't screw things up
 syn sync minlines=2000
 
-syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@elixirDeclaration,elixirTodo,elixirArguments,elixirBlockDefinition,elixirUnusedVariable
+syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@elixirDeclaration,elixirTodo,elixirArguments,elixirBlockDefinition,elixirUnusedVariable,elixirStructStartDelimiter,elixirStructBody,elixirStructBodyDelimiter
 syn cluster elixirRegexSpecial contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
 syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
 syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDeclaration,elixirProtocolDeclaration,elixirImplDeclaration,elixirRecordDeclaration,elixirMacroDeclaration,elixirDelegateDeclaration,elixirOverridableDeclaration,elixirExceptionDeclaration,elixirCallbackDeclaration,elixirStructDeclaration
@@ -75,9 +75,13 @@ syn match elixirRegexCharClass         "\[:\(alnum\|alpha\|ascii\|blank\|cntrl\|
 
 syn region elixirRegex matchgroup=elixirRegexDelimiter start="%r/" end="/[uiomxfr]*" skip="\\\\" contains=@elixirRegexSpecial
 
-syn region elixirTuple  matchgroup=elixirTupleDelimiter   start="\(#\)\@<!{"    end="}" contains=ALLBUT,@elixirNotTop
-syn region elixirMap    matchgroup=elixirMapDelimiter     start="%{"            end="}" contains=ALLBUT,@elixirNotTop
-syn region elixirStruct matchgroup=elixirStructDelimiter  start="%[A-Za-z]\+{"  end="}" contains=ALLBUT,@elixirNotTop
+syn region elixirTuple  matchgroup=elixirTupleDelimiter start="\(#\)\@<!{" end="}" contains=ALLBUT,@elixirNotTop
+
+syn match elixirStructStartDelimiter "%" containedin=elixirStruct contained
+syn region elixirStructBody matchgroup=elixirStructBodyDelimiter start="{" end="}" contained containedin=elixirStruct contains=ALLBUT,@elixirNotTop
+syn region elixirStruct start="%\(\w\+\)\@=" end="}" keepend contains=ALLBUT,@elixirNotTop
+
+syn region elixirMap matchgroup=elixirMapDelimiter start="%{" end="}" contains=ALLBUT,@elixirNotTop
 
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirStringContained
