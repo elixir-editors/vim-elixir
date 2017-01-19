@@ -50,3 +50,7 @@ function! s:match_count(string, pattern)
 
   return counter
 endfunction
+
+function elixir#util#is_blank(string)
+  return a:string =~ '^\s*$'
+endfunction

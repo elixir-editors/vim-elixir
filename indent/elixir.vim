@@ -25,7 +25,7 @@ function! elixir#indent()
   elseif !s:is_indentable_line(line)
     " Keep last line indentation if the current line does not have an
     " indentable syntax
-    return indent(line.last.num)
+    return indent(line.last_non_blank.num)
   else
     " Calculates the indenation level based on the rules
     " All the rules are defined in `autoload/elixir/indent.vim`
@@ -65,7 +65,7 @@ function s:debug(message)
 endfunction
 
 function! s:is_beginning_of_file(line)
-  return a:line.last.num == 0
+  return a:line.last_non_blank.num == 0
 endfunction
 
 function! s:is_indentable_line(line)
@@ -73,13 +73,19 @@ function! s:is_indentable_line(line)
 endfunction
 
 function! s:build_line(line)
-  let line = { 'current': {}, 'last': {} }
-  let line.current.num = a:line
-  let line.current.text = getline(line.current.num)
-  let line.last.num = prevnonblank(line.current.num - 1)
-  let line.last.text = getline(line.last.num)
+  let line = { 'current': {}, 'last': {}, 'last_non_blank': {} }
+  let line.current = s:new_line(a:line)
+  let line.last = s:new_line(line.current.num - 1)
+  let line.last_non_blank = s:new_line(prevnonblank(line.current.num - 1))
 
   return line
+endfunction
+
+function! s:new_line(num)
+  return {
+        \ "num": a:num,
+        \ "text": getline(a:num)
+        \ }
 endfunction
 
 let &cpo = s:cpo_save
