@@ -73,9 +73,11 @@ function! s:is_indentable_line(line)
 endfunction
 
 function! s:build_line(line)
-  let line = { 'current': {}, 'last_non_blank': {} }
+  let line = { 'current': {}, 'last_non_blank': {}, 'last': {} }
   let line.current.num = a:line
   let line.current.text = getline(line.current.num)
+  let line.last.num = line.current.num - 1
+  let line.last.text = getline(line.last.num)
   let line.last_non_blank.num = prevnonblank(line.current.num - 1)
   let line.last_non_blank.text = getline(line.last_non_blank.num)
 
