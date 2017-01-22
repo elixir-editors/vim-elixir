@@ -94,13 +94,21 @@ function! elixir#indent#deindent_opened_symbols(ind, line)
 endfunction
 
 function! elixir#indent#indent_after_pipeline(ind, line)
-  if a:line.last_non_blank.text =~ s:STARTS_WITH_PIPELINE
+  if exists("b:old_ind.pipeline")
+        \ && elixir#util#is_blank(a:line.last.text)
+        \ && a:line.current.text !~ s:STARTS_WITH_PIPELINE
+    " Reset indentation in pipelines if there is a blank line between
+    " pipes
+    let ind = b:old_ind.pipeline
+    unlet b:old_ind.pipeline
+    return ind
+  elseif a:line.last_non_blank.text =~ s:STARTS_WITH_PIPELINE
     if empty(substitute(a:line.current.text, ' ', '', 'g'))
           \ || a:line.current.text =~ s:STARTS_WITH_PIPELINE
       return indent(a:line.last_non_blank.num)
     elseif a:line.last_non_blank.text !~ s:INDENT_KEYWORDS
       let ind = b:old_ind.pipeline
-      let b:old_ind.pipeline = 0
+      unlet b:old_ind.pipeline
       return ind
     end
   end
