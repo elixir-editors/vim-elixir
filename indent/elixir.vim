@@ -25,11 +25,11 @@ function! elixir#indent()
   elseif !s:is_indentable_line(line)
     " Keep last line indentation if the current line does not have an
     " indentable syntax
-    return indent(line.last.num)
+    return indent(line.last_non_blank.num)
   else
     " Calculates the indenation level based on the rules
     " All the rules are defined in `autoload/elixir/indent.vim`
-    let ind = indent(line.last.num)
+    let ind = indent(line.last_non_blank.num)
     call s:debug('>>> line_num = ' . line.current.num . ', line_text = "' . line.current.text . '", initial = ' . ind)
     let ind = s:indent('deindent_case_arrow', ind, line)
     let ind = s:indent('indent_parenthesis', ind, line)
@@ -65,7 +65,7 @@ function s:debug(message)
 endfunction
 
 function! s:is_beginning_of_file(line)
-  return a:line.last.num == 0
+  return a:line.last_non_blank.num == 0
 endfunction
 
 function! s:is_indentable_line(line)
@@ -73,11 +73,11 @@ function! s:is_indentable_line(line)
 endfunction
 
 function! s:build_line(line)
-  let line = { 'current': {}, 'last': {} }
+  let line = { 'current': {}, 'last_non_blank': {} }
   let line.current.num = a:line
   let line.current.text = getline(line.current.num)
-  let line.last.num = prevnonblank(line.current.num - 1)
-  let line.last.text = getline(line.last.num)
+  let line.last_non_blank.num = prevnonblank(line.current.num - 1)
+  let line.last_non_blank.text = getline(line.last_non_blank.num)
 
   return line
 endfunction
