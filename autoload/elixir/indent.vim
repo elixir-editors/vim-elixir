@@ -171,13 +171,13 @@ endfunction
 
 function! elixir#indent#indent_pipeline_assignment(ind, line)
   if a:line.current.text =~ s:STARTS_WITH_PIPELINE
-        \ && a:line.last.text =~ s:MATCH_OPERATOR
-    let b:old_ind.pipeline = indent(a:line.last.num)
+        \ && a:line.last_non_blank.text =~ s:MATCH_OPERATOR
+    let b:old_ind.pipeline = indent(a:line.last_non_blank.num)
     " if line starts with pipeline
-    " and last line is an attribution
+    " and last_non_blank line is an attribution
     " indents pipeline in same level as attribution
-    let assign_pos = match(a:line.last.text, '=\s*\zs[^ ]')
-    return (elixir#util#is_indentable_at(a:line.last.num, assign_pos) ? assign_pos : a:ind)
+    let assign_pos = match(a:line.last_non_blank.text, '=\s*\zs[^ ]')
+    return (elixir#util#is_indentable_at(a:line.last_non_blank.num, assign_pos) ? assign_pos : a:ind)
   else
     return a:ind
   end
