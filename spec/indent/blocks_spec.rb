@@ -159,4 +159,15 @@ describe 'Indenting blocks' do
       EOF
     end
   end
+
+  it 'indenting with a blank line in it' do
+    expect(<<~EOF).to be_elixir_indentation
+    scope "/", API do
+      pipe_through :api # Use the default browser stack
+
+      get "/url", Controller, :index
+      post "/url", Controller, :create
+    end
+    EOF
+  end
 end
