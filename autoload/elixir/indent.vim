@@ -1,7 +1,6 @@
 let s:NO_COLON_BEFORE = ':\@<!'
 let s:NO_COLON_AFTER = ':\@!'
 let s:ENDING_SYMBOLS = '\]\|}\|)'
-let s:STARTING_SYMBOLS = '\[\|{\|('
 let s:ARROW = '->'
 let s:END_WITH_ARROW = s:ARROW.'$'
 let s:SKIP_SYNTAX = '\%(Comment\|String\)$'
