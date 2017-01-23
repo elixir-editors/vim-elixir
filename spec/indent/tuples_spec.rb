@@ -23,4 +23,13 @@ describe 'Indenting tuples' do
     end
     EOF
   end
+
+  it 'tuples with strings with embedded braces' do
+    expect(<<~EOF).to be_elixir_indentation
+    x = [
+      {:text, "asd {"},
+      {:text, "qwe"},
+    ]
+    EOF
+  end
 end

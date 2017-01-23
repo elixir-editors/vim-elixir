@@ -95,5 +95,15 @@ describe 'String syntax' do
       expect(str).not_to include_elixir_syntax('elixirInterpolationDelimiter', '}}"$')
       expect(str).to include_elixir_syntax('elixirInterpolationDelimiter', '}"$')
     end
+
+    it 'strings with embedded braces' do
+      str = <<~EOF
+      x = [
+        {:text, "asd {"},
+        {:text, "qwe"},
+      ]
+      EOF
+      expect(str).to include_elixir_syntax('elixirString', '{"}')
+    end
   end
 end
