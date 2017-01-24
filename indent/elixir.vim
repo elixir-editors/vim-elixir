@@ -30,7 +30,8 @@ function! elixir#indent()
     " Calculates the indenation level based on the rules
     " All the rules are defined in `autoload/elixir/indent.vim`
     let ind = indent(line.last_non_blank.num)
-    call s:debug('>>> line_num = ' . line.current.num . ', line_text = "' . line.current.text . '", initial = ' . ind)
+    call s:debug('>>> line = ' . string(line.current))
+    call s:debug('>>> ind = ' . ind)
     let ind = s:indent('deindent_case_arrow', ind, line)
     let ind = s:indent('indent_parenthesis', ind, line)
     let ind = s:indent('indent_square_brackets', ind, line)
