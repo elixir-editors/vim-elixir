@@ -18,19 +18,10 @@ function! elixir#util#is_indentable_at(line, col)
         \ !~ s:SKIP_SYNTAX
 endfunction
 
-function! elixir#util#is_indentable_match(line, pattern)
-  return elixir#util#is_indentable_at(a:line.num, match(a:line.text, a:pattern))
-endfunction
-
 function! elixir#util#count_indentable_symbol_diff(line, open, close)
-  if elixir#util#is_indentable_match(a:line, a:open)
-        \ && elixir#util#is_indentable_match(a:line, a:close)
-    return
-          \   s:match_count(a:line, a:open)
-          \ - s:match_count(a:line, a:close)
-  else
-    return 0
-  end
+  return
+        \   s:match_count(a:line, a:open)
+        \ - s:match_count(a:line, a:close)
 endfunction
 
 function! s:match_count(line, pattern)
