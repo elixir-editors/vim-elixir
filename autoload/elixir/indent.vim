@@ -62,6 +62,14 @@ function! elixir#indent#deindent_ending_symbols(ind, line)
 endfunction
 
 function! elixir#indent#deindent_keywords(ind, line)
+  echom "> pair start ". s:PAIR_START
+  echom "> pair middle ". s:PAIR_MIDDLE
+  echom "> pair end ". s:PAIR_END
+  echom "> pair skip ". s:PAIR_SKIP
+
+  " NOTE: cursor is not being properly set here which causes this to
+  " incorrectly handle nesting
+  echom "> cursor => " . line(".") ", " . col(".")
   if a:line.current.text =~ s:DEINDENT_KEYWORDS
     let bslnum = searchpair(
           \ s:PAIR_START,
@@ -71,7 +79,12 @@ function! elixir#indent#deindent_keywords(ind, line)
           \ s:BLOCK_SKIP
           \ )
 
-    return indent(bslnum)
+    " No match found
+    if bslnum > 0
+      return indent(bslnum)
+    else
+      return a:ind
+    end
   else
     return a:ind
   end
