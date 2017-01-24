@@ -44,7 +44,7 @@ endfunction
 function! elixir#indent#deindent_case_arrow(ind, line)
   if get(b:old_ind, 'arrow', 0) > 0
         \ && (a:line.current.text =~ s:ARROW
-        \ || a:line.current.text =~ s:BLOCK_END)
+        \ || elixir#util#find_indentable(a:line.current, s:BLOCK_END) != -1)
     let ind = b:old_ind.arrow
     let b:old_ind.arrow = 0
     return ind
