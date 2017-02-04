@@ -189,7 +189,7 @@ hi def link elixirExceptionDefine        Define
 hi def link elixirCallbackDefine         Define
 hi def link elixirStructDefine           Define
 hi def link elixirExUnitMacro            Define
-hi def link elixirModuleDeclaration      Type
+hi def link elixirModuleDeclaration      Identifier
 hi def link elixirFunctionDeclaration    Function
 hi def link elixirMacroDeclaration       Macro
 hi def link elixirInclude                Include
@@ -201,7 +201,7 @@ hi def link elixirKernelFunction         Keyword
 hi def link elixirOperator               Operator
 hi def link elixirAtom                   Constant
 hi def link elixirPseudoVariable         Constant
-hi def link elixirAlias                  Type
+hi def link elixirAlias                  Identifier
 hi def link elixirBoolean                Boolean
 hi def link elixirVariable               Identifier
 hi def link elixirSelf                   Identifier
