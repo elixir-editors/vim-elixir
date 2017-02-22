@@ -66,4 +66,63 @@ describe 'Indenting anonymous functions' do
       EOF
     end
   end
+
+  it 'fn with pattern matching and :end' do
+    expect(<<~EOF).to be_elixir_indentation
+    fun1 = fn
+      (:foo) ->
+        :bar
+        :end
+    end
+    EOF
+  end
+
+  it 'fn with pattern matching and :end' do
+    expect(<<~EOF).to be_elixir_indentation
+    fun2 = fn
+      (:foo) ->
+        :bar
+        'end'
+    end
+    EOF
+  end
+
+  it 'fn with pattern matching and :end' do
+    expect(<<~EOF).to be_elixir_indentation
+    fun3 = fn
+      (:foo) ->
+        :bar
+        :send
+    end
+    EOF
+  end
+
+  it 'fn with string with "end"' do
+    expect(<<~EOF).to be_elixir_indentation
+    fun2 = fn
+      (:foo) ->
+        :foo
+        "string with end"
+    end
+    EOF
+  end
+
+  it 'fn with comment with "end"' do
+    expect(<<~EOF).to be_elixir_indentation
+    fun3 = fn
+      (:foo) ->
+        :foo
+        :asd # end
+    end
+    EOF
+  end
+
+  it 'fn with comment with "end" and actual end' do
+    expect(<<~EOF).to be_elixir_indentation
+    fun3 = fn
+      (:foo) ->
+        :foo
+    end # end
+    EOF
+  end
 end

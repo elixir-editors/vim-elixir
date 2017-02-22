@@ -17,6 +17,30 @@ function! elixir#util#is_indentable_at(line, col)
         \ !~ s:SKIP_SYNTAX
 endfunction
 
+" Return the column of an indentable match which matches
+" the given regex or -1
+function! elixir#util#find_indentable(line, regex)
+  return s:find_indentable(a:line, 0, a:regex)
+endfunction
+
+function! s:find_indentable(line, col, regex)
+  let substr = strpart(a:line.text, a:col)
+
+  " Recursion base case: no matches left to check in line
+  let idx = match(substr, a:regex)
+  if idx == -1
+    return -1
+  end
+
+  " Was match, so if indentable return idx of this match
+  if elixir#util#is_indentable_at(a:line.num, idx)
+    return idx
+  else
+    " Increment the idx and recurse
+    return s:find_indentable(a:line, idx + 1, a:regex)
+  end
+endfunction
+
 function! elixir#util#count_indentable_symbol_diff(line, open, close)
   return
         \   s:match_count(a:line, a:open)

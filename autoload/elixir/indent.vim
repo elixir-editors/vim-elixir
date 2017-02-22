@@ -11,7 +11,7 @@ let s:MULTILINE_FN = s:FN.'\%(.*end\)\@!'
 let s:BLOCK_START = '\%(\<do\>\|'.s:FN.'\)\>'
 let s:MULTILINE_BLOCK = '\%(\<do\>'.s:NO_COLON_AFTER.'\|'.s:MULTILINE_FN.'\)'
 let s:BLOCK_MIDDLE = '\<\%(else\|match\|elsif\|catch\|after\|rescue\)\>'
-let s:BLOCK_END = 'end'
+let s:BLOCK_END = '\([^ ]\)\@<!end'
 let s:STARTS_WITH_PIPELINE = '^\s*|>.*$'
 let s:QUERY_FROM = '^\s*\<from\>.*\<in\>.*,'
 let s:ENDING_WITH_ASSIGNMENT = '=\s*$'
@@ -44,7 +44,7 @@ endfunction
 function! elixir#indent#deindent_case_arrow(ind, line)
   if get(b:old_ind, 'arrow', 0) > 0
         \ && (a:line.current.text =~ s:ARROW
-        \ || a:line.current.text =~ s:BLOCK_END)
+        \ || elixir#util#find_indentable(a:line.current, s:BLOCK_END) != -1)
     let ind = b:old_ind.arrow
     let b:old_ind.arrow = 0
     return ind
@@ -62,6 +62,14 @@ function! elixir#indent#deindent_ending_symbols(ind, line)
 endfunction
 
 function! elixir#indent#deindent_keywords(ind, line)
+  echom "> pair start ". s:PAIR_START
+  echom "> pair middle ". s:PAIR_MIDDLE
+  echom "> pair end ". s:PAIR_END
+  echom "> pair skip ". s:PAIR_SKIP
+
+  " NOTE: cursor is not being properly set here which causes this to
+  " incorrectly handle nesting
+  echom "> cursor => " . line(".") ", " . col(".")
   if a:line.current.text =~ s:DEINDENT_KEYWORDS
     let bslnum = searchpair(
           \ s:PAIR_START,
@@ -71,7 +79,12 @@ function! elixir#indent#deindent_keywords(ind, line)
           \ s:BLOCK_SKIP
           \ )
 
-    return indent(bslnum)
+    " No match found
+    if bslnum > 0
+      return indent(bslnum)
+    else
+      return a:ind
+    end
   else
     return a:ind
   end
