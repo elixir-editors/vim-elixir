@@ -1,14 +1,22 @@
-" " Only load this indent file when no other was loaded
-" if exists("b:did_indent") || exists("*elixir#indent")
-"   finish
-" end
-" let b:did_indent = 1
+" Only load this indent file when no other was loaded
+if exists("b:did_indent")
+  finish
+end
+let b:did_indent = 1
 
 setlocal indentexpr=elixir#indent(v:lnum)
 
 setlocal indentkeys+=0=end,0=catch,0=rescue,0=after,0=else,=->,0},0],0=\|>
 " setlocal indentkeys+=0)
 
+function! elixir#debug(str)
+  if exists("g:elixir#debug") && g:elixir#debug
+    echom str
+  endif
+endfunction
+
+" Returns 0 or 1 based on whether or not the text starts with the given
+" expression and is not a string or comment
 function! elixir#starts_with(text, expr, lnum)
   let pos = match(a:text, '^\s*'.a:expr)
   if pos == -1
@@ -24,6 +32,8 @@ function! elixir#starts_with(text, expr, lnum)
   end
 endfunction
 
+" Returns 0 or 1 based on whether or not the text ends with the given
+" expression and is not a string or comment
 function! elixir#ends_with(text, expr, lnum)
   let pos = match(a:text, a:expr.'\s*$')
   if pos == -1
@@ -37,17 +47,25 @@ function! elixir#ends_with(text, expr, lnum)
   end
 endfunction
 
+" Returns 0 or 1 based on whether or not the text matches the given expression
 function! elixir#contains(text, expr)
   return a:text =~ a:expr
 endfunction
 
-function! elixir#is_string_or_comment(line, pos)
-  echom "is_string_or_comment - line=".a:line.", pos=".a:pos
-  echom "rv = " . (synIDattr(synID(a:line, a:pos, 1), "name") =~ '\%(String\|Comment\)')
-  return synIDattr(synID(a:line, a:pos, 1), "name") =~ '\%(String\|Comment\)'
+" Returns 0 or 1 based on whether or not the given line number and column
+" number pair is a string or comment
+function! elixir#is_string_or_comment(line, col)
+  elixir#debug("is_string_or_comment - line=".a:line.", col=".a:col)
+  elixir#debug("rv = " . (synIDattr(synID(a:line, a:col, 1), "name") =~ '\%(String\|Comment\)'))
+  return synIDattr(synID(a:line, a:col, 1), "name") =~ '\%(String\|Comment\)'
 endfunction
 
+" Skip expression for searchpair. Returns 0 or 1 based on whether the value
+" under the cursor is a string or comment
 function! elixir#searchpair_back_skip()
+  " NOTE: @jbodah 2017-02-27: for some reason this function gets called with
+  " and index that doesn't exist in the line sometimes. Detect and account for
+  " that situation
   let curr_col = col('.')
   if getline('.')[curr_col-1] == ''
     let curr_col = curr_col-1
@@ -55,18 +73,25 @@ function! elixir#searchpair_back_skip()
   return elixir#is_string_or_comment(line('.'), curr_col)
 endfunction
 
+" DRY up searchpair calls
 function! elixir#searchpair_back(start, mid, end)
   return searchpair(a:start, a:mid, a:end, 'bn', "elixir#searchpair_back_skip()")
 endfunction
 
+" DRY up searchpairpos calls
 function! elixir#searchpairpos_back(start, mid, end)
   return searchpairpos(a:start, a:mid, a:end, 'bn', "elixir#searchpair_back_skip()")
 endfunction
 
+" DRY up regex for keywords that 1) makes sure we only look at complete words
+" and 2) ignores atoms
 function! elixir#keyword(expr)
   return ':\@<!\<'.a:expr.'\>:\@!'
 endfunction
 
+" Start at the end of text and search backwards looking for a match. Also peek
+" ahead if we get a match to make sure we get a complete match. This means
+" that the result should be the position of the start of the right-most match
 function! elixir#find_last_pos(lnum, text, match)
   let last = len(a:text) - 1
   let c = last
@@ -90,6 +115,9 @@ function! elixir#find_last_pos(lnum, text, match)
   return -1
 endfunction
 
+" Returns the indent level of the innermost data structure. For example, if we
+" are in a list nested in a tuple then this function should return the indent
+" level based on the list. Returns -1 if not in a data structure
 function! elixir#find_innermost_block_indent(lnum)
   let innermost = -1
 
@@ -108,7 +136,7 @@ function! elixir#find_innermost_block_indent(lnum)
     endif
   endif
 
-  " TODO: @jbodah 2017-02-24:
+  " TODO: @jbodah 2017-02-24: expand to be treated like []
   " If in tuple/map/struct...
   let pair_lnum = elixir#searchpair_back('{', '', '}')
   if pair_lnum
@@ -118,6 +146,7 @@ function! elixir#find_innermost_block_indent(lnum)
   return innermost
 endfunction
 
+" Main indent callback
 function! elixir#indent(lnum)
   let lnum = a:lnum
   let text = getline(lnum)
@@ -131,17 +160,17 @@ function! elixir#indent(lnum)
   let searchpair_skip = "synIDattr(synID(line('.'), col('.'), 1), 'name') =~ '\\%(String\\|Comment\\)'"
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
-  echom "Indenting line " . lnum
-  echom "text = " . text
+  elixir#debug("Indenting line " . lnum)
+  elixir#debug("text = " . text)
 
   " 1. Look at last non-blank line...
   if prev_nb_lnum == 0
-    echom "top of file"
+    elixir#debug("top of file")
     return 0
   end
 
   if elixir#ends_with(prev_nb_text, elixir#keyword('do'), prev_nb_lnum)
-    echom "prev line ends with do"
+    elixir#debug("prev line ends with do")
     if elixir#starts_with(text, '\<end\>', lnum)
       return prev_nb_indent
     else
@@ -150,18 +179,18 @@ function! elixir#indent(lnum)
   endif
 
   if elixir#ends_with(prev_nb_text, '\<else\>', prev_nb_lnum)
-    echom "prev line ends with else"
+    elixir#debug("prev line ends with else")
     return prev_nb_indent + 2
   endif
 
   if elixir#ends_with(prev_nb_text, binary_operator, prev_nb_lnum)
-    echom "prev line ends with binary operator"
+    elixir#debug("prev line ends with binary operator")
     return prev_nb_indent + 2
   endif
 
   " 2. Look at current line...
   if elixir#starts_with(text, '|>', lnum)
-    echom "starts w pipe"
+    elixir#debug("starts w pipe")
     let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
     let pos = elixir#find_last_pos(prev_nb_lnum, prev_nb_text, match_operator)
     if pos == -1
@@ -177,43 +206,43 @@ function! elixir#indent(lnum)
   endif
 
   if elixir#starts_with(text, '\<end\>', lnum)
-    echom "starts with end"
+    elixir#debug("starts with end")
     let pair_lnum = elixir#searchpair_back(elixir#keyword('\%(do\|fn\)'), '', elixir#keyword('end').'\zs')
     return indent(pair_lnum)
   endif
 
   if elixir#starts_with(text, '\<else\>', lnum)
-    echom "starts with else"
+    elixir#debug("starts with else")
     let pair_lnum = elixir#searchpair_back('\<if\>', '\<else\>\zs', '\<end\>')
     return indent(pair_lnum)
   endif
 
   if elixir#starts_with(text, '\<rescue\>', lnum)
-    echom "starts with rescue"
+    elixir#debug("starts with rescue")
     let pair_lnum = elixir#searchpair_back('\<try\>', '\<rescue\>\zs', '\<end\>')
     return indent(pair_lnum)
   endif
 
   if elixir#starts_with(text, '\<catch\>', lnum)
-    echom "starts with catch"
+    elixir#debug("starts with catch")
     let pair_lnum = elixir#searchpair_back('\<try\>', '\<catch\>\zs', '\<end\>')
     return indent(pair_lnum)
   endif
 
   if elixir#starts_with(text, '\<after\>', lnum)
-    echom "starts with after"
+    elixir#debug("starts with after")
     let pair_lnum = elixir#searchpair_back('\<receive\>', '\<after\>\zs', '\<end\>')
     return indent(pair_lnum)
   endif
 
   if elixir#starts_with(text, '\]', lnum)
-    echom "starts with ]"
+    elixir#debug("starts with ]")
     let pair_lnum = elixir#searchpair_back('\[', '', '\]\zs')
     return indent(pair_lnum)
   endif
 
   if elixir#starts_with(text, '}', lnum)
-    echom "starts with }"
+    elixir#debug("starts with }")
     let pair_lnum = elixir#searchpair_back('{', '', '}\zs')
     return indent(pair_lnum)
   endif
@@ -222,7 +251,7 @@ function! elixir#indent(lnum)
   " If in "cond" statement...
   let pair_lnum = elixir#searchpair_back('\<cond\>', '', '\<end\>')
   if pair_lnum
-    echom "in cond"
+    elixir#debug("in cond")
     if elixir#contains(text, '->')
       return indent(pair_lnum) + 2
     else
@@ -233,7 +262,7 @@ function! elixir#indent(lnum)
   " If in "case" statement...
   let pair_lnum = elixir#searchpair_back('\<case\>', '', '\<end\>')
   if pair_lnum
-    echom "in case"
+    elixir#debug("in case")
     if elixir#contains(text, '->')
       return indent(pair_lnum) + 2
     else
@@ -244,7 +273,7 @@ function! elixir#indent(lnum)
   " If in "fn" statement...
   let pair_lnum = elixir#searchpair_back('\<fn\>', '', '\<end\>')
   if pair_lnum && pair_lnum != lnum
-    echom "in fn"
+    elixir#debug("in fn")
     if elixir#contains(text, '->')
       return indent(pair_lnum) + 2
     else
@@ -259,7 +288,7 @@ function! elixir#indent(lnum)
   " If in "rescue" statement...
   let pair_lnum = elixir#searchpair_back('\<rescue\>', '', '\<end\>')
   if pair_lnum
-    echom "in rescue"
+    elixir#debug("in rescue")
     if elixir#ends_with(text, '->', lnum)
       return indent(pair_lnum) + 2
     else
@@ -270,7 +299,7 @@ function! elixir#indent(lnum)
   " If in "catch" statement...
   let pair_lnum = elixir#searchpair_back('\<catch\>', '', '\<end\>')
   if pair_lnum
-    echom "in catch"
+    elixir#debug("in catch")
     if elixir#ends_with(text, '->', lnum)
       return indent(pair_lnum) + 2
     else
@@ -281,7 +310,7 @@ function! elixir#indent(lnum)
   " If in "after" statement...
   let pair_lnum = elixir#searchpair_back('\<after\>', '', '\<end\>')
   if pair_lnum
-    echom "in after"
+    elixir#debug("in after")
     if elixir#ends_with(text, '->', lnum)
       return indent(pair_lnum) + 2
     else
@@ -292,7 +321,7 @@ function! elixir#indent(lnum)
   " If in "receive" statement...
   let pair_lnum = elixir#searchpair_back('\<receive\>', '', '\<\%(end\|after\)\>')
   if pair_lnum
-    echom "in receive"
+    elixir#debug("in receive")
     if elixir#ends_with(text, '->', lnum)
       return indent(pair_lnum) + 2
     else
@@ -303,15 +332,15 @@ function! elixir#indent(lnum)
   " Find innermost data structure and indent based on it...
   let block_indent = elixir#find_innermost_block_indent(lnum)
   if block_indent != -1
-    echom "found block indent"
+    elixir#debug("found block indent")
     return block_indent
   endif
 
   " If in parens...
-  echom "checking parens"
+  elixir#debug("checking parens"))
   let pair_lnum = elixir#searchpair_back('(', '', ')')
   if pair_lnum
-    echom "in parens"
+    elixir#debug("in parens")
     " Align indent (e.g. "def add(a,")
     let pos = elixir#find_last_pos(prev_nb_lnum, prev_nb_text, '\w\+,')
     if pos == -1
@@ -323,18 +352,14 @@ function! elixir#indent(lnum)
   endif
 
   " 4. Look back two non-blank lines...
-  " if elixir#ends_with(two_prev_nb_text, binary_operator, two_prev_nb_lnum)
-  "   return two_prev_nb_indent
-  " end
-
   " If in a do-end block, use that as top-level
   let pair_lnum = searchpair(elixir#keyword('\%(do\|\fn\)'), '', elixir#keyword('end'), 'b', "line('.') == ".lnum." || elixir#is_string_or_comment(line('.'), col('.'))")
   if pair_lnum
-    echom "in do-end block as top-level"
+    elixir#debug("in do-end block as top-level")
     return indent(pair_lnum) + 2
   endif
 
-  echom "defaulting"
-  " Else...
+  " 5. Else...
+  elixir#debug("defaulting")
   return 0
 endfunction
