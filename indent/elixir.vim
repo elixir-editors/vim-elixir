@@ -6,12 +6,14 @@ let b:did_indent = 1
 
 setlocal indentexpr=elixir#indent(v:lnum)
 
-setlocal indentkeys+=0=end,0=catch,0=rescue,0=after,0=else,=->,0},0],0=\|>
+setlocal indentkeys+=0=end,0=catch,0=rescue,0=after,0=else,=->,0},0],0=\|>,0=<>
+" TODO: @jbodah 2017-02-27:
 " setlocal indentkeys+=0)
+" TODO: @jbodah 2017-02-27: all operators should cause reindent when typed
 
 function! elixir#debug(str)
   if exists("g:elixir#debug") && g:elixir#debug
-    echom str
+    echom a:str
   endif
 endfunction
 
@@ -152,6 +154,7 @@ function! elixir#indent(lnum)
   let text = getline(lnum)
   let prev_nb_lnum = prevnonblank(lnum-1)
   let prev_nb_text = getline(prev_nb_lnum)
+  " TODO: @jbodah 2017-02-27: remove variable
   let prev_nb_indent = indent(prev_nb_lnum)
   let two_prev_nb_lnum = prevnonblank(prev_nb_lnum-1)
   let two_prev_nb_text = getline(two_prev_nb_lnum)
@@ -245,6 +248,11 @@ function! elixir#indent(lnum)
     elixir#debug("starts with }")
     let pair_lnum = elixir#searchpair_back('{', '', '}\zs')
     return indent(pair_lnum)
+  endif
+
+  if elixir#starts_with(text, binary_operator, lnum)
+    elixir#debug("starts with binary operator")
+    return indent(prev_nb_lnum)
   endif
 
   " 3. Nesting adjustments...

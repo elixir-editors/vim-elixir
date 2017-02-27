@@ -2,26 +2,7 @@
 
 require 'spec_helper'
 
-
 describe 'Basic indenting' do
-  def self.i(str)
-    it "#{str}" do
-      reload = -> do
-        VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
-        received = ExBuffer.new.reindent(str)
-        puts received
-        str == received
-      end
-      actual = ExBuffer.new.reindent(str)
-      require 'rubygems'; require 'pry'; binding.pry unless actual == str
-      expect(actual).to eq(str)
-    end
-
-    it "typed: #{str}" do
-      expect(str).to be_typed_with_right_indent
-    end
-  end
-
   i <<~EOF
 
   defmodule Hello do

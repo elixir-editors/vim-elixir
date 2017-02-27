@@ -195,3 +195,22 @@ RSpec.configure do |config|
   config.filter_run_including focus: true
   config.run_all_when_everything_filtered = true
 end
+
+RSpec::Core::ExampleGroup.instance_eval do
+  def i(str)
+    it "#{str}" do
+      reload = -> do
+        VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
+        received = ExBuffer.new.reindent(str)
+        puts received
+        str == received
+      end
+      actual = ExBuffer.new.reindent(str)
+      expect(actual).to eq(str)
+    end
+
+    it "typed: #{str}" do
+      expect(str).to be_typed_with_right_indent
+    end
+  end
+end
