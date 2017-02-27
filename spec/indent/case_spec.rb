@@ -27,7 +27,7 @@ describe 'Indenting case statements' do
     EOF
   end
 
-  pending 'nested case statements' do
+  it 'nested case statements' do
     expect(<<~EOF).to be_elixir_indentation
     defmodule M do
       defp _fetch(result, key, deep_key) do
