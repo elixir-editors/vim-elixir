@@ -536,4 +536,28 @@ describe 'Basic indenting' do
     end
   end
   EOF
+
+  i <<~EOF
+  fun1 = fn
+    (:foo) ->
+      :bar
+      :end
+  end
+  EOF
+
+  i <<~EOF
+  fun2 = fn
+    (:foo) ->
+      :bar
+      'end'
+  end
+  EOF
+
+  i <<~EOF
+  fun3 = fn
+    (:foo) ->
+      :bar
+      :send
+  end
+  EOF
 end
