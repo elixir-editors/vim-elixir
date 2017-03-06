@@ -44,4 +44,10 @@ describe 'Indenting Ecto queries' do
     end
     EOF
   end
+
+  i <<~EOF
+  def alphabetical(query) do
+    from c in query, order_by: c.name
+  end
+  EOF
 end
