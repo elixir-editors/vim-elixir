@@ -152,14 +152,13 @@ describe 'Indenting pipeline' do
     EOF
   end
 
-  # TODO: @jbodah 2017-03-06: 210
-  # i <<~EOF
-  # def hello do
-  #   do_something
-  #   |> Pipe.to_me
-  #   {:ok}
-  # end
-  # EOF
+  i <<~EOF
+  def hello do
+    do_something
+    |> Pipe.to_me
+    {:ok}
+  end
+  EOF
 
   i <<~EOF
   defmodule MyModule do

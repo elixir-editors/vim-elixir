@@ -14,14 +14,13 @@ describe 'Binary operators' do
   IO.puts word
   EOF
 
-  # TODO: @jbodah 2017-03-06: 209
-  # i <<~EOF
-  # def hello do
-  #   expected = "hello"
-  #              <> "world"
-  #   IO.puts expected
-  # end
-  # EOF
+  i <<~EOF
+  def hello do
+    expected = "hello"
+               <> "world"
+    IO.puts expected
+  end
+  EOF
 
   i <<~EOF
   def hello do
