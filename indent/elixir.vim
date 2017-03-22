@@ -159,11 +159,7 @@ function! elixir#indent(lnum)
   let prev_nb_text = getline(prev_nb_lnum)
   " TODO: @jbodah 2017-02-27: remove variable
   let prev_nb_indent = indent(prev_nb_lnum)
-  let two_prev_nb_lnum = prevnonblank(prev_nb_lnum-1)
-  let two_prev_nb_text = getline(two_prev_nb_lnum)
-  let two_prev_nb_indent = indent(two_prev_nb_lnum)
 
-  let searchpair_skip = "synIDattr(synID(line('.'), col('.'), 1), 'name') =~ '\\%(String\\|Comment\\)'"
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
   call elixir#debug("Indenting line " . lnum)
