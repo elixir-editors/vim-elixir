@@ -173,10 +173,15 @@ function! elixir#indent(lnum)
   call elixir#debug("text = " . text)
 
   " 1. Look at last non-blank line...
-  let indent = elixir#handle_indent_top_of_file(lnum, text, prev_nb_lnum, prev_nb_text)
-  if indent != -1
-    return indent
-  endif
+  let handlers = [
+        \'top_of_file'
+        \]
+  for handler in handlers
+    let indent = function('elixir#handle_indent_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
+    if indent != -1
+      return indent
+    endif
+  endfor
 
   if elixir#ends_with(prev_nb_text, elixir#keyword('do'), prev_nb_lnum)
     call elixir#debug("prev line ends with do")
