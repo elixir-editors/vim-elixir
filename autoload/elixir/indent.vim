@@ -121,7 +121,7 @@ function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, p
     if elixir#indent#starts_with(a:text, '\<end\>', a:lnum)
       return indent(a:prev_nb_lnum)
     else
-      return indent(a:prev_nb_lnum) + 2
+      return indent(a:prev_nb_lnum) + &sw
     end
   else
     return -1
@@ -131,7 +131,7 @@ endfunction
 function! elixir#indent#handle_following_trailing_else(_lnum, _text, prev_nb_lnum, prev_nb_text)
   if elixir#indent#ends_with(a:prev_nb_text, '\<else\>', a:prev_nb_lnum)
     call elixir#indent#debug("prev line ends with else")
-    return indent(a:prev_nb_lnum) + 2
+    return indent(a:prev_nb_lnum) + &sw
   else
     return -1
   endif
@@ -142,7 +142,7 @@ function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, pr
 
   if elixir#indent#ends_with(a:prev_nb_text, binary_operator, a:prev_nb_lnum)
     call elixir#indent#debug("prev line ends with binary operator")
-    return indent(a:prev_nb_lnum) + 2
+    return indent(a:prev_nb_lnum) + &sw
   else
     return -1
   endif
@@ -158,7 +158,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
     else
       let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
       if next_word_pos == -1
-        return indent(a:prev_nb_lnum) + 2
+        return indent(a:prev_nb_lnum) + &sw
       else
         return pos + 1 + next_word_pos
       end
@@ -250,7 +250,7 @@ function! elixir#indent#handle_starts_with_binary_operator(lnum, text, prev_nb_l
     else
       let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
       if next_word_pos == -1
-        return indent(a:prev_nb_lnum) + 2
+        return indent(a:prev_nb_lnum) + &sw
       else
         return pos + 1 + next_word_pos
       end
@@ -265,9 +265,9 @@ function! elixir#indent#handle_inside_cond_block(_lnum, text, _prev_nb_lnum, _pr
   if pair_lnum
     call elixir#indent#debug("in cond")
     if elixir#indent#contains(a:text, '->')
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
-      return indent(pair_lnum) + 4
+      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
@@ -279,9 +279,9 @@ function! elixir#indent#handle_inside_case_block(_lnum, text, _prev_nb_lnum, _pr
   if pair_lnum
     call elixir#indent#debug("in case")
     if elixir#indent#contains(a:text, '->')
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
-      return indent(pair_lnum) + 4
+      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
@@ -293,10 +293,10 @@ function! elixir#indent#handle_inside_fn(lnum, text, prev_nb_lnum, prev_nb_text)
   if pair_lnum && pair_lnum != a:lnum
     call elixir#indent#debug("in fn")
     if elixir#indent#contains(a:text, '->')
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
       if elixir#indent#ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
-        return indent(a:prev_nb_lnum) + 2
+        return indent(a:prev_nb_lnum) + &sw
       else
         return indent(a:prev_nb_lnum)
       end
@@ -311,9 +311,9 @@ function! elixir#indent#handle_inside_rescue(lnum, text, _prev_nb_lnum, _prev_nb
   if pair_lnum
     call elixir#indent#debug("in rescue")
     if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
-      return indent(pair_lnum) + 4
+      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
@@ -325,9 +325,9 @@ function! elixir#indent#handle_inside_catch(lnum, text, _prev_nb_lnum, _prev_nb_
   if pair_lnum
     call elixir#indent#debug("in catch")
     if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
-      return indent(pair_lnum) + 4
+      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
@@ -339,9 +339,9 @@ function! elixir#indent#handle_inside_after(lnum, text, _prev_nb_lnum, _prev_nb_
   if pair_lnum
     call elixir#indent#debug("in after")
     if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
-      return indent(pair_lnum) + 4
+      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
@@ -353,9 +353,9 @@ function! elixir#indent#handle_inside_receive(lnum, text, _prev_nb_lnum, _prev_n
   if pair_lnum
     call elixir#indent#debug("in receive")
     if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + 2
+      return indent(pair_lnum) + &sw
     else
-      return indent(pair_lnum) + 4
+      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
@@ -377,7 +377,7 @@ function! elixir#indent#handle_inside_data_structure(_lnum, _text, _prev_nb_lnum
     if indent_pos != -1
       let innermost = max([innermost, indent_pos + pair_col])
     else
-      let innermost = max([innermost, indent(pair_lnum) + 2])
+      let innermost = max([innermost, indent(pair_lnum) + &sw])
     endif
   endif
 
@@ -386,7 +386,7 @@ function! elixir#indent#handle_inside_data_structure(_lnum, _text, _prev_nb_lnum
   let pair_lnum = elixir#indent#searchpair_back('{', '', '}')
   if pair_lnum
     call elixir#indent#debug("in tuple/map/struct")
-    let innermost = max([innermost, indent(pair_lnum) + 2])
+    let innermost = max([innermost, indent(pair_lnum) + &sw])
   endif
 
   return innermost
@@ -404,7 +404,6 @@ function! elixir#indent#handle_inside_parens(_lnum, _text, prev_nb_lnum, prev_nb
     else
       return pos
     end
-    return indent(pair_lnum) + 2
   else
     return -1
   endif
@@ -414,7 +413,7 @@ function! elixir#indent#handle_inside_generic_block(lnum, _text, _prev_nb_lnum, 
   let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|\fn\)'), '', elixir#indent#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
   if pair_lnum
     call elixir#indent#debug("in do-end block as top-level")
-    return indent(pair_lnum) + 2
+    return indent(pair_lnum) + &sw
   else
     return -1
   endif
