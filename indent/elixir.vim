@@ -157,8 +157,6 @@ function! elixir#indent(lnum)
   let text = getline(lnum)
   let prev_nb_lnum = prevnonblank(lnum-1)
   let prev_nb_text = getline(prev_nb_lnum)
-  " TODO: @jbodah 2017-02-27: remove variable
-  let prev_nb_indent = indent(prev_nb_lnum)
 
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
@@ -174,20 +172,20 @@ function! elixir#indent(lnum)
   if elixir#ends_with(prev_nb_text, elixir#keyword('do'), prev_nb_lnum)
     call elixir#debug("prev line ends with do")
     if elixir#starts_with(text, '\<end\>', lnum)
-      return prev_nb_indent
+      return indent(prev_nb_lnum)
     else
-      return prev_nb_indent + 2
+      return indent(prev_nb_lnum) + 2
     end
   endif
 
   if elixir#ends_with(prev_nb_text, '\<else\>', prev_nb_lnum)
     call elixir#debug("prev line ends with else")
-    return prev_nb_indent + 2
+    return indent(prev_nb_lnum) + 2
   endif
 
   if elixir#ends_with(prev_nb_text, binary_operator, prev_nb_lnum)
     call elixir#debug("prev line ends with binary operator")
-    return prev_nb_indent + 2
+    return indent(prev_nb_lnum) + 2
   endif
 
   " 2. Look at current line...
@@ -299,9 +297,9 @@ function! elixir#indent(lnum)
       return indent(pair_lnum) + 2
     else
       if elixir#ends_with(prev_nb_text, '->', prev_nb_lnum)
-        return prev_nb_indent + 2
+        return indent(prev_nb_lnum) + 2
       else
-        return prev_nb_indent
+        return indent(prev_nb_lnum)
       end
     end
   endif
