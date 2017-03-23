@@ -151,6 +151,15 @@ function! elixir#find_innermost_block_indent(lnum)
   return innermost
 endfunction
 
+function! elixir#handle_indent_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_text)
+  if a:prev_nb_lnum == 0
+    call elixir#debug("top of file")
+    return 0
+  else
+    return -1
+  end
+endfunction
+
 " Main indent callback
 function! elixir#indent(lnum)
   let lnum = a:lnum
@@ -164,10 +173,10 @@ function! elixir#indent(lnum)
   call elixir#debug("text = " . text)
 
   " 1. Look at last non-blank line...
-  if prev_nb_lnum == 0
-    call elixir#debug("top of file")
-    return 0
-  end
+  let indent = elixir#handle_indent_top_of_file(lnum, text, prev_nb_lnum, prev_nb_text)
+  if indent != -1
+    return indent
+  endif
 
   if elixir#ends_with(prev_nb_text, elixir#keyword('do'), prev_nb_lnum)
     call elixir#debug("prev line ends with do")
