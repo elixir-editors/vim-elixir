@@ -119,10 +119,263 @@ function! elixir#find_last_pos(lnum, text, match)
   return -1
 endfunction
 
-" Returns the indent level of the innermost data structure. For example, if we
-" are in a list nested in a tuple then this function should return the indent
-" level based on the list. Returns -1 if not in a data structure
-function! elixir#find_innermost_block_indent(lnum)
+function! elixir#handle_indent_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_text)
+  if a:prev_nb_lnum == 0
+    call elixir#debug("top of file")
+    return 0
+  else
+    return -1
+  end
+endfunction
+
+function! elixir#handle_indent_following_trailing_do(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#ends_with(a:prev_nb_text, elixir#keyword('do'), a:prev_nb_lnum)
+    call elixir#debug("prev line ends with do")
+    if elixir#starts_with(a:text, '\<end\>', a:lnum)
+      return indent(a:prev_nb_lnum)
+    else
+      return indent(a:prev_nb_lnum) + 2
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_following_trailing_else(_lnum, _text, prev_nb_lnum, prev_nb_text)
+  if elixir#ends_with(a:prev_nb_text, '\<else\>', a:prev_nb_lnum)
+    call elixir#debug("prev line ends with else")
+    return indent(a:prev_nb_lnum) + 2
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_following_trailing_binary_operator(lnum, text, prev_nb_lnum, prev_nb_text)
+  let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
+
+  if elixir#ends_with(a:prev_nb_text, binary_operator, a:prev_nb_lnum)
+    call elixir#debug("prev line ends with binary operator")
+    return indent(a:prev_nb_lnum) + 2
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_pipe(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#starts_with(a:text, '|>', a:lnum)
+    call elixir#debug("starts w pipe")
+    let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
+    let pos = elixir#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, match_operator)
+    if pos == -1
+      return indent(a:prev_nb_lnum)
+    else
+      let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
+      if next_word_pos == -1
+        return indent(a:prev_nb_lnum) + 2
+      else
+        return pos + 1 + next_word_pos
+      end
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '\<end\>', a:lnum)
+    call elixir#debug("starts with end")
+    let pair_lnum = elixir#searchpair_back(elixir#keyword('\%(do\|fn\)'), '', elixir#keyword('end').'\zs')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_else(lnum, text, prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '\<else\>', a:lnum)
+    call elixir#debug("starts with else")
+    let pair_lnum = elixir#searchpair_back('\<if\>', '\<else\>\zs', '\<end\>')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_rescue(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '\<rescue\>', a:lnum)
+    call elixir#debug("starts with rescue")
+    let pair_lnum = elixir#searchpair_back('\<try\>', '\<rescue\>\zs', '\<end\>')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_catch(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '\<catch\>', a:lnum)
+    call elixir#debug("starts with catch")
+    let pair_lnum = elixir#searchpair_back('\<try\>', '\<catch\>\zs', '\<end\>')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_after(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '\<after\>', a:lnum)
+    call elixir#debug("starts with after")
+    let pair_lnum = elixir#searchpair_back('\<receive\>', '\<after\>\zs', '\<end\>')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_close_sq_bracket(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '\]', a:lnum)
+    call elixir#debug("starts with ]")
+    let pair_lnum = elixir#searchpair_back('\[', '', '\]\zs')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_close_curly_brace(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#starts_with(a:text, '}', a:lnum)
+    call elixir#debug("starts with }")
+    let pair_lnum = elixir#searchpair_back('{', '', '}\zs')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_starts_with_binary_operator(lnum, text, prev_nb_lnum, prev_nb_text)
+  let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
+
+  if elixir#starts_with(a:text, binary_operator, a:lnum)
+    call elixir#debug("starts with binary operator")
+    let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
+    let pos = elixir#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, match_operator)
+    if pos == -1
+      return indent(a:prev_nb_lnum)
+    else
+      let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
+      if next_word_pos == -1
+        return indent(a:prev_nb_lnum) + 2
+      else
+        return pos + 1 + next_word_pos
+      end
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_cond_block(_lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<cond\>', '', '\<end\>')
+  if pair_lnum
+    call elixir#debug("in cond")
+    if elixir#contains(a:text, '->')
+      return indent(pair_lnum) + 2
+    else
+      return indent(pair_lnum) + 4
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_case_block(_lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<case\>', '', '\<end\>')
+  if pair_lnum
+    call elixir#debug("in case")
+    if elixir#contains(a:text, '->')
+      return indent(pair_lnum) + 2
+    else
+      return indent(pair_lnum) + 4
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_fn(lnum, text, prev_nb_lnum, prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<fn\>', '', '\<end\>')
+  if pair_lnum && pair_lnum != a:lnum
+    call elixir#debug("in fn")
+    if elixir#contains(a:text, '->')
+      return indent(pair_lnum) + 2
+    else
+      if elixir#ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
+        return indent(a:prev_nb_lnum) + 2
+      else
+        return indent(a:prev_nb_lnum)
+      end
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_rescue(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<rescue\>', '', '\<end\>')
+  if pair_lnum
+    call elixir#debug("in rescue")
+    if elixir#ends_with(a:text, '->', a:lnum)
+      return indent(pair_lnum) + 2
+    else
+      return indent(pair_lnum) + 4
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_catch(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<catch\>', '', '\<end\>')
+  if pair_lnum
+    call elixir#debug("in catch")
+    if elixir#ends_with(a:text, '->', a:lnum)
+      return indent(pair_lnum) + 2
+    else
+      return indent(pair_lnum) + 4
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_after(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<after\>', '', '\<end\>')
+  if pair_lnum
+    call elixir#debug("in after")
+    if elixir#ends_with(a:text, '->', a:lnum)
+      return indent(pair_lnum) + 2
+    else
+      return indent(pair_lnum) + 4
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_receive(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#searchpair_back('\<receive\>', '', '\<\%(end\|after\)\>')
+  if pair_lnum
+    call elixir#debug("in receive")
+    if elixir#ends_with(a:text, '->', a:lnum)
+      return indent(pair_lnum) + 2
+    else
+      return indent(pair_lnum) + 4
+    end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_data_structure(_lnum, _text, _prev_nb_lnum, _prev_nb_text)
   let innermost = -1
 
   " If in list...
@@ -130,6 +383,7 @@ function! elixir#find_innermost_block_indent(lnum)
   let pair_lnum = pair_info[0]
   let pair_col = pair_info[1]
   if pair_lnum != 0 || pair_col != 0
+    call elixir#debug("in list")
     let pair_text = getline(pair_lnum)
     let substr = strpart(pair_text, pair_col, len(pair_text)-1)
     let indent_pos = match(substr, '\S')
@@ -144,20 +398,39 @@ function! elixir#find_innermost_block_indent(lnum)
   " If in tuple/map/struct...
   let pair_lnum = elixir#searchpair_back('{', '', '}')
   if pair_lnum
-    echom "3"
+    call elixir#debug("in tuple/map/struct")
     let innermost = max([innermost, indent(pair_lnum) + 2])
   endif
 
   return innermost
 endfunction
 
-function! elixir#handle_indent_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_text)
-  if a:prev_nb_lnum == 0
-    call elixir#debug("top of file")
-    return 0
+function! elixir#handle_indent_inside_parens(_lnum, _text, prev_nb_lnum, prev_nb_text)
+  call elixir#debug("checking parens"))
+  let pair_lnum = elixir#searchpair_back('(', '', ')')
+  if pair_lnum
+    call elixir#debug("in parens")
+    " Align indent (e.g. "def add(a,")
+    let pos = elixir#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '\w\+,')
+    if pos == -1
+      return 0
+    else
+      return pos
+    end
+    return indent(pair_lnum) + 2
   else
     return -1
-  end
+  endif
+endfunction
+
+function! elixir#handle_indent_inside_generic_block(lnum, _text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = searchpair(elixir#keyword('\%(do\|\fn\)'), '', elixir#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#is_string_or_comment(line('.'), col('.'))")
+  if pair_lnum
+    call elixir#debug("in do-end block as top-level")
+    return indent(pair_lnum) + 2
+  else
+    return -1
+  endif
 endfunction
 
 " Main indent callback
@@ -167,14 +440,34 @@ function! elixir#indent(lnum)
   let prev_nb_lnum = prevnonblank(lnum-1)
   let prev_nb_text = getline(prev_nb_lnum)
 
-  let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
-
   call elixir#debug("Indenting line " . lnum)
   call elixir#debug("text = " . text)
 
   " 1. Look at last non-blank line...
   let handlers = [
-        \'top_of_file'
+        \'top_of_file',
+        \'following_trailing_do',
+        \'following_trailing_else',
+        \'following_trailing_binary_operator',
+        \'starts_with_pipe',
+        \'starts_with_end',
+        \'starts_with_else',
+        \'starts_with_rescue',
+        \'starts_with_catch',
+        \'starts_with_after',
+        \'starts_with_close_sq_bracket',
+        \'starts_with_close_curly_brace',
+        \'starts_with_binary_operator',
+        \'inside_cond_block',
+        \'inside_case_block',
+        \'inside_fn',
+        \'inside_rescue',
+        \'inside_catch',
+        \'inside_after',
+        \'inside_receive',
+        \'inside_data_structure',
+        \'inside_parens',
+        \'inside_generic_block'
         \]
   for handler in handlers
     let indent = function('elixir#handle_indent_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
@@ -183,216 +476,6 @@ function! elixir#indent(lnum)
     endif
   endfor
 
-  if elixir#ends_with(prev_nb_text, elixir#keyword('do'), prev_nb_lnum)
-    call elixir#debug("prev line ends with do")
-    if elixir#starts_with(text, '\<end\>', lnum)
-      return indent(prev_nb_lnum)
-    else
-      return indent(prev_nb_lnum) + 2
-    end
-  endif
-
-  if elixir#ends_with(prev_nb_text, '\<else\>', prev_nb_lnum)
-    call elixir#debug("prev line ends with else")
-    return indent(prev_nb_lnum) + 2
-  endif
-
-  if elixir#ends_with(prev_nb_text, binary_operator, prev_nb_lnum)
-    call elixir#debug("prev line ends with binary operator")
-    return indent(prev_nb_lnum) + 2
-  endif
-
-  " 2. Look at current line...
-  if elixir#starts_with(text, '|>', lnum)
-    call elixir#debug("starts w pipe")
-    let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
-    let pos = elixir#find_last_pos(prev_nb_lnum, prev_nb_text, match_operator)
-    if pos == -1
-      return indent(prev_nb_lnum)
-    else
-      let next_word_pos = match(strpart(prev_nb_text, pos+1, len(prev_nb_text)-1), '\S')
-      if next_word_pos == -1
-        return indent(prev_nb_lnum) + 2
-      else
-        return pos + 1 + next_word_pos
-      end
-    end
-  endif
-
-  if elixir#starts_with(text, '\<end\>', lnum)
-    call elixir#debug("starts with end")
-    let pair_lnum = elixir#searchpair_back(elixir#keyword('\%(do\|fn\)'), '', elixir#keyword('end').'\zs')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, '\<else\>', lnum)
-    call elixir#debug("starts with else")
-    let pair_lnum = elixir#searchpair_back('\<if\>', '\<else\>\zs', '\<end\>')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, '\<rescue\>', lnum)
-    call elixir#debug("starts with rescue")
-    let pair_lnum = elixir#searchpair_back('\<try\>', '\<rescue\>\zs', '\<end\>')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, '\<catch\>', lnum)
-    call elixir#debug("starts with catch")
-    let pair_lnum = elixir#searchpair_back('\<try\>', '\<catch\>\zs', '\<end\>')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, '\<after\>', lnum)
-    call elixir#debug("starts with after")
-    let pair_lnum = elixir#searchpair_back('\<receive\>', '\<after\>\zs', '\<end\>')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, '\]', lnum)
-    call elixir#debug("starts with ]")
-    let pair_lnum = elixir#searchpair_back('\[', '', '\]\zs')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, '}', lnum)
-    call elixir#debug("starts with }")
-    let pair_lnum = elixir#searchpair_back('{', '', '}\zs')
-    return indent(pair_lnum)
-  endif
-
-  if elixir#starts_with(text, binary_operator, lnum)
-    call elixir#debug("starts with binary operator")
-    let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
-    let pos = elixir#find_last_pos(prev_nb_lnum, prev_nb_text, match_operator)
-    if pos == -1
-      echom "case1"
-      return indent(prev_nb_lnum)
-    else
-      let next_word_pos = match(strpart(prev_nb_text, pos+1, len(prev_nb_text)-1), '\S')
-      if next_word_pos == -1
-        echom "case2"
-        return indent(prev_nb_lnum) + 2
-      else
-        echom "case3"
-        return pos + 1 + next_word_pos
-      end
-    end
-  endif
-
-  " 3. Nesting adjustments...
-  " If in "cond" statement...
-  let pair_lnum = elixir#searchpair_back('\<cond\>', '', '\<end\>')
-  if pair_lnum
-    call elixir#debug("in cond")
-    if elixir#contains(text, '->')
-      return indent(pair_lnum) + 2
-    else
-      return indent(pair_lnum) + 4
-    end
-  endif
-
-  " If in "case" statement...
-  let pair_lnum = elixir#searchpair_back('\<case\>', '', '\<end\>')
-  if pair_lnum
-    call elixir#debug("in case")
-    if elixir#contains(text, '->')
-      return indent(pair_lnum) + 2
-    else
-      return indent(pair_lnum) + 4
-    end
-  endif
-
-  " If in "fn" statement...
-  let pair_lnum = elixir#searchpair_back('\<fn\>', '', '\<end\>')
-  if pair_lnum && pair_lnum != lnum
-    call elixir#debug("in fn")
-    if elixir#contains(text, '->')
-      return indent(pair_lnum) + 2
-    else
-      if elixir#ends_with(prev_nb_text, '->', prev_nb_lnum)
-        return indent(prev_nb_lnum) + 2
-      else
-        return indent(prev_nb_lnum)
-      end
-    end
-  endif
-
-  " If in "rescue" statement...
-  let pair_lnum = elixir#searchpair_back('\<rescue\>', '', '\<end\>')
-  if pair_lnum
-    call elixir#debug("in rescue")
-    if elixir#ends_with(text, '->', lnum)
-      return indent(pair_lnum) + 2
-    else
-      return indent(pair_lnum) + 4
-    end
-  endif
-
-  " If in "catch" statement...
-  let pair_lnum = elixir#searchpair_back('\<catch\>', '', '\<end\>')
-  if pair_lnum
-    call elixir#debug("in catch")
-    if elixir#ends_with(text, '->', lnum)
-      return indent(pair_lnum) + 2
-    else
-      return indent(pair_lnum) + 4
-    end
-  endif
-
-  " If in "after" statement...
-  let pair_lnum = elixir#searchpair_back('\<after\>', '', '\<end\>')
-  if pair_lnum
-    call elixir#debug("in after")
-    if elixir#ends_with(text, '->', lnum)
-      return indent(pair_lnum) + 2
-    else
-      return indent(pair_lnum) + 4
-    end
-  endif
-
-  " If in "receive" statement...
-  let pair_lnum = elixir#searchpair_back('\<receive\>', '', '\<\%(end\|after\)\>')
-  if pair_lnum
-    call elixir#debug("in receive")
-    if elixir#ends_with(text, '->', lnum)
-      return indent(pair_lnum) + 2
-    else
-      return indent(pair_lnum) + 4
-    end
-  endif
-
-  " Find innermost data structure and indent based on it...
-  let block_indent = elixir#find_innermost_block_indent(lnum)
-  if block_indent != -1
-    call elixir#debug("found block indent")
-    return block_indent
-  endif
-
-  " If in parens...
-  call elixir#debug("checking parens"))
-  let pair_lnum = elixir#searchpair_back('(', '', ')')
-  if pair_lnum
-    call elixir#debug("in parens")
-    " Align indent (e.g. "def add(a,")
-    let pos = elixir#find_last_pos(prev_nb_lnum, prev_nb_text, '\w\+,')
-    if pos == -1
-      return 0
-    else
-      return pos
-    end
-    return indent(pair_lnum) + 2
-  endif
-
-  " 4. Look back two non-blank lines...
-  " If in a do-end block, use that as top-level
-  let pair_lnum = searchpair(elixir#keyword('\%(do\|\fn\)'), '', elixir#keyword('end'), 'b', "line('.') == ".lnum." || elixir#is_string_or_comment(line('.'), col('.'))")
-  if pair_lnum
-    call elixir#debug("in do-end block as top-level")
-    return indent(pair_lnum) + 2
-  endif
-
-  " 5. Else...
   call elixir#debug("defaulting")
   return 0
 endfunction
