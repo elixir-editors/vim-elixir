@@ -1,4 +1,3 @@
-" Only load this indent file when no other was loaded
 if exists("b:did_indent")
   finish
 end
@@ -11,7 +10,6 @@ setlocal indentkeys+=0=end,0=catch,0=rescue,0=after,0=else,=->,0},0],0=\|>,0=<>
 " setlocal indentkeys+=0)
 " TODO: @jbodah 2017-02-27: all operators should cause reindent when typed
 
-" Main indent callback
 function! elixir#indent(lnum)
   let lnum = a:lnum
   let text = getline(lnum)
@@ -21,7 +19,6 @@ function! elixir#indent(lnum)
   call elixir#indent#debug("Indenting line " . lnum)
   call elixir#indent#debug("text = " . text)
 
-  " 1. Look at last non-blank line...
   let handlers = [
         \'top_of_file',
         \'following_trailing_do',
