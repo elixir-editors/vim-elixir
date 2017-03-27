@@ -27,7 +27,7 @@ describe 'Indenting case statements' do
     EOF
   end
 
-  pending 'nested case statements' do
+  it 'nested case statements' do
     expect(<<~EOF).to be_elixir_indentation
     defmodule M do
       defp _fetch(result, key, deep_key) do
@@ -68,4 +68,15 @@ describe 'Indenting case statements' do
     end
     EOF
   end
+
+  i <<~EOF
+  case Repo.insert(changeset) do
+    {:ok, user} ->
+      conn
+      |> put_flash(:info, "%{user.name} created!")
+      |> redirect(to: user_path(conn, :index))
+    {:error, changeset} ->
+      render(conn, "new.html", changeset: changeset)
+  end
+  EOF
 end

@@ -88,6 +88,18 @@ class Differ
   end
 end
 
+module ExBuffer
+  def self.new
+    Buffer.new(VIM, :ex)
+  end
+end
+
+module EexBuffer
+  def self.new
+    Buffer.new(VIM, :eex)
+  end
+end
+
 RSpec::Matchers.define :be_typed_with_right_indent do |syntax|
   buffer = Buffer.new(VIM, syntax || :ex)
 
@@ -97,9 +109,14 @@ RSpec::Matchers.define :be_typed_with_right_indent do |syntax|
   end
 
   failure_message do |code|
-    <<~EOM
-    #{Differ.diff(@typed, code)}
-    EOM
+      <<~EOM
+      Expected
+
+      #{@typed}
+      to be indented as
+
+      #{code}
+      EOM
   end
 end
 
@@ -111,12 +128,18 @@ end
     buffer = Buffer.new(VIM, type)
 
     match do |code|
-      buffer.reindent(code) == code
+      reindented = buffer.reindent(code)
+      reindented == code
     end
 
     failure_message do |code|
       <<~EOM
-      #{Differ.diff(buffer.reindent(code), code)}
+      Expected
+
+      #{buffer.reindent(code)}
+      to be indented as
+
+      #{code}
       EOM
     end
   end
@@ -171,4 +194,23 @@ RSpec.configure do |config|
   # Run a single spec by adding the `focus: true` option
   config.filter_run_including focus: true
   config.run_all_when_everything_filtered = true
+end
+
+RSpec::Core::ExampleGroup.instance_eval do
+  def i(str)
+    it "#{str}" do
+      reload = -> do
+        VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
+        received = ExBuffer.new.reindent(str)
+        puts received
+        str == received
+      end
+      actual = ExBuffer.new.reindent(str)
+      expect(actual).to eq(str)
+    end
+
+    it "typed: #{str}" do
+      expect(str).to be_typed_with_right_indent
+    end
+  end
 end

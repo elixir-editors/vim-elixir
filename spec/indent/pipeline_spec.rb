@@ -151,4 +151,24 @@ describe 'Indenting pipeline' do
                       |> do_stuff
     EOF
   end
+
+  i <<~EOF
+  def hello do
+    do_something
+    |> Pipe.to_me
+    {:ok}
+  end
+  EOF
+
+  i <<~EOF
+  defmodule MyModule do
+    def do_stuff do
+      name =
+        "Dr. Zaius"
+        |> determine_name
+
+      hello
+    end
+  end
+  EOF
 end

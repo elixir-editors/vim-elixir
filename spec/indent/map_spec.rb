@@ -12,4 +12,26 @@ describe 'Map indent' do
     end)
     EOF
   end
+
+  i <<~EOF
+  x = %{
+    foo: :bar
+  }
+
+  y = :foo
+  EOF
+
+  i <<~EOF
+  x =
+    %{ foo: :bar }
+
+  y = :foo
+  EOF
+
+  i <<~EOF
+  x = %{
+    foo: :bar }
+
+  y = :foo
+  EOF
 end
