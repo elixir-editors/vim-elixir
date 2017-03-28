@@ -170,6 +170,15 @@ function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_
   endif
 endfunction
 
+function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
+  let starts_with_comment = match(a:text, '^\s*#')
+  if starts_with_comment != -1
+    return indent(a:prev_nb_lnum)
+  else
+    return -1
+  endif
+endfunction
+
 function! elixir#indent#handle_starts_with_else(lnum, text, prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, '\<else\>', a:lnum)
     let pair_lnum = elixir#indent#searchpair_back('\<if\>', '\<else\>\zs', '\<end\>')

@@ -42,6 +42,7 @@ function! elixir#indent(lnum)
         \'inside_receive',
         \'inside_data_structure',
         \'inside_parens',
+        \'starts_with_comment',
         \'inside_generic_block'
         \]
   for handler in handlers
