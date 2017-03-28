@@ -2,12 +2,12 @@ Filing a bug? Have you already tried updating `vim-elixir`? For indentation/high
 
 # Actual
 
-```
+```ex
 Example code
 ```
 
 # Expected
 
-```
+```ex
 Example code
 ```
