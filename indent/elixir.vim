@@ -16,7 +16,7 @@ function! elixir#indent(lnum)
   let prev_nb_lnum = prevnonblank(lnum-1)
   let prev_nb_text = getline(prev_nb_lnum)
 
-  call elixir#indent#debug("Indenting line " . lnum)
+  call elixir#indent#debug("==> Indenting line " . lnum)
   call elixir#indent#debug("text = " . text)
 
   let handlers = [
@@ -47,6 +47,7 @@ function! elixir#indent(lnum)
   for handler in handlers
     let indent = function('elixir#indent#handle_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
     if indent != -1
+      call elixir#indent#debug('line '.lnum.': elixir#indent#handle_'.handler.' returned '.indent)
       return indent
     endif
   endfor
