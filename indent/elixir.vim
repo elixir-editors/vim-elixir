@@ -17,7 +17,7 @@ function! elixir#indent(lnum)
   let prev_nb_text = getline(prev_nb_lnum)
 
   call elixir#indent#debug("==> Indenting line " . lnum)
-  call elixir#indent#debug("text = " . text)
+  call elixir#indent#debug("text = '" . text . "'")
 
   let handlers = [
         \'top_of_file',
