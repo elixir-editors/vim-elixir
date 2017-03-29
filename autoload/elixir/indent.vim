@@ -393,7 +393,7 @@ function! elixir#indent#handle_inside_parens(_lnum, _text, prev_nb_lnum, prev_nb
 endfunction
 
 function! elixir#indent#handle_inside_generic_block(lnum, _text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|\fn\)'), '', elixir#indent#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
+  let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|fn\)'), '', elixir#indent#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
   if pair_lnum
     return indent(pair_lnum) + &sw
   else
