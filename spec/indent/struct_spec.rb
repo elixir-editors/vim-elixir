@@ -5,8 +5,8 @@ describe 'defstruct' do
   defmodule A do
     defmodule State do
       defstruct field: nil, field: nil, field: nil,
-      field: [], field: nil, field: 0,
-      field: false, field: %{}
+        field: [], field: nil, field: 0,
+        field: false, field: %{}
     end
 
     defmodule State do
@@ -15,8 +15,8 @@ describe 'defstruct' do
 
     defmodule State do
       defstruct field: nil,
-      field: [],
-      field: false
+        field: [],
+        field: false
     end
   end
   EOF

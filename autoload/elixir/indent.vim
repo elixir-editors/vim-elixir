@@ -392,10 +392,16 @@ function! elixir#indent#handle_inside_parens(_lnum, _text, prev_nb_lnum, prev_nb
   endif
 endfunction
 
-function! elixir#indent#handle_inside_generic_block(lnum, _text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|\fn\)'), '', elixir#indent#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
+function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, prev_nb_text)
+  let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|fn\)'), '', elixir#indent#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
   if pair_lnum
-    return indent(pair_lnum) + &sw
+    " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
+    " blocks
+    if elixir#indent#ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
+      return indent(pair_lnum) + 2 * &sw
+    else
+      return indent(pair_lnum) + &sw
+    endif
   else
     return -1
   endif
