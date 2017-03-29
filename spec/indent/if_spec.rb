@@ -28,4 +28,10 @@ describe 'Indenting if clauses' do
     end
     EOF
   end
+
+  i <<~EOF
+  if true do
+  else
+  end
+  EOF
 end
