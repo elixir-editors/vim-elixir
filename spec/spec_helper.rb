@@ -184,6 +184,7 @@ Vimrunner::RSpec.configure do |config|
   config.start_vim do
     VIM = Vimrunner.start_gvim
     VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
+    VIM.normal(":set ignorecase<CR>") # make sure we test ignorecase
     VIM
   end
 end
