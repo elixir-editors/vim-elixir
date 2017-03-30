@@ -114,7 +114,7 @@ endfunction
 
 function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, prev_nb_text)
   if elixir#indent#ends_with(a:prev_nb_text, elixir#indent#keyword('do'), a:prev_nb_lnum)
-    if elixir#indent#starts_with(a:text, '\<end\>', a:lnum)
+    if elixir#indent#starts_with(a:text, elixir#indent#keyword('end'), a:lnum)
       return indent(a:prev_nb_lnum)
     else
       return indent(a:prev_nb_lnum) + &sw
@@ -125,7 +125,7 @@ function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, p
 endfunction
 
 function! elixir#indent#handle_following_trailing_else(_lnum, _text, prev_nb_lnum, prev_nb_text)
-  if elixir#indent#ends_with(a:prev_nb_text, '\<else\>', a:prev_nb_lnum)
+  if elixir#indent#ends_with(a:prev_nb_text, elixir#indent#keyword('else'), a:prev_nb_lnum)
     return indent(a:prev_nb_lnum) + &sw
   else
     return -1
@@ -162,7 +162,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
 endfunction
 
 function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\<end\>', a:lnum)
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('end'), a:lnum)
     let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('\%(do\|fn\)'), '', elixir#indent#keyword('end').'\zs')
     return indent(pair_lnum)
   else
@@ -180,8 +180,8 @@ function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _p
 endfunction
 
 function! elixir#indent#handle_starts_with_else(lnum, text, prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\<else\>', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\<if\>', '\<else\>\zs', '\<end\>')
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('else'), a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('if'), elixir#indent#keyword('else').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
@@ -189,8 +189,8 @@ function! elixir#indent#handle_starts_with_else(lnum, text, prev_nb_lnum, _prev_
 endfunction
 
 function! elixir#indent#handle_starts_with_rescue(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\<rescue\>', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\<try\>', '\<rescue\>\zs', '\<end\>')
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('rescue'), a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('try'), elixir#indent#keyword('rescue').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
@@ -198,8 +198,8 @@ function! elixir#indent#handle_starts_with_rescue(lnum, text, _prev_nb_lnum, _pr
 endfunction
 
 function! elixir#indent#handle_starts_with_catch(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\<catch\>', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\<try\>', '\<catch\>\zs', '\<end\>')
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch'), a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('try'), elixir#indent#keyword('catch').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
@@ -207,8 +207,8 @@ function! elixir#indent#handle_starts_with_catch(lnum, text, _prev_nb_lnum, _pre
 endfunction
 
 function! elixir#indent#handle_starts_with_after(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\<after\>', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\<receive\|try\>', '\<after\>\zs', '\<end\>')
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('after'), a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive\|try'), elixir#indent#keyword('after').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
@@ -255,7 +255,7 @@ function! elixir#indent#handle_starts_with_binary_operator(lnum, text, prev_nb_l
 endfunction
 
 function! elixir#indent#handle_inside_cond_block(_lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<cond\>', '', '\<end\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('cond'), '', elixir#indent#keyword('end'))
   if pair_lnum
     if elixir#indent#contains(a:text, '->')
       return indent(pair_lnum) + &sw
@@ -268,7 +268,7 @@ function! elixir#indent#handle_inside_cond_block(_lnum, text, _prev_nb_lnum, _pr
 endfunction
 
 function! elixir#indent#handle_inside_case_block(_lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<case\>', '', '\<end\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('case'), '', elixir#indent#keyword('end'))
   if pair_lnum
     if elixir#indent#contains(a:text, '->')
       return indent(pair_lnum) + &sw
@@ -281,7 +281,7 @@ function! elixir#indent#handle_inside_case_block(_lnum, text, _prev_nb_lnum, _pr
 endfunction
 
 function! elixir#indent#handle_inside_fn(lnum, text, prev_nb_lnum, prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<fn\>', '', '\<end\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('fn'), '', elixir#indent#keyword('end'))
   if pair_lnum && pair_lnum != a:lnum
     if elixir#indent#contains(a:text, '->')
       return indent(pair_lnum) + &sw
@@ -298,7 +298,7 @@ function! elixir#indent#handle_inside_fn(lnum, text, prev_nb_lnum, prev_nb_text)
 endfunction
 
 function! elixir#indent#handle_inside_rescue(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<rescue\>', '', '\<end\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('rescue'), '', elixir#indent#keyword('end'))
   if pair_lnum
     if elixir#indent#ends_with(a:text, '->', a:lnum)
       return indent(pair_lnum) + &sw
@@ -311,7 +311,7 @@ function! elixir#indent#handle_inside_rescue(lnum, text, _prev_nb_lnum, _prev_nb
 endfunction
 
 function! elixir#indent#handle_inside_catch(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<catch\>', '', '\<end\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('catch'), '', elixir#indent#keyword('end'))
   if pair_lnum
     if elixir#indent#ends_with(a:text, '->', a:lnum)
       return indent(pair_lnum) + &sw
@@ -324,7 +324,7 @@ function! elixir#indent#handle_inside_catch(lnum, text, _prev_nb_lnum, _prev_nb_
 endfunction
 
 function! elixir#indent#handle_inside_after(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<after\>', '', '\<end\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('after'), '', elixir#indent#keyword('end'))
   if pair_lnum
     if elixir#indent#ends_with(a:text, '->', a:lnum)
       return indent(pair_lnum) + &sw
@@ -337,7 +337,7 @@ function! elixir#indent#handle_inside_after(lnum, text, _prev_nb_lnum, _prev_nb_
 endfunction
 
 function! elixir#indent#handle_inside_receive(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back('\<receive\>', '', '\<\%(end\|after\)\>')
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive'), '', elixir#indent#keyword('\%(end\|after\)'))
   if pair_lnum
     if elixir#indent#ends_with(a:text, '->', a:lnum)
       return indent(pair_lnum) + &sw
