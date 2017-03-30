@@ -75,7 +75,7 @@ endfunction
 " DRY up regex for keywords that 1) makes sure we only look at complete words
 " and 2) ignores atoms
 function! elixir#indent#keyword(expr)
-  return ':\@<!\<'.a:expr.'\>:\@!'
+  return ':\@<!\<\C'.a:expr.'\>:\@!'
 endfunction
 
 " Start at the end of text and search backwards looking for a match. Also peek
