@@ -254,22 +254,10 @@ function! elixir#indent#handle_starts_with_binary_operator(lnum, text, prev_nb_l
   endif
 endfunction
 
-function! elixir#indent#handle_inside_cond_block(_lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('cond'), '', elixir#indent#keyword('end'))
+function! elixir#indent#handle_inside_keyword_block(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('case\|cond\|try\|receive'), elixir#indent#keyword('rescue\|after\|catch'), elixir#indent#keyword('end'))
   if pair_lnum
-    if elixir#indent#contains(a:text, '->')
-      return indent(pair_lnum) + &sw
-    else
-      return indent(pair_lnum) + 2 * &sw
-    end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_inside_case_block(_lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('case'), '', elixir#indent#keyword('end'))
-  if pair_lnum
+    " TODO: @jbodah 2017-03-31: test contains ignores str + comments
     if elixir#indent#contains(a:text, '->')
       return indent(pair_lnum) + &sw
     else
@@ -291,32 +279,6 @@ function! elixir#indent#handle_inside_fn(lnum, text, prev_nb_lnum, prev_nb_text)
       else
         return indent(a:prev_nb_lnum)
       end
-    end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_inside_rescue(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('rescue'), '', elixir#indent#keyword('end'))
-  if pair_lnum
-    if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + &sw
-    else
-      return indent(pair_lnum) + 2 * &sw
-    end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_inside_catch_or_receive(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('catch\|receive'), elixir#indent#keyword('after'), elixir#indent#keyword('end'))
-  if pair_lnum
-    if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + &sw
-    else
-      return indent(pair_lnum) + 2 * &sw
     end
   else
     return -1
