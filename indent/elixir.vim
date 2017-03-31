@@ -38,7 +38,6 @@ function! elixir#indent(lnum)
         \'inside_fn',
         \'inside_rescue',
         \'inside_catch',
-        \'inside_after',
         \'inside_receive',
         \'inside_data_structure',
         \'inside_parens',
