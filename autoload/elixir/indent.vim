@@ -63,13 +63,13 @@ endfunction
 " DRY up searchpair calls
 function! elixir#indent#searchpair_back(start, mid, end)
   let line = line('.')
-  return searchpair(a:start, a:mid, a:end, 'bn', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
+  return searchpair(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
 endfunction
 
 " DRY up searchpairpos calls
 function! elixir#indent#searchpairpos_back(start, mid, end)
   let line = line('.')
-  return searchpairpos(a:start, a:mid, a:end, 'bn', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
+  return searchpairpos(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
 endfunction
 
 " DRY up regex for keywords that 1) makes sure we only look at complete words
@@ -393,7 +393,7 @@ function! elixir#indent#handle_inside_parens(_lnum, _text, prev_nb_lnum, prev_nb
 endfunction
 
 function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, prev_nb_text)
-  let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|fn\)'), '', elixir#indent#keyword('end'), 'b', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
+  let pair_lnum = searchpair(elixir#indent#keyword('\%(do\|fn\)'), '', elixir#indent#keyword('end'), 'bW', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
   if pair_lnum
     " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
     " blocks
