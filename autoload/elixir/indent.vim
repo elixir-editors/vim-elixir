@@ -310,21 +310,8 @@ function! elixir#indent#handle_inside_rescue(lnum, text, _prev_nb_lnum, _prev_nb
   endif
 endfunction
 
-function! elixir#indent#handle_inside_catch(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('catch'), '', elixir#indent#keyword('end'))
-  if pair_lnum
-    if elixir#indent#ends_with(a:text, '->', a:lnum)
-      return indent(pair_lnum) + &sw
-    else
-      return indent(pair_lnum) + 2 * &sw
-    end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_inside_receive(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive'), elixir#indent#keyword('after'), elixir#indent#keyword('end'))
+function! elixir#indent#handle_inside_catch_or_receive(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('catch\|receive'), elixir#indent#keyword('after'), elixir#indent#keyword('end'))
   if pair_lnum
     if elixir#indent#ends_with(a:text, '->', a:lnum)
       return indent(pair_lnum) + &sw
