@@ -55,3 +55,6 @@ setlocal includeexpr=GetElixirFilename(v:fname)
 setlocal suffixesadd=.ex,.exs,.eex,.erl,.yrl,.hrl
 
 silent! setlocal formatoptions-=t formatoptions+=croqlj
+
+let b:undo_ftplugin = 'setlocal com< cms< path< inex< sua< '.
+      \ '| unlet! b:match_ignorecase b:match_words'
