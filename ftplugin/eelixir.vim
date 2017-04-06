@@ -14,7 +14,7 @@ if !exists("g:eelixir_default_subtype")
 endif
 
 if !exists("b:eelixir_subtype")
-  let s:lines = getline(1)."\n".getline(2)."\n".getline(3)."\n".getline(4)."\n".getline(5)."\n".getline("$")
+  let s:lines = join(getline(1, 5) + [getline('$')], "\n")
   let b:eelixir_subtype = matchstr(s:lines,'eelixir_subtype=\zs\w\+')
   if b:eelixir_subtype == ''
     let b:eelixir_subtype = matchstr(&filetype,'^eex\.\zs\w\+')
