@@ -78,6 +78,10 @@ function! elixir#indent#keyword(expr)
   return ':\@<!\<\C\%('.a:expr.'\)\>:\@!'
 endfunction
 
+function! elixir#indent#starts_with_comment(text)
+  return match(a:text, '^\s*#') != -1
+endfunction
+
 " Start at the end of text and search backwards looking for a match. Also peek
 " ahead if we get a match to make sure we get a complete match. This means
 " that the result should be the position of the start of the right-most match
@@ -155,8 +159,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
 endfunction
 
 function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
-  let starts_with_comment = match(a:text, '^\s*#')
-  if starts_with_comment != -1
+  if elixir#indent#starts_with_comment(a:text) != -1
     return indent(a:prev_nb_lnum)
   else
     return -1
@@ -245,12 +248,25 @@ function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum,
   end
 endfunction
 
-function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, _prev_nb_lnum, _prev_nb_text)
+function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, prev_nb_lnum, prev_nb_text)
+  let keyword_pattern = '\C\%(\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<after\>\|\<catch\>\|\<rescue\>\)'
   if a:pair_lnum
-    " TODO: @jbodah 2017-03-31: test contains ignores str + comments
-    if elixir#indent#contains(a:text, '->')
+    if elixir#indent#starts_with_comment(a:text)
+      call elixir#indent#debug("starts with comment")
+      " last line as a "receive" or something
+      if elixir#indent#starts_with(a:prev_nb_text, keyword_pattern, a:prev_nb_lnum)
+        call elixir#indent#debug("prev nb line is keyword")
+        return indent(a:prev_nb_lnum) + &sw
+      else
+        call elixir#indent#debug("prev nb line is not keyword")
+        return indent(a:prev_nb_lnum)
+      end
+    elseif elixir#indent#contains(a:text, '->')
+      call elixir#indent#debug("contains ->")
+      " TODO: @jbodah 2017-03-31: test contains ignores str + comments
       return indent(a:pair_lnum) + &sw
     else
+      call elixir#indent#debug("doesnt start with comment or contain ->")
       return indent(a:pair_lnum) + 2 * &sw
     end
   else
