@@ -185,8 +185,8 @@ function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, 
 endfunction
 
 function! elixir#indent#handle_starts_with_close_bracket(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\%(\]\|}\)', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\)', '', '\%(\]\|}\)\zs')
+  if elixir#indent#starts_with(a:text, '\%(\]\|}\|)\)', a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)\zs')
     return indent(pair_lnum)
   else
     return -1
@@ -312,12 +312,18 @@ endfunction
 
 function! elixir#indent#do_handle_inside_parens(pair_lnum, pair_col, _lnum, _text, prev_nb_lnum, prev_nb_text)
   if a:pair_lnum
-    " Align indent (e.g. "def add(a,")
-    let pos = elixir#indent#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '\w\+,')
-    if pos == -1
-      return 0
+    if elixir#indent#ends_with(a:prev_nb_text, '(', a:prev_nb_lnum)
+      return indent(a:prev_nb_lnum) + &sw
+    elseif a:pair_lnum == a:prev_nb_lnum
+      " Align indent (e.g. "def add(a,")
+      let pos = elixir#indent#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '\w\+,')
+      if pos == -1
+        return 0
+      else
+        return pos
+      end
     else
-      return pos
+      return indent(a:prev_nb_lnum)
     end
   else
     return -1
