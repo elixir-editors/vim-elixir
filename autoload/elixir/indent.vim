@@ -159,7 +159,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
 endfunction
 
 function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with_comment(a:text) != -1
+  if elixir#indent#starts_with_comment(a:text)
     return indent(a:prev_nb_lnum)
   else
     return -1
