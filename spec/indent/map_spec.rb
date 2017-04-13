@@ -34,4 +34,16 @@ describe 'Map indent' do
 
   y = :foo
   EOF
+
+  i <<~EOF
+  test "test" do
+    Mod.fun(fn ->
+      map = %Mod.Map{
+        id: "abc123",
+        state: "processing",
+        submod: %Mod.Submod{
+          options: %{}
+        }
+      }
+  EOF
 end
