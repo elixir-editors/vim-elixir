@@ -66,4 +66,13 @@ describe 'Indenting anonymous functions' do
       EOF
     end
   end
+
+  i <<~EOF
+    {:ok, 0} = Mod.exec!(cmd, fn progress ->
+      if event_handler do
+        event_handler.({:progress_updated, progress})
+      end
+    end
+    )
+  EOF
 end
