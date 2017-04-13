@@ -78,6 +78,10 @@ function! elixir#indent#keyword(expr)
   return ':\@<!\<\C\%('.a:expr.'\)\>:\@!'
 endfunction
 
+function! elixir#indent#starts_with_comment(text)
+  return match(a:text, '^\s*#') != -1
+endfunction
+
 " Start at the end of text and search backwards looking for a match. Also peek
 " ahead if we get a match to make sure we get a complete match. This means
 " that the result should be the position of the start of the right-most match
@@ -155,8 +159,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
 endfunction
 
 function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
-  let starts_with_comment = match(a:text, '^\s*#')
-  if starts_with_comment != -1
+  if elixir#indent#starts_with_comment(a:text)
     return indent(a:prev_nb_lnum)
   else
     return -1
@@ -174,7 +177,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch\|rescue\|after\|else'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive\|try\|if'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
@@ -182,8 +185,8 @@ function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, 
 endfunction
 
 function! elixir#indent#handle_starts_with_close_bracket(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, '\%(\]\|}\)', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\)', '', '\%(\]\|}\)\zs')
+  if elixir#indent#starts_with(a:text, '\%(\]\|}\|)\)', a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)')
     return indent(pair_lnum)
   else
     return -1
@@ -245,13 +248,23 @@ function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum,
   end
 endfunction
 
-function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, _prev_nb_lnum, _prev_nb_text)
+function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, prev_nb_lnum, prev_nb_text)
+  let keyword_pattern = '\C\%(\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<after\>\|\<catch\>\|\<rescue\>\|\<else\>\)'
   if a:pair_lnum
-    " TODO: @jbodah 2017-03-31: test contains ignores str + comments
-    if elixir#indent#contains(a:text, '->')
+      " last line is a "receive" or something
+    if elixir#indent#starts_with(a:prev_nb_text, keyword_pattern, a:prev_nb_lnum)
+      call elixir#indent#debug("prev nb line is keyword")
+      return indent(a:prev_nb_lnum) + &sw
+    elseif elixir#indent#contains(a:text, '->')
+      call elixir#indent#debug("contains ->")
+      " TODO: @jbodah 2017-03-31: test contains ignores str + comments
       return indent(a:pair_lnum) + &sw
+    elseif elixir#indent#contains(a:prev_nb_text, '->')
+      call elixir#indent#debug("prev nb line contains ->")
+      return indent(a:prev_nb_lnum) + &sw
     else
-      return indent(a:pair_lnum) + 2 * &sw
+      call elixir#indent#debug("doesnt start with comment or contain ->")
+      return indent(a:prev_nb_lnum)
     end
   else
     return -1
@@ -296,12 +309,18 @@ endfunction
 
 function! elixir#indent#do_handle_inside_parens(pair_lnum, pair_col, _lnum, _text, prev_nb_lnum, prev_nb_text)
   if a:pair_lnum
-    " Align indent (e.g. "def add(a,")
-    let pos = elixir#indent#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '\w\+,')
-    if pos == -1
-      return 0
+    if elixir#indent#ends_with(a:prev_nb_text, '(', a:prev_nb_lnum)
+      return indent(a:prev_nb_lnum) + &sw
+    elseif a:pair_lnum == a:prev_nb_lnum
+      " Align indent (e.g. "def add(a,")
+      let pos = elixir#indent#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '[^(]\+,')
+      if pos == -1
+        return 0
+      else
+        return pos
+      end
     else
-      return pos
+      return indent(a:prev_nb_lnum)
     end
   else
     return -1

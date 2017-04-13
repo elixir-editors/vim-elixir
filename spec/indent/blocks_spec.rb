@@ -170,4 +170,19 @@ describe 'Indenting blocks' do
     end
     EOF
   end
+
+  i <<~EOF
+    def hello do
+      {:ok, _} = TaskRunner.TaskStore.start_link(name: @task_store)
+      {:ok, _} = Workspace.start_link
+      {:ok, pending_task_sup} = TaskRunner.PendingTaskSupervisor.start_link
+    end
+  EOF
+
+  i <<~EOF
+  def handle_info(:tick, state = %{policy_iteration: []) do
+    state = put_in(state[:policy_iteration], state.policy)
+    {:noreply, state}
+  end
+  EOF
 end
