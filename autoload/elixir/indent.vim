@@ -186,7 +186,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_close_bracket(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, '\%(\]\|}\|)\)', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)\zs')
+    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)')
     return indent(pair_lnum)
   else
     return -1
