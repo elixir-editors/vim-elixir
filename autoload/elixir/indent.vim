@@ -251,23 +251,17 @@ endfunction
 function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, prev_nb_lnum, prev_nb_text)
   let keyword_pattern = '\C\%(\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<after\>\|\<catch\>\|\<rescue\>\|\<else\>\)'
   if a:pair_lnum
-    if elixir#indent#starts_with_comment(a:text)
-      call elixir#indent#debug("starts with comment")
-      " last line as a "receive" or something
-      if elixir#indent#starts_with(a:prev_nb_text, keyword_pattern, a:prev_nb_lnum)
-        call elixir#indent#debug("prev nb line is keyword")
-        return indent(a:prev_nb_lnum) + &sw
-      else
-        call elixir#indent#debug("prev nb line is not keyword")
-        return indent(a:prev_nb_lnum)
-      end
+      " last line is a "receive" or something
+    if elixir#indent#starts_with(a:prev_nb_text, keyword_pattern, a:prev_nb_lnum)
+      call elixir#indent#debug("prev nb line is keyword")
+      return indent(a:prev_nb_lnum) + &sw
     elseif elixir#indent#contains(a:text, '->')
       call elixir#indent#debug("contains ->")
       " TODO: @jbodah 2017-03-31: test contains ignores str + comments
       return indent(a:pair_lnum) + &sw
     else
       call elixir#indent#debug("doesnt start with comment or contain ->")
-      return indent(a:pair_lnum) + 2 * &sw
+      return indent(a:prev_nb_lnum)
     end
   else
     return -1
