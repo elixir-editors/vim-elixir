@@ -259,6 +259,9 @@ function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _ln
       call elixir#indent#debug("contains ->")
       " TODO: @jbodah 2017-03-31: test contains ignores str + comments
       return indent(a:pair_lnum) + &sw
+    elseif elixir#indent#contains(a:prev_nb_text, '->')
+      call elixir#indent#debug("prev nb line contains ->")
+      return indent(a:prev_nb_lnum) + &sw
     else
       call elixir#indent#debug("doesnt start with comment or contain ->")
       return indent(a:prev_nb_lnum)
@@ -310,7 +313,7 @@ function! elixir#indent#do_handle_inside_parens(pair_lnum, pair_col, _lnum, _tex
       return indent(a:prev_nb_lnum) + &sw
     elseif a:pair_lnum == a:prev_nb_lnum
       " Align indent (e.g. "def add(a,")
-      let pos = elixir#indent#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '\w\+,')
+      let pos = elixir#indent#find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '[^(]\+,')
       if pos == -1
         return 0
       else
