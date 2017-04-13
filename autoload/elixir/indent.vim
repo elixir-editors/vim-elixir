@@ -177,7 +177,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch\|rescue\|after\|else'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive\|try\|if'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
@@ -249,7 +249,7 @@ function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum,
 endfunction
 
 function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, prev_nb_lnum, prev_nb_text)
-  let keyword_pattern = '\C\%(\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<after\>\|\<catch\>\|\<rescue\>\)'
+  let keyword_pattern = '\C\%(\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<after\>\|\<catch\>\|\<rescue\>\|\<else\>\)'
   if a:pair_lnum
     if elixir#indent#starts_with_comment(a:text)
       call elixir#indent#debug("starts with comment")
