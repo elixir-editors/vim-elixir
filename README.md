@@ -11,6 +11,17 @@ Features included so far:
 * Filetype detection for `.ex`, `.exs` and `.eex` files
 * Automatic indentation
 
+Using NVim (simply [install it](https://github.com/neovim/neovim/wiki/Installin://github.com/neovim/neovim/wiki/Installing) and rename your `.vimrc` and `.vim` in
+`.nvimrc` `.nvim`, and run `:UpdateRemotePlugins` to update remote plugin database), extra features are :
+* Omni completion `CTRL-X-O` (with module/fun docs in the preview window)
+* Load nearest mix project in current file path with `:MixLoad`
+* Start the current mix project application inside your vim : `:MixStart`
+* Interpret the currently selected Elixir Code with `:ElixirExec`
+  * If no line selected, then the whole file is interpreted, useful
+    to dynamically reload current file modules when the app runs with `:MixStart`
+  * Bindings are kept along interpretations
+  * You can reset binding using the bang : `:ElixirExec!`
+
 
 ## Installation
 

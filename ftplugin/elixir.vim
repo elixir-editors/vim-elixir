@@ -15,6 +15,9 @@ if exists("loaded_matchit") && !exists("b:match_words")
         \ ',{:},\[:\],(:)'
 endif
 
+if has('nvim')
+  setlocal omnifunc=ElixirComplete
+endif
 setlocal comments=:#
 setlocal commentstring=#\ %s
 
