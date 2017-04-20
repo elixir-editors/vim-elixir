@@ -178,11 +178,18 @@ end
   end
 end
 
+def start_vim
+  return Vimrunner.start_gvim if system('which gvim')
+  return Vimrunner.start_mvim if system('which mvim')
+  return Vimrunner.start if system('which vim')
+  raise "Couldn't find suitable vim version"
+end
+
 Vimrunner::RSpec.configure do |config|
   config.reuse_server = true
 
   config.start_vim do
-    VIM = Vimrunner.start_gvim
+    VIM = start_vim
     VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
     VIM.normal(":set ignorecase<CR>") # make sure we test ignorecase
     VIM
