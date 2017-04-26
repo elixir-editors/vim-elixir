@@ -185,4 +185,13 @@ describe 'Indenting blocks' do
     {:noreply, state}
   end
   EOF
+
+  i <<~EOF
+  with {:ok, msg} <- Msgpax.unpack(payload) do
+    {:ok, rebuild(msg)}
+  else
+    error -> error
+  end
+  EOF
+
 end

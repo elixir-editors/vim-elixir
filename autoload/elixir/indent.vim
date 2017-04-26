@@ -177,7 +177,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch\|rescue\|after\|else'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('with\|receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
     return indent(pair_lnum)
   else
     return -1
