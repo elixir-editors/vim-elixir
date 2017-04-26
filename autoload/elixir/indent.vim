@@ -219,7 +219,7 @@ endfunction
 " function, etc... so we need to first figure out what the innermost structure
 " is then forward execution to the proper handler
 function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum, prev_nb_text)
-  let start_pattern = '\C\%(\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|{\|\[\|(\)'
+  let start_pattern = '\C\%(\<if\>\|\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|{\|\[\|(\)'
   let end_pattern = '\C\%(\<end\>\|\]\|}\|)\)'
   let pair_info = elixir#indent#searchpairpos_back(start_pattern, '', end_pattern)
   let pair_lnum = pair_info[0]

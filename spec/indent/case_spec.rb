@@ -79,4 +79,29 @@ describe 'Indenting case statements' do
       render(conn, "new.html", changeset: changeset)
   end
   EOF
+
+  i <<~EOF
+  case st do
+    sym ->
+      code = if true do
+        :ok
+      else
+        :error
+      end
+      Logger.info(code)
+      st
+  end
+  EOF
+
+  i <<~EOF
+  case world do
+    "apple" ->
+      IO.puts "its an apple"
+
+      IO.puts "no really, its an apple"
+    "orange" ->
+      IO.puts "its not an apple"
+      IO.puts "believe it or not"
+  end
+  EOF
 end
