@@ -1,7 +1,7 @@
 language: ruby
 rvm:
   - 2.3.1
-before_install: sudo apt-get install vim-gtk
+before_install: sudo apt-get update && sudo apt-get install vim-gtk
 before_script:
   - "vim --version"
   - "export DISPLAY=:99.0"
