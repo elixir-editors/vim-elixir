@@ -101,53 +101,6 @@ describe 'Indenting blocks' do
     EOF
   end
 
-  describe 'with' do
-    pending 'with..do..end' do
-      expect(<<~EOF).to be_elixir_indentation
-      with {:ok, width} <- Map.fetch(opts, :width),
-           double_width = width * 2,
-           {:ok, height} <- Map.fetch(opts, :height)
-      do
-        {:ok, double_width * height}
-      end
-      EOF
-    end
-
-    pending 'with..,do:' do
-      expect(<<~EOF).to be_elixir_indentation
-      with {:ok, width} <- Map.fetch(opts, :width),
-          double_width = width * 2,
-          {:ok, height} <- Map.fetch(opts, :height),
-        do: {:ok, double_width * height}
-      EOF
-    end
-
-    pending 'with..do..else..end' do
-      expect(<<~EOF).to be_elixir_indentation
-      with {:ok, width} <- Map.fetch(opts, :width),
-           {:ok, height} <- Map.fetch(opts, :height)
-      do
-        {:ok, width * height}
-      else
-        :error ->
-          {:error, :wrong_data}
-      end
-      EOF
-    end
-
-    pending 'with..,do:..,else:..' do
-      expect(<<~EOF).to be_elixir_indentation
-      with {:ok, width} <- Map.fetch(opts, :width),
-           {:ok, height} <- Map.fetch(opts, :height),
-        do:
-          {:ok, width * height},
-        else:
-          (:error -> {:error, :wrong_data})
-      end
-      EOF
-    end
-  end
-
   describe 'indenting while typing' do
     it 'close block' do
       expect(<<~EOF).to be_typed_with_right_indent
@@ -185,13 +138,4 @@ describe 'Indenting blocks' do
     {:noreply, state}
   end
   EOF
-
-  i <<~EOF
-  with {:ok, msg} <- Msgpax.unpack(payload) do
-    {:ok, rebuild(msg)}
-  else
-    error -> error
-  end
-  EOF
-
 end
