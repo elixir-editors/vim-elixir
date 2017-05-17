@@ -251,7 +251,7 @@ function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum,
   end
 endfunction
 
-function! elixir#indent#do_handle_inside_with(pair_lnum, pair_col, lnum, text, _prev_nb_lnum, _prev_nb_text)
+function! elixir#indent#do_handle_inside_with(pair_lnum, pair_col, lnum, text, prev_nb_lnum, prev_nb_text)
   if a:pair_lnum == a:lnum
     " This is the `with` line or an inline `with`/`do`
     call elixir#indent#debug("current line is `with`")
@@ -287,7 +287,7 @@ function! elixir#indent#do_handle_inside_with(pair_lnum, pair_col, lnum, text, _
       return pair_col - 1 + &sw
     else
       call elixir#indent#debug("inside else/end")
-      return pair_col - 1 + &sw
+      return elixir#indent#handle_pattern_match_block(pair_lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
     end
   end
 endfunction
@@ -299,33 +299,30 @@ function! elixir#indent#do_handle_inside_keyword_block(pair_lnum, _pair_col, _ln
     if elixir#indent#starts_with(a:prev_nb_text, keyword_pattern, a:prev_nb_lnum)
       call elixir#indent#debug("prev nb line is keyword")
       return indent(a:prev_nb_lnum) + &sw
-    elseif elixir#indent#contains(a:text, '->')
-      call elixir#indent#debug("contains ->")
-      " TODO: @jbodah 2017-03-31: test contains ignores str + comments
-      return indent(a:pair_lnum) + &sw
-    elseif elixir#indent#contains(a:prev_nb_text, '->')
-      call elixir#indent#debug("prev nb line contains ->")
-      return indent(a:prev_nb_lnum) + &sw
     else
-      call elixir#indent#debug("doesnt start with comment or contain ->")
-      return indent(a:prev_nb_lnum)
+      return elixir#indent#handle_pattern_match_block(a:pair_lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
     end
   else
     return -1
   endif
 endfunction
 
+" Implements indent for pattern-matching blocks (e.g. case, fn, with/else)
+function! elixir#indent#handle_pattern_match_block(block_start_lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#contains(a:text, '->')
+    call elixir#indent#debug("current line contains ->")
+    return indent(a:block_start_lnum) + &sw
+  elseif elixir#indent#contains(a:prev_nb_text, '->')
+    call elixir#indent#debug("prev nb line contains ->")
+    return indent(a:prev_nb_lnum) + &sw
+  else
+    return indent(a:prev_nb_lnum)
+  end
+endfunction
+
 function! elixir#indent#do_handle_inside_fn(pair_lnum, _pair_col, lnum, text, prev_nb_lnum, prev_nb_text)
   if a:pair_lnum && a:pair_lnum != a:lnum
-    if elixir#indent#contains(a:text, '->')
-      return indent(a:pair_lnum) + &sw
-    else
-      if elixir#indent#ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
-        return indent(a:prev_nb_lnum) + &sw
-      else
-        return indent(a:prev_nb_lnum)
-      end
-    end
+    return elixir#indent#handle_pattern_match_block(a:pair_lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
   else
     return -1
   endif

@@ -31,7 +31,7 @@ describe 'with' do
     EOF
   end
 
-  pending 'with..do..else..end' do
+  it 'with..do..else..end' do
     expect(<<~EOF).to be_elixir_indentation
     with {:ok, width} <- Map.fetch(opts, :width),
          {:ok, height} <- Map.fetch(opts, :height)
