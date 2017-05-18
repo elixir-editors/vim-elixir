@@ -24,8 +24,5 @@ DEPENDENCIES
   rspec
   vimrunner
 
-RUBY VERSION
-   ruby 2.3.1p112
-
 BUNDLED WITH
-   1.13.6
+   1.13.7
