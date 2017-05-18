@@ -1,112 +1,4 @@
-function! elixir#indent#debug(str)
-  if exists("g:elixir_indent_debug") && g:elixir_indent_debug
-    echom a:str
-  endif
-endfunction
-
-" Returns 0 or 1 based on whether or not the text starts with the given
-" expression and is not a string or comment
-function! elixir#indent#starts_with(text, expr, lnum)
-  let pos = match(a:text, '^\s*'.a:expr)
-  if pos == -1
-    return 0
-  else
-    " NOTE: @jbodah 2017-02-24: pos is the index of the match which is
-    " zero-indexed. Add one to make it the column number
-    if elixir#indent#is_string_or_comment(a:lnum, pos + 1)
-      return 0
-    else
-      return 1
-    end
-  end
-endfunction
-
-" Returns 0 or 1 based on whether or not the text ends with the given
-" expression and is not a string or comment
-function! elixir#indent#ends_with(text, expr, lnum)
-  let pos = match(a:text, a:expr.'\s*$')
-  if pos == -1
-    return 0
-  else
-    if elixir#indent#is_string_or_comment(a:lnum, pos)
-      return 0
-    else
-      return 1
-    end
-  end
-endfunction
-
-" Returns 0 or 1 based on whether or not the text matches the given expression
-function! elixir#indent#contains(text, expr)
-  return a:text =~ a:expr
-endfunction
-
-" Returns 0 or 1 based on whether or not the given line number and column
-" number pair is a string or comment
-function! elixir#indent#is_string_or_comment(line, col)
-  return synIDattr(synID(a:line, a:col, 1), "name") =~ '\%(String\|Comment\)'
-endfunction
-
-" Skip expression for searchpair. Returns 0 or 1 based on whether the value
-" under the cursor is a string or comment
-function! elixir#indent#searchpair_back_skip()
-  " NOTE: @jbodah 2017-02-27: for some reason this function gets called with
-  " and index that doesn't exist in the line sometimes. Detect and account for
-  " that situation
-  let curr_col = col('.')
-  if getline('.')[curr_col-1] == ''
-    let curr_col = curr_col-1
-  endif
-  return elixir#indent#is_string_or_comment(line('.'), curr_col)
-endfunction
-
-" DRY up searchpair calls
-function! elixir#indent#searchpair_back(start, mid, end)
-  let line = line('.')
-  return searchpair(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
-endfunction
-
-" DRY up searchpairpos calls
-function! elixir#indent#searchpairpos_back(start, mid, end)
-  let line = line('.')
-  return searchpairpos(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
-endfunction
-
-" DRY up regex for keywords that 1) makes sure we only look at complete words
-" and 2) ignores atoms
-function! elixir#indent#keyword(expr)
-  return ':\@<!\<\C\%('.a:expr.'\)\>:\@!'
-endfunction
-
-function! elixir#indent#starts_with_comment(text)
-  return match(a:text, '^\s*#') != -1
-endfunction
-
-" Start at the end of text and search backwards looking for a match. Also peek
-" ahead if we get a match to make sure we get a complete match. This means
-" that the result should be the position of the start of the right-most match
-function! elixir#indent#find_last_pos(lnum, text, match)
-  let last = len(a:text) - 1
-  let c = last
-
-  while c >= 0
-    let substr = strpart(a:text, c, last)
-    let peek = strpart(a:text, c - 1, last)
-    let ss_match = match(substr, a:match)
-    if ss_match != -1
-      let peek_match = match(peek, a:match)
-      if peek_match == ss_match + 1
-        let syng = synIDattr(synID(a:lnum, c + ss_match, 1), 'name')
-        if syng !~ '\%(String\|Comment\)'
-          return c + ss_match
-        end
-      end
-    end
-    let c -= 1
-  endwhile
-
-  return -1
-endfunction
+""" 0. Top-level Handlers
 
 function! elixir#indent#handle_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_text)
   if a:prev_nb_lnum == 0
@@ -114,6 +6,24 @@ function! elixir#indent#handle_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_
   else
     return -1
   end
+endfunction
+
+function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('end'), a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('do\|fn'), '', elixir#indent#keyword('end').'\zs')
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch\|rescue\|after\|else'), a:lnum)
+    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('with\|receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
+    return indent(pair_lnum)
+  else
+    return -1
+  endif
 endfunction
 
 " TODO: @jbodah 2017-03-31: remove
@@ -153,32 +63,6 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
         return pos + 1 + next_word_pos
       end
     end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with_comment(a:text)
-    return indent(a:prev_nb_lnum)
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, elixir#indent#keyword('end'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('do\|fn'), '', elixir#indent#keyword('end').'\zs')
-    return indent(pair_lnum)
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch\|rescue\|after\|else'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('with\|receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
-    return indent(pair_lnum)
   else
     return -1
   endif
@@ -249,6 +133,138 @@ function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum,
   else
     return -1
   end
+endfunction
+
+function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
+  if match(a:text, '^\s*#') != -1
+    return indent(a:prev_nb_lnum)
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, prev_nb_text)
+  let pair_lnum = searchpair(elixir#indent#keyword('do\|fn'), '', elixir#indent#keyword('end'), 'bW', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
+  if pair_lnum
+    " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
+    " blocks
+    if elixir#indent#ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
+      return indent(pair_lnum) + 2 * &sw
+    else
+      return indent(pair_lnum) + &sw
+    endif
+  else
+    return -1
+  endif
+endfunction
+
+""" 1. Helpers
+
+function! elixir#indent#debug(str)
+  if exists("g:elixir_indent_debug") && g:elixir_indent_debug
+    echom a:str
+  endif
+endfunction
+
+" Returns 0 or 1 based on whether or not the text starts with the given
+" expression and is not a string or comment
+function! elixir#indent#starts_with(text, expr, lnum)
+  let pos = match(a:text, '^\s*'.a:expr)
+  if pos == -1
+    return 0
+  else
+    " NOTE: @jbodah 2017-02-24: pos is the index of the match which is
+    " zero-indexed. Add one to make it the column number
+    if elixir#indent#is_string_or_comment(a:lnum, pos + 1)
+      return 0
+    else
+      return 1
+    end
+  end
+endfunction
+
+" Returns 0 or 1 based on whether or not the text ends with the given
+" expression and is not a string or comment
+function! elixir#indent#ends_with(text, expr, lnum)
+  let pos = match(a:text, a:expr.'\s*$')
+  if pos == -1
+    return 0
+  else
+    if elixir#indent#is_string_or_comment(a:lnum, pos)
+      return 0
+    else
+      return 1
+    end
+  end
+endfunction
+
+" Returns 0 or 1 based on whether or not the text matches the given expression
+function! elixir#indent#contains(text, expr)
+  return a:text =~ a:expr
+endfunction
+
+" Returns 0 or 1 based on whether or not the given line number and column
+" number pair is a string or comment
+function! elixir#indent#is_string_or_comment(line, col)
+  call elixir#indent#debug("called")
+  return synIDattr(synID(a:line, a:col, 1), "name") =~ '\%(String\|Comment\)'
+endfunction
+
+" Skip expression for searchpair. Returns 0 or 1 based on whether the value
+" under the cursor is a string or comment
+function! elixir#indent#searchpair_back_skip()
+  " NOTE: @jbodah 2017-02-27: for some reason this function gets called with
+  " and index that doesn't exist in the line sometimes. Detect and account for
+  " that situation
+  let curr_col = col('.')
+  if getline('.')[curr_col-1] == ''
+    let curr_col = curr_col-1
+  endif
+  return elixir#indent#is_string_or_comment(line('.'), curr_col)
+endfunction
+
+" DRY up searchpair calls
+function! elixir#indent#searchpair_back(start, mid, end)
+  let line = line('.')
+  return searchpair(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
+endfunction
+
+" DRY up searchpairpos calls
+function! elixir#indent#searchpairpos_back(start, mid, end)
+  let line = line('.')
+  return searchpairpos(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
+endfunction
+
+" DRY up regex for keywords that 1) makes sure we only look at complete words
+" and 2) ignores atoms
+function! elixir#indent#keyword(expr)
+  return ':\@<!\<\C\%('.a:expr.'\)\>:\@!'
+endfunction
+
+" Start at the end of text and search backwards looking for a match. Also peek
+" ahead if we get a match to make sure we get a complete match. This means
+" that the result should be the position of the start of the right-most match
+function! elixir#indent#find_last_pos(lnum, text, match)
+  let last = len(a:text) - 1
+  let c = last
+
+  while c >= 0
+    let substr = strpart(a:text, c, last)
+    let peek = strpart(a:text, c - 1, last)
+    let ss_match = match(substr, a:match)
+    if ss_match != -1
+      let peek_match = match(peek, a:match)
+      if peek_match == ss_match + 1
+        let syng = synIDattr(synID(a:lnum, c + ss_match, 1), 'name')
+        if syng !~ '\%(String\|Comment\)'
+          return c + ss_match
+        end
+      end
+    end
+    let c -= 1
+  endwhile
+
+  return -1
 endfunction
 
 function! elixir#indent#do_handle_inside_with(pair_lnum, pair_col, lnum, text, prev_nb_lnum, prev_nb_text)
@@ -363,21 +379,6 @@ function! elixir#indent#do_handle_inside_parens(pair_lnum, pair_col, _lnum, _tex
     else
       return indent(a:prev_nb_lnum)
     end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, prev_nb_text)
-  let pair_lnum = searchpair(elixir#indent#keyword('do\|fn'), '', elixir#indent#keyword('end'), 'bW', "line('.') == ".a:lnum." || elixir#indent#is_string_or_comment(line('.'), col('.'))")
-  if pair_lnum
-    " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
-    " blocks
-    if elixir#indent#ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
-      return indent(pair_lnum) + 2 * &sw
-    else
-      return indent(pair_lnum) + &sw
-    endif
   else
     return -1
   endif
