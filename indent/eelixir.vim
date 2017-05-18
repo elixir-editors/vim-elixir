@@ -28,7 +28,7 @@ let b:eelixir_subtype_indentexpr = &l:indentexpr
 let b:did_indent = 1
 
 setlocal indentexpr=GetEelixirIndent()
-setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],o,O,!^F,=end,=else,=elsif,=catch,=after,=rescue
+setlocal indentkeys=o,O,<Return>,<>>,{,},0),0],o,O,!^F,=end,=else,=elsif,=catch,=after,=rescue
 
 " Only define the function once.
 if exists("*GetEelixirIndent")
