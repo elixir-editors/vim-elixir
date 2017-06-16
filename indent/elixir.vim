@@ -21,13 +21,13 @@ function! elixir#indent(lnum)
         \'top_of_file',
         \'starts_with_end',
         \'starts_with_mid_or_end_block_keyword',
-        \'following_trailing_do',
+        \'following_trailing_keyword',
         \'following_trailing_binary_operator',
         \'starts_with_pipe',
         \'starts_with_close_bracket',
         \'starts_with_binary_operator',
-        \'inside_nested_construct',
         \'starts_with_comment',
+        \'inside_nested_construct',
         \'inside_generic_block'
         \]
   for handler in handlers

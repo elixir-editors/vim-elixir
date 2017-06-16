@@ -116,9 +116,8 @@ function! elixir#indent#handle_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_
   end
 endfunction
 
-" TODO: @jbodah 2017-03-31: remove
-function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, prev_nb_text)
-  if elixir#indent#ends_with(a:prev_nb_text, elixir#indent#keyword('do'), a:prev_nb_lnum)
+function! elixir#indent#handle_following_trailing_keyword(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#ends_with(a:prev_nb_text, elixir#indent#keyword('do\|catch\|rescue\|after\|else'), a:prev_nb_lnum)
     if elixir#indent#starts_with(a:text, elixir#indent#keyword('end'), a:lnum)
       return indent(a:prev_nb_lnum)
     else
