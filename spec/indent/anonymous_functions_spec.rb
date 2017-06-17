@@ -12,14 +12,6 @@ describe 'Indenting anonymous functions' do
       EOF
     end
 
-    it 'is declared with function syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      def do
-        some_func = function do x -> x end
-      end
-      EOF
-    end
-
     it 'spans in multiple lines' do
       expect(<<~EOF).to be_elixir_indentation
       def test do
@@ -47,17 +39,6 @@ describe 'Indenting anonymous functions' do
     it 'it with fn syntax' do
       expect(<<~EOF).to be_elixir_indentation
       fizzbuzz = fn
-        0, 0, _ -> "FizzBuzz"
-        0, _, _ -> "Fizz"
-        _, 0, _ -> "Buzz"
-        _, _, x -> x
-      end
-      EOF
-    end
-
-    it 'it with function syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      fizzbuzz = function do
         0, 0, _ -> "FizzBuzz"
         0, _, _ -> "Fizz"
         _, 0, _ -> "Buzz"
