@@ -128,6 +128,68 @@ function! elixir#indent#handle_following_trailing_keyword(lnum, text, prev_nb_ln
   endif
 endfunction
 
+function! elixir#indent#handle_pattern_match_case(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#contains(a:text, '->')
+    " NOTE: @jbodah 2017-06-16: there's something bizarre going on where this
+    " only moves the cursor if I save this result...
+    let searchres = search('->', '', line('.'))
+    let block_start_info = searchpairpos('\%(cond\|case\|fn\|receive\|catch\|rescue\|else\)', '', 'end', 'b')
+    let block_start_line = block_start_info[0]
+    call elixir#indent#debug(string(block_start_info))
+    if block_start_line == a:lnum
+      " Ignore inline functions
+      return -1
+    else
+      " This line indents fn/case matches to be inline with fn/case
+      " let block_start_indent = block_start_info[1] - 1
+      " return block_start_indent + &sw
+      return indent(block_start_line) + &sw
+    end
+  else
+    return -1
+  endfunction
+endfunction
+
+function! elixir#indent#handle_following_trailing_arrow(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
+    return indent(a:prev_nb_lnum) + &sw
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_following_trailing_open_data_structure(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#ends_with(a:prev_nb_text, '\%({\|[\)', a:prev_nb_lnum)
+    if elixir#indent#starts_with(a:text, '\%(}\|]\)', a:lnum)
+      return indent(a:prev_nb_lnum)
+    else
+      return indent(a:prev_nb_lnum) + &sw
+    endif
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_following_trailing_open_parens(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#ends_with(a:prev_nb_text, '(', a:prev_nb_lnum)
+    if elixir#indent#starts_with(a:text, ')', a:lnum)
+      return indent(a:prev_nb_lnum)
+    else
+      return indent(a:prev_nb_lnum) + &sw
+    endif
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_following_trailing_end(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#ends_with(a:prev_nb_text, elixir#indent#keyword('end'), a:prev_nb_lnum)
+    return indent(a:prev_nb_lnum)
+  else
+    return -1
+  endif
+endfunction
+
 function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, prev_nb_lnum, prev_nb_text)
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
@@ -380,4 +442,49 @@ function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, p
   else
     return -1
   endif
+endfunction
+
+function! elixir#indent#handle_follow_last_line(lnum, text, prev_nb_lnum, prev_nb_text)
+  let candidate_lnum = a:prev_nb_lnum
+  let candidate_text = a:prev_nb_text
+  let lookahead_lnum = prevnonblank(candidate_lnum-1)
+  let lookahead_text = getline(lookahead_lnum)
+
+  while candidate_lnum != 1 && !elixir#indent#is_indent_base(candidate_lnum, candidate_text, lookahead_lnum, lookahead_text)
+    let candidate_lnum = lookahead_lnum
+    let candidate_text = lookahead_text
+    let lookahead_lnum = prevnonblank(candidate_lnum-1)
+    let lookahead_text = getline(lookahead_lnum)
+  endwhile
+
+  return indent(candidate_lnum)
+endfunction
+
+function! elixir#indent#is_indent_base(lnum, text, lookahead_lnum, lookahead_text)
+  let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
+
+  if elixir#indent#starts_with(a:text, binary_operator, a:lnum)
+    return 0
+  endif
+
+  if elixir#indent#starts_with(a:text, '|>', a:lnum)
+    return 0
+  endif
+
+  if elixir#indent#ends_with(a:lookahead_text, binary_operator, a:lookahead_lnum)
+    return 0
+  endif
+
+  if elixir#indent#ends_with(a:text, ')', a:lnum)
+    cursor(a:lnum, strlen(a:text))
+    let searchres = search(')', 'b')
+    let pair_lnum = searchpair('(', '', ')', 'bW')
+    if pair_lnum < a:lnum
+      return 0
+    endif
+  endif
+
+  " if straddling data structure...
+
+  return 1
 endfunction

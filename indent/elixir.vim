@@ -19,17 +19,23 @@ function! elixir#indent(lnum)
 
   let handlers = [
         \'top_of_file',
+        \'pattern_match_case',
         \'starts_with_end',
         \'starts_with_mid_or_end_block_keyword',
         \'following_trailing_keyword',
+        \'following_trailing_arrow',
+        \'following_trailing_end',
+        \'following_trailing_open_data_structure',
+        \'following_trailing_open_parens',
         \'following_trailing_binary_operator',
         \'starts_with_pipe',
         \'starts_with_close_bracket',
         \'starts_with_binary_operator',
         \'starts_with_comment',
-        \'inside_nested_construct',
-        \'inside_generic_block'
+        \'follow_last_line'
         \]
+        " \'inside_generic_block',
+        " \'inside_nested_construct',
   for handler in handlers
     call elixir#indent#debug('testing handler elixir#indent#handle_'.handler)
     let indent = function('elixir#indent#handle_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
@@ -40,5 +46,5 @@ function! elixir#indent(lnum)
   endfor
 
   call elixir#indent#debug("defaulting")
-  return 0
+  return indent(prev_nb_lnum)
 endfunction
