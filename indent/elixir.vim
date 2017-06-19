@@ -32,13 +32,11 @@ function! elixir#indent(lnum)
         \'starts_with_close_bracket',
         \'starts_with_binary_operator',
         \'starts_with_comment',
-        \'inside_parens',
         \'follow_last_line'
         \]
-        " \'inside_generic_block',
-        " \'inside_nested_construct',
+        " \'traverse_blocks',
   for handler in handlers
-    call elixir#indent#debug('testing handler elixir#indent#handle_'.handler)
+    " call elixir#indent#debug('testing handler elixir#indent#handle_'.handler)
     let indent = function('elixir#indent#handle_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
     if indent != -1
       call elixir#indent#debug('line '.lnum.': elixir#indent#handle_'.handler.' returned '.indent)
