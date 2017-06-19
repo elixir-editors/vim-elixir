@@ -291,15 +291,15 @@ function! elixir#indent#traverse_blocks(lnum, text)
       let char = chars[char_idx]
       if char == ' '
         " do nothing
-      elseif char =~ '[])]'
+      elseif char =~ '[])}]'
         let stack += [char]
         let stack_depth += 1
-      elseif char =~ '[[(]'
+      elseif char =~ '[[({]'
         " TODO: @jbodah 2017-06-19: this is soooo slowww
         if elixir#indent#is_string_or_comment(curr_lnum, char_idx)
           " do nothing
         else
-          if stack[-1] =~ '[])]'
+          if stack[-1] =~ '[])}]'
             let stack = stack[0:-2]
           endif
 
