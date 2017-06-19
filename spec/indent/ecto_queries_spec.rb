@@ -3,18 +3,6 @@
 require 'spec_helper'
 
 describe 'Indenting Ecto queries' do
-  it 'works correctly' do
-    expect(<<~EOF).to be_elixir_indentation
-    defmodule New do
-      def do_query do
-        from user in Users,
-          select: user.name,
-          join: signup in Signups, where: user.id == signup.user_id
-      end
-    end
-    EOF
-  end
-
   it 'does not affect similar statements that are not queries' do
     expect(<<~EOF).to be_elixir_indentation
     def smth do

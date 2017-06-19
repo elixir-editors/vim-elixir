@@ -314,9 +314,12 @@ function! elixir#indent#traverse_blocks(lnum, text)
       let char_idx -= 1
     endwhile
 
+    " todo pull up
     if stack_depth == 0
+      echom "stack depth = 0"
       return [curr_lnum, indent(curr_lnum)]
     elseif stack_depth < 0
+      echom "stack depth < 0"
       return [curr_lnum, last_char_idx]
     endif
 
