@@ -32,6 +32,7 @@ function! elixir#indent(lnum)
         \'starts_with_close_bracket',
         \'starts_with_binary_operator',
         \'starts_with_comment',
+        \'inside_parens',
         \'follow_last_line'
         \]
         " \'inside_generic_block',

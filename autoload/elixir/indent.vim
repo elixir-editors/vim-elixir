@@ -445,29 +445,57 @@ function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, p
 endfunction
 
 function! elixir#indent#handle_follow_last_line(lnum, text, prev_nb_lnum, prev_nb_text)
+  let most_sig_block = elixir#indent#get_most_significant_block()
   let candidate_lnum = a:prev_nb_lnum
   let candidate_text = a:prev_nb_text
   let lookahead_lnum = prevnonblank(candidate_lnum-1)
   let lookahead_text = getline(lookahead_lnum)
 
-  while candidate_lnum != 1 && !elixir#indent#is_indent_base(candidate_lnum, candidate_text, lookahead_lnum, lookahead_text)
+  while candidate_lnum != 1 && !elixir#indent#is_indent_ref(most_sig_block, candidate_lnum, candidate_text, lookahead_lnum, lookahead_text)
     let candidate_lnum = lookahead_lnum
     let candidate_text = lookahead_text
     let lookahead_lnum = prevnonblank(candidate_lnum-1)
     let lookahead_text = getline(lookahead_lnum)
   endwhile
 
+  echom string("candidate " . candidate_lnum)
+
   return indent(candidate_lnum)
 endfunction
 
-function! elixir#indent#is_indent_base(lnum, text, lookahead_lnum, lookahead_text)
+function! elixir#indent#handle_inside_parens(lnum, text, prev_nb_lnum, prev_nb_text)
+  " 1. Find most significant block that we are in
+  let _move = cursor(a:lnum, 1)
+  let block_start_info = elixir#indent#get_most_significant_block()
+  let block_start_line = block_start_info[0]
+  let block_start_col = block_start_info[1]
+  if block_start_col == 0
+    return -1
+  else
+    let block_start_text = getline(block_start_line)
+    let part = strpart(block_start_text, block_start_col - 1, len(block_start_text) - 1)
+    if part =~ '^(\s*\S'
+      return block_start_col
+    else
+      return -1
+    endif
+  endif
+endfunction
+
+function! elixir#indent#get_most_significant_block()
+  return searchpairpos('\%(fn\|\<do\>:\@!\|(\|{\|\[\)', '', '\%(:\@<!end\|)\|}\|\]\)', 'bnW', "elixir#indent#is_string_or_comment(line('.'), col('.'))")
+endfunction
+
+function! elixir#indent#is_indent_ref(most_sig_block, candidate_lnum, candidate_text, lookahead_lnum, lookahead_text)
+  echom "testing candidate: ".a:candidate_lnum
+
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
-  if elixir#indent#starts_with(a:text, binary_operator, a:lnum)
+  if elixir#indent#starts_with(a:candidate_text, binary_operator, a:candidate_lnum)
     return 0
   endif
 
-  if elixir#indent#starts_with(a:text, '|>', a:lnum)
+  if elixir#indent#starts_with(a:candidate_text, '|>', a:candidate_lnum)
     return 0
   endif
 
@@ -475,13 +503,14 @@ function! elixir#indent#is_indent_base(lnum, text, lookahead_lnum, lookahead_tex
     return 0
   endif
 
-  if elixir#indent#ends_with(a:text, ')', a:lnum)
-    cursor(a:lnum, strlen(a:text))
-    let searchres = search(')', 'b')
-    let pair_lnum = searchpair('(', '', ')', 'bW')
-    if pair_lnum < a:lnum
-      return 0
-    endif
+  " Check the MSB of the previous line; keep searching for an indent ref if
+  " the candidate is in a different block than our source block
+  let _do_move = cursor(a:candidate_lnum, 1)
+  let candidate_most_sig_block = elixir#indent#get_most_significant_block()
+  echom "curr_msb: ".string(a:most_sig_block)
+  echom "candidate_msb: ".string(candidate_most_sig_block)
+  if candidate_most_sig_block != a:most_sig_block
+    return 0
   endif
 
   " if straddling data structure...
