@@ -475,7 +475,11 @@ function! elixir#indent#handle_inside_parens(lnum, text, prev_nb_lnum, prev_nb_t
     let block_start_text = getline(block_start_line)
     let part = strpart(block_start_text, block_start_col - 1, len(block_start_text) - 1)
     if part =~ '^(\s*\S'
-      return block_start_col
+      let part_part = strpart(part, 1)
+      return match(part_part, '\S') + block_start_col
+    elseif part =~ '^[\s*\S'
+      let part_part = strpart(part, 1)
+      return match(part_part, '\S') + block_start_col
     else
       return -1
     endif
