@@ -200,6 +200,24 @@ function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, pr
   endif
 endfunction
 
+function! elixir#indent#handle_following_trailing_defstruct(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#starts_with(a:prev_nb_text, elixir#indent#keyword('defstruct'), a:prev_nb_lnum) &&
+        \ elixir#indent#ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
+    return indent(a:prev_nb_lnum) + &sw
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_following_trailing_defstruct(lnum, text, prev_nb_lnum, prev_nb_text)
+  if elixir#indent#starts_with(a:prev_nb_text, elixir#indent#keyword('from'), a:prev_nb_lnum) &&
+        \ elixir#indent#ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
+    return indent(a:prev_nb_lnum) + &sw
+  else
+    return -1
+  endif
+endfunction
+
 function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_nb_text)
   if elixir#indent#starts_with(a:text, '|>', a:lnum)
     let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
@@ -393,4 +411,59 @@ function! elixir#indent#should_skip_line(candidate_lnum, candidate_text)
     endif
 
     return 0
+endfunction
+
+" todo this is pretty slow
+function! elixir#indent#handle_with_block(lnum, text, prev_nb_lnum, prev_nb_text)
+  let start_pattern = '\C\<with\>'
+  let end_pattern = '\C\<end\>'
+  let pair_info = elixir#indent#searchpairpos_back(start_pattern, '', end_pattern)
+  let pair_lnum = pair_info[0]
+  if pair_lnum != 0
+    let pair_col = pair_info[1]
+      return elixir#indent#do_handle_inside_with(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
+  else
+    return -1
+  end
+endfunction
+
+function! elixir#indent#do_handle_inside_with(pair_lnum, pair_col, lnum, text, prev_nb_lnum, prev_nb_text)
+  if a:pair_lnum == a:lnum
+    " This is the `with` line or an inline `with`/`do`
+    call elixir#indent#debug("current line is `with`")
+    return -1
+  else
+    " Determine if in with/do, do/else|end, or else/end
+    let start_pattern = '\C\%(\<with\>\|\<else\>\|\<do\>\)'
+    let end_pattern = '\C\%(\<end\>\)'
+    let pair_info = elixir#indent#searchpairpos_back(start_pattern, '', end_pattern)
+    let pair_lnum = pair_info[0]
+    let pair_col = pair_info[1]
+
+    let pair_text = getline(pair_lnum)
+    let pair_char = pair_text[pair_col - 1]
+
+    if elixir#indent#starts_with(a:text, '\Cdo:', a:lnum)
+      call elixir#indent#debug("current line is do:")
+      return pair_col - 1 + &sw
+    elseif elixir#indent#starts_with(a:text, '\Celse:', a:lnum)
+      call elixir#indent#debug("current line is else:")
+      return pair_col - 1
+    elseif elixir#indent#starts_with(a:text, '\C\(\<do\>\|\<else\>\)', a:lnum)
+      call elixir#indent#debug("current line is do/else")
+      return pair_col - 1
+    elseif elixir#indent#starts_with(pair_text, '\C\(do\|else\):', pair_lnum)
+      call elixir#indent#debug("inside do:/else:")
+      return pair_col - 1 + &sw
+    elseif pair_char == 'w'
+      call elixir#indent#debug("inside with/do")
+      return pair_col + 4
+    elseif pair_char == 'd'
+      call elixir#indent#debug("inside do/else|end")
+      return pair_col - 1 + &sw
+    else
+      call elixir#indent#debug("inside else/end")
+      return elixir#indent#handle_pattern_match_block(pair_lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
+    end
+  end
 endfunction

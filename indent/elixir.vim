@@ -28,13 +28,16 @@ function! elixir#indent(lnum)
         \'following_trailing_open_data_structure',
         \'following_trailing_open_parens',
         \'following_trailing_binary_operator',
+        \'following_trailing_defstruct',
+        \'following_trailing_defstruct',
+        \'following_trailing_ecto_from',
         \'starts_with_pipe',
         \'starts_with_close_bracket',
         \'starts_with_binary_operator',
         \'starts_with_comment',
+        \'with_block',
         \'follow_last_line'
         \]
-        " \'traverse_blocks',
   for handler in handlers
     " call elixir#indent#debug('testing handler elixir#indent#handle_'.handler)
     let indent = function('elixir#indent#handle_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
