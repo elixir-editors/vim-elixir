@@ -12,14 +12,6 @@ describe 'Indenting anonymous functions' do
       EOF
     end
 
-    it 'is declared with function syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      def do
-        some_func = function do x -> x end
-      end
-      EOF
-    end
-
     it 'spans in multiple lines' do
       expect(<<~EOF).to be_elixir_indentation
       def test do
@@ -54,17 +46,6 @@ describe 'Indenting anonymous functions' do
       end
       EOF
     end
-
-    it 'it with function syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      fizzbuzz = function do
-        0, 0, _ -> "FizzBuzz"
-        0, _, _ -> "Fizz"
-        _, 0, _ -> "Buzz"
-        _, _, x -> x
-      end
-      EOF
-    end
   end
 
   i <<~EOF
@@ -74,17 +55,6 @@ describe 'Indenting anonymous functions' do
       end
     end
     )
-  EOF
-
-  i <<~EOF
-    defp handle_chunk(:err, line, state) do
-      update_in(state[:stderr],
-                fn
-                ->
-                ->
-                end)
-      Map.update(state, :stderr, [line], &(&1 ++ [line]))
-    end
   EOF
 
   i <<~EOF

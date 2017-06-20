@@ -168,11 +168,11 @@ describe 'Indenting lists' do
       expect(<<~EOF).to be_elixir_indentation
       defmodule Module do
         @person1 { name: "name",
-          age: 18,
-          enabled?: true }
+                   age: 18,
+                   enabled?: true }
         @person2 { name: "other name",
-          age: 21,
-          enabled?: false }
+                   age: 21,
+                   enabled?: false }
       end
       EOF
     end
