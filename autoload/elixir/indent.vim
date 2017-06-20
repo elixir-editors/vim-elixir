@@ -24,7 +24,7 @@ endfunction
 " Returns 0 or 1 based on whether or not the text ends with the given
 " expression and is not a string or comment
 function! elixir#indent#ends_with(text, expr, lnum)
-  let pos = match(a:text, a:expr.'\s*$')
+  let pos = match(a:text, a:expr.'\s*\%(#.*\)\=$')
   if pos == -1
     return 0
   else
