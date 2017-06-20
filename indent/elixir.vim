@@ -29,7 +29,6 @@ function! elixir#indent(lnum)
         \'following_trailing_open_parens',
         \'following_trailing_binary_operator',
         \'following_trailing_defstruct',
-        \'following_trailing_defstruct',
         \'following_trailing_ecto_from',
         \'starts_with_pipe',
         \'starts_with_close_bracket',
