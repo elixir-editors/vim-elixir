@@ -287,32 +287,34 @@ function! elixir#indent#traverse_blocks(lnum, text)
     let chars = split(curr_text, '.\zs')
     let char_idx = len(chars) - 1
 
-    while char_idx >= 0
-      let char = chars[char_idx]
-      if char == ' '
-        " do nothing
-      elseif char =~ '[])}]'
-        let stack += [char]
-        let stack_depth += 1
-      elseif char =~ '[[({]'
-        " TODO: @jbodah 2017-06-19: this is soooo slowww
-        if elixir#indent#is_string_or_comment(curr_lnum, char_idx)
+    if synIDattr(synID(curr_lnum, 1, 1), "name") != 'elixirDocString'
+      while char_idx >= 0
+        let char = chars[char_idx]
+        if char == ' '
           " do nothing
-        else
-          if stack[-1] =~ '[])}]'
-            let stack = stack[0:-2]
+        elseif char =~ '[])}]'
+          let stack += [char]
+          let stack_depth += 1
+        elseif char =~ '[[({]'
+          " TODO: @jbodah 2017-06-19: this is soooo slowww
+          if elixir#indent#is_string_or_comment(curr_lnum, char_idx)
+            " do nothing
+          else
+            if stack[-1] =~ '[])}]'
+              let stack = stack[0:-2]
+            endif
+
+            let stack_depth -= 1
+
+            if stack_depth == -1
+              let last_char_idx = char_idx + 1 + elixir#indent#find_idx_of_first_nonspace(strpart(curr_text, char_idx + 1))
+            end
           endif
-
-          let stack_depth -= 1
-
-          if stack_depth == -1
-            let last_char_idx = char_idx + 1 + elixir#indent#find_idx_of_first_nonspace(strpart(curr_text, char_idx + 1))
-          end
         endif
-      endif
 
-      let char_idx -= 1
-    endwhile
+        let char_idx -= 1
+      endwhile
+    endif
 
     " todo pull up
     if stack_depth == 0
