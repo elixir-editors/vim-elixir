@@ -132,8 +132,8 @@ function! elixir#indent#handle_pattern_match_case(lnum, text, prev_nb_lnum, prev
   if elixir#indent#contains(a:text, '->')
     " NOTE: @jbodah 2017-06-16: there's something bizarre going on where this
     " only moves the cursor if I save this result...
-    let searchres = search('->', '', line('.'))
-    let block_start_info = searchpairpos('\%(cond\|case\|fn\|receive\|catch\|rescue\|else\)', '', 'end', 'b')
+    let _move = search('->', '', line('.'))
+    let block_start_info = searchpairpos('\%(cond\|case\|fn\|receive\|catch\|rescue\|else\)', '', elixir#indent#keyword('end'), 'b')
     let block_start_line = block_start_info[0]
     call elixir#indent#debug(string(block_start_info))
     if block_start_line == a:lnum
