@@ -60,12 +60,6 @@ function! elixir#indent#searchpair_back_skip()
   return elixir#indent#is_string_or_comment(line('.'), curr_col)
 endfunction
 
-" DRY up searchpair calls
-function! elixir#indent#searchpair_back(start, mid, end)
-  let line = line('.')
-  return searchpair(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
-endfunction
-
 " DRY up regex for keywords that 1) makes sure we only look at complete words
 " and 2) ignores atoms
 function! elixir#indent#keyword(expr)
@@ -162,7 +156,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, elixir#indent#keyword('end'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('do\|fn'), '', elixir#indent#keyword('end').'\zs')
+    let pair_lnum = searchpair(elixir#indent#keyword('do\|fn'), '', elixir#indent#keyword('end').'\zs', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     return indent(pair_lnum)
   else
     return -1
@@ -171,7 +165,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, elixir#indent#keyword('catch\|rescue\|after\|else'), a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back(elixir#indent#keyword('with\|receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'))
+    let pair_lnum = searchpair(elixir#indent#keyword('with\|receive\|try\|if\|fn'), elixir#indent#keyword('catch\|rescue\|after\|else').'\zs', elixir#indent#keyword('end'), 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     return indent(pair_lnum)
   else
     return -1
@@ -180,7 +174,7 @@ endfunction
 
 function! elixir#indent#handle_starts_with_close_bracket(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if elixir#indent#starts_with(a:text, '\%(\]\|}\|)\)', a:lnum)
-    let pair_lnum = elixir#indent#searchpair_back('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)')
+    let pair_lnum = searchpair('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     return indent(pair_lnum)
   else
     return -1
