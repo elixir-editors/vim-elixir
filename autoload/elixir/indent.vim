@@ -36,11 +36,6 @@ function! elixir#indent#ends_with(text, expr, lnum)
   end
 endfunction
 
-" Returns 0 or 1 based on whether or not the text matches the given expression
-function! elixir#indent#contains(text, expr)
-  return a:text =~ a:expr
-endfunction
-
 " Returns 0 or 1 based on whether or not the given line number and column
 " number pair is a string or comment
 function! elixir#indent#is_string_or_comment(line, col)
@@ -297,10 +292,10 @@ endfunction
 
 " Implements indent for pattern-matching blocks (e.g. case, fn, with/else)
 function! elixir#indent#handle_pattern_match_block(block_start_lnum, text, prev_nb_lnum, prev_nb_text)
-  if elixir#indent#contains(a:text, '->')
+  if a:text =~ '->'
     call elixir#indent#debug("current line contains ->")
     return indent(a:block_start_lnum) + &sw
-  elseif elixir#indent#contains(a:prev_nb_text, '->')
+  elseif a:prev_nb_text =~ '->'
     call elixir#indent#debug("prev nb line contains ->")
     return indent(a:prev_nb_lnum) + &sw
   else
