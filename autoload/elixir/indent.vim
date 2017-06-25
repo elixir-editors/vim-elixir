@@ -61,10 +61,6 @@ function! elixir#indent#keyword(expr)
   return ':\@<!\<\C\%('.a:expr.'\)\>:\@!'
 endfunction
 
-function! elixir#indent#starts_with_comment(text)
-  return match(a:text, '^\s*#') != -1
-endfunction
-
 " Start at the end of text and search backwards looking for a match. Also peek
 " ahead if we get a match to make sure we get a complete match. This means
 " that the result should be the position of the start of the right-most match
@@ -142,7 +138,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
 endfunction
 
 function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
-  if elixir#indent#starts_with_comment(a:text)
+  if match(a:text, '^\s*#') != -1
     return indent(a:prev_nb_lnum)
   else
     return -1
