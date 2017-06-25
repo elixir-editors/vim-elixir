@@ -66,12 +66,6 @@ function! elixir#indent#searchpair_back(start, mid, end)
   return searchpair(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
 endfunction
 
-" DRY up searchpairpos calls
-function! elixir#indent#searchpairpos_back(start, mid, end)
-  let line = line('.')
-  return searchpairpos(a:start, a:mid, a:end, 'bnW', "line('.') == " . line . " || elixir#indent#searchpair_back_skip()")
-endfunction
-
 " DRY up regex for keywords that 1) makes sure we only look at complete words
 " and 2) ignores atoms
 function! elixir#indent#keyword(expr)
@@ -221,7 +215,7 @@ endfunction
 function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum, prev_nb_text)
   let start_pattern = '\C\%(\<with\>\|\<if\>\|\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|{\|\[\|(\)'
   let end_pattern = '\C\%(\<end\>\|\]\|}\|)\)'
-  let pair_info = elixir#indent#searchpairpos_back(start_pattern, '', end_pattern)
+  let pair_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
   let pair_lnum = pair_info[0]
   let pair_col = pair_info[1]
   if pair_lnum != 0 || pair_col != 0
@@ -260,7 +254,7 @@ function! elixir#indent#do_handle_inside_with(pair_lnum, pair_col, lnum, text, p
     " Determine if in with/do, do/else|end, or else/end
     let start_pattern = '\C\%(\<with\>\|\<else\>\|\<do\>\)'
     let end_pattern = '\C\%(\<end\>\)'
-    let pair_info = elixir#indent#searchpairpos_back(start_pattern, '', end_pattern)
+    let pair_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     let pair_lnum = pair_info[0]
     let pair_col = pair_info[1]
 
