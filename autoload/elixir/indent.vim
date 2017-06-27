@@ -1,5 +1,5 @@
 if !exists("g:elixir_indent_max_lookbehind")
-  let g:elixir_indent_max_lookbehind = 20
+  let g:elixir_indent_max_lookbehind = 30
 endif
 
 function! elixir#indent#indent(lnum)
