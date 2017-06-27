@@ -22,7 +22,8 @@ function! elixir#indent#indent(lnum)
         \'starts_with_binary_operator',
         \'inside_nested_construct',
         \'starts_with_comment',
-        \'inside_generic_block'
+        \'inside_generic_block',
+        \'follow_prev_nb',
         \]
   for handler in handlers
     call s:debug('testing handler elixir#indent#handle_'.handler)
@@ -399,4 +400,8 @@ function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, p
   else
     return -1
   endif
+endfunction
+
+function! elixir#indent#handle_follow_prev_nb(_lnum, _text, prev_nb_lnum, _prev_nb_text)
+  return indent(a:prev_nb_lnum)
 endfunction
