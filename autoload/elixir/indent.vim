@@ -1,3 +1,7 @@
+if !exists("g:elixir_indent_max_lookbehind")
+  let g:elixir_indent_max_lookbehind = 20
+endif
+
 function! elixir#indent#indent(lnum)
   let lnum = a:lnum
   let text = getline(lnum)
@@ -235,7 +239,7 @@ endfunction
 function! elixir#indent#handle_inside_nested_construct(lnum, text, prev_nb_lnum, prev_nb_text)
   let start_pattern = '\C\%(\<with\>\|\<if\>\|\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|{\|\[\|(\)'
   let end_pattern = '\C\%(\<end\>\|\]\|}\|)\)'
-  let pair_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
+  let pair_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()", max([0, a:lnum - g:elixir_indent_max_lookbehind]))
   let pair_lnum = pair_info[0]
   let pair_col = pair_info[1]
   if pair_lnum != 0 || pair_col != 0
@@ -383,7 +387,7 @@ function! s:do_handle_inside_parens(pair_lnum, pair_col, _lnum, _text, prev_nb_l
 endfunction
 
 function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, prev_nb_text)
-  let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end'), 'bW', "line('.') == ".a:lnum." || s:is_string_or_comment(line('.'), col('.'))")
+  let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end'), 'bW', "line('.') == ".a:lnum." || s:is_string_or_comment(line('.'), col('.'))", max([0, a:lnum - g:elixir_indent_max_lookbehind]))
   if pair_lnum
     " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
     " blocks
