@@ -201,7 +201,17 @@ end
 
 RSpec::Core::ExampleGroup.instance_eval do
   def i(str)
-    it "#{str}" do
+    gen_tests(:it, str)
+  end
+
+  def ip(str)
+    gen_tests(:pending, str)
+  end
+
+  private
+
+  def gen_tests(method, str)
+    send method, "\n#{str}" do
       reload = -> do
         VIM.add_plugin(File.expand_path('..', __dir__), 'ftdetect/elixir.vim')
         received = ExBuffer.new.reindent(str)
@@ -212,7 +222,7 @@ RSpec::Core::ExampleGroup.instance_eval do
       expect(actual).to eq(str)
     end
 
-    it "typed: #{str}" do
+    send method, "typed: \n#{str}" do
       expect(str).to be_typed_with_right_indent
     end
   end
