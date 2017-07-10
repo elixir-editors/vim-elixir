@@ -53,6 +53,8 @@ Copy the contents of each directory in the respective directories inside
 >
 > **If your version of Syntastic is below `3.4.0-107` (16 July 2014), you should
 > update to a newer version.**
+>
+> You can check your version by running `:echo g:_SYNTASTIC_VERSION`
 
 [vim-plug]: https://github.com/junegunn/vim-plug
 [vundle]: https://github.com/VundleVim/Vundle.vim
