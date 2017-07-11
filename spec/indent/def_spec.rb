@@ -15,4 +15,60 @@ describe 'def indentation' do
 
     def
   EOF
+
+  i <<~EOF
+  defmodule HiMom do
+    def hi do
+      puts "hi"
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def mom do
+      puts "mom"
+    end
+  end
+  EOF
 end
