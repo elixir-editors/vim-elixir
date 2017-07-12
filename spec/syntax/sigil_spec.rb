@@ -3,6 +3,13 @@
 require 'spec_helper'
 
 describe 'Sigil syntax' do
+  it 'as function argument' do
+    expect('def f(~s(")), do: true').to include_elixir_syntax('elixirSigilDelimiter', '\~s(')
+    expect('def f(~s(")), do: true').to include_elixir_syntax('elixirSigil', '"')
+    expect("def f(~s(')), do: true").to include_elixir_syntax('elixirSigil', "'")
+    expect('def f(~s(")), do: true').not_to include_elixir_syntax('elixirSigilDelimiter', '"')
+  end
+
   describe 'upper case' do
     it 'string' do
       expect('~S(string)').to include_elixir_syntax('elixirSigilDelimiter', 'S')
@@ -24,7 +31,7 @@ describe 'Sigil syntax' do
       expect('~W(list of words)').to include_elixir_syntax('elixirSigil', 'list')
     end
 
-    it 'delimited with parans' do
+    it 'delimited with parenthesis' do
       expect('~S(foo bar)').to include_elixir_syntax('elixirSigilDelimiter', '(')
       expect('~S(foo bar)').to include_elixir_syntax('elixirSigilDelimiter', ')')
     end
@@ -63,7 +70,7 @@ describe 'Sigil syntax' do
       expect('~S(foo #{bar})').not_to include_elixir_syntax('elixirInterpolation', 'bar')
     end
 
-    it 'without escaped parans' do
+    it 'without escaped parenthesis' do
       expect('~S(\( )').not_to include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
     end
   end
@@ -97,7 +104,7 @@ describe 'Sigil syntax' do
       expect('~s(foo #{bar})').to include_elixir_syntax('elixirInterpolation', 'bar')
     end
 
-    it 'with escaped parans' do
+    it 'with escaped parenthesis' do
       expect('~s(\( )').to include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
     end
 
