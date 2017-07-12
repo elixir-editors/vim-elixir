@@ -52,4 +52,24 @@ describe 'Variable syntax' do
     expect(str).to include_elixir_syntax('elixirUnusedVariable', '_user')
     expect(str).to include_elixir_syntax('elixirUnusedVariable', '_claims')
   end
+
+  it 'unused, in anonymous function, inline' do
+    expect(<<~EOF).to include_elixir_syntax('elixirUnusedVariable', '_unused')
+      fun = fn _unused -> false end
+    EOF
+  end
+
+  it 'unused, in anonymous function, multiple lines' do
+    expect(<<~EOF).to include_elixir_syntax('elixirUnusedVariable', '_unused')
+      fun  = fn
+        ([], _unused) -> true
+      end
+    EOF
+  end
+
+  it 'unused, in pattern matching' do
+    expect(<<~EOF).to include_elixir_syntax('elixirUnusedVariable', '_unused')
+      _unused = false
+    EOF
+  end
 end
