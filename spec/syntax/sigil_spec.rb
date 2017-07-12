@@ -3,6 +3,13 @@
 require 'spec_helper'
 
 describe 'Sigil syntax' do
+  it 'as function argument' do
+    expect('def f(~s(")), do: true').to include_elixir_syntax('elixirSigilDelimiter', '\~s(')
+    expect('def f(~s(")), do: true').to include_elixir_syntax('elixirSigil', '"')
+    expect("def f(~s(')), do: true").to include_elixir_syntax('elixirSigil', "'")
+    expect('def f(~s(")), do: true').not_to include_elixir_syntax('elixirSigilDelimiter', '"')
+  end
+
   describe 'upper case' do
     it 'string' do
       expect('~S(string)').to include_elixir_syntax('elixirSigilDelimiter', 'S')
