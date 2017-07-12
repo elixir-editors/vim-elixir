@@ -16,7 +16,7 @@ syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDec
 syn match elixirComment '#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
-syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>'
+syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>' contains=elixirUnusedVariable
 
 syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|send\)\>'
 syn match elixirKeyword '\(\.\)\@<!\<\(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>'
@@ -33,7 +33,7 @@ syn keyword elixirInclude import require alias use
 syn keyword elixirSelf self
 
 " This unfortunately also matches function names in function calls
-syn match elixirUnusedVariable contained '\<_\w*\>'
+syn match elixirUnusedVariable contained '\v%(^|[^.])@<=<_\w*>'
 
 syn keyword elixirOperator and not or in
 syn match   elixirOperator '!==\|!=\|!'
