@@ -13,7 +13,7 @@ describe 'Sigil syntax' do
   describe 'upper case' do
     it 'string' do
       expect('~S(string)').to include_elixir_syntax('elixirSigilDelimiter', 'S')
-      expect('~S(string)').to include_elixir_syntax('elixirSigil', 'foo')
+      expect('~S(string)').to include_elixir_syntax('elixirSigil', 'string')
     end
 
     it 'character list' do
@@ -47,7 +47,7 @@ describe 'Sigil syntax' do
     end
 
     it 'escapes double quotes unless only preceded by whitespace' do
-      expect(<<~EOF).to include_elixir_syntax('elixirSigilDelimiter', %q(^\s*\zs'"'))
+      expect(<<~EOF).to include_elixir_syntax('elixirSigilDelimiter', %q(^\s*\zs"""))
         ~r"""
         foo """
         """
@@ -78,7 +78,7 @@ describe 'Sigil syntax' do
   describe 'lower case' do
     it 'string' do
       expect('~s(string)').to include_elixir_syntax('elixirSigilDelimiter', 's')
-      expect('~s(string)').to include_elixir_syntax('elixirSigil', 'foo')
+      expect('~s(string)').to include_elixir_syntax('elixirSigil', 'string')
     end
 
     it 'character list' do

@@ -80,7 +80,7 @@ describe 'documentation syntax' do
       EOF
       expect(ex).to include_elixir_syntax('elixirDocString', 'doctest')
       expect(ex).to include_elixir_syntax('elixirDocTest',   'map')
-      expect(ex).to include_elixir_syntax('elixirDocTest',   'x * 2')
+      expect(ex).to include_elixir_syntax('elixirDocTest',   'x \* 2')
       expect(ex).to include_elixir_syntax('elixirDocTest',   '2, 4, 6')
     end
 
