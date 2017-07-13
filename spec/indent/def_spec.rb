@@ -17,57 +17,11 @@ describe 'def indentation' do
   EOF
 
   i <<~EOF
-  defmodule HiMom do
-    def hi do
-      puts "hi"
+  defmodule Hello do
+    def hello do
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def mom do
-      puts "mom"
+#{"\n" * 40}
+    def world do
     end
   end
   EOF
