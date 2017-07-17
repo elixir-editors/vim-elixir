@@ -21,19 +21,4 @@ describe 'Kernel function syntax' do
     end
     EOF
   end
-
-  it 'kernel function used in a function body' do
-    expect(<<~'EOF').not_to include_elixir_syntax('elixirKernelFunction', 'length')
-    def say_size(chars) do
-      size = length(chars)
-      IO.puts "you gave me #{size} chars"
-    end
-    EOF
-  end
-
-  it 'kernel function used as top-level' do
-    expect(<<~'EOF').not_to include_elixir_syntax('elixirKernelFunction', 'length')
-    length(chars)
-    EOF
-  end
 end
