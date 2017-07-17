@@ -3,14 +3,17 @@
 require 'spec_helper'
 
 describe 'Kernel function syntax' do
-  it 'kernel function used as an atom key in a keyword list contained in a block' do
+  it 'kernel function used as an atom key in a keyword list outside of a block' do
     expect(<<~EOF).not_to include_elixir_syntax('elixirKernelFunction', 'length')
     do
-      plug Plug.Parsers,
-        parsers: [:urlencoded, :multipart, :json],
-        pass: ["*/*"],
-        json_decoder: Poison,
-        length: 400_000_000
+      plug Plug.Parsers, length: 400_000_000
+    end
+    EOF
+  end
+
+  it 'kernel function used as an atom key in a keyword list contained in a block' do
+    expect(<<~EOF).not_to include_elixir_syntax('elixirKernelFunction', 'length')
+    plug Plug.Parsers, length: 400_000_000
     EOF
   end
 
