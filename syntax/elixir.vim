@@ -16,17 +16,18 @@ syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDec
 syn match elixirComment '#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
-syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>' contains=elixirUnusedVariable
+syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>' contains=elixirUnusedVariable,elixirKernelFunction
 
 syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|send\)\>'
 syn match elixirKeyword '\(\.\)\@<!\<\(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>'
 syn match elixirKeyword '\(\.\)\@<!\<\(quote\|unquote\|super\|spawn\|spawn_link\|spawn_monitor\)\>'
 
 " Kernel functions
-syn match elixirKernelFunction contained containedin=elixirGuard '\<\(is_atom\|is_binary\|is_bitstring\|is_boolean\|is_float\|is_function\|is_integer\|is_list\|is_map\|is_nil\|is_number\|is_pid\|is_port\)\>\([ (]\)\@='
-syn match elixirKernelFunction contained containedin=elixirGuard '\<\(is_record\|is_reference\|is_tuple\|is_exception\|abs\|bit_size\|byte_size\|div\|elem\|hd\|length\|map_size\|node\|rem\|round\|tl\|trunc\|tuple_size\)\>\([ (]\)\@='
-
-syn match elixirGuard '.*when.*' contains=ALLBUT,@elixirNotTop
+syn keyword elixirKernelFunction contained is_atom is_binary is_bitstring is_boolean is_float
+syn keyword elixirKernelFunction contained is_function is_integer is_list is_map is_nil
+syn keyword elixirKernelFunction contained is_number is_pid is_port is_reference is_tuple
+syn keyword elixirKernelFunction contained abs binary_part bit_size byte_size div elem hd length
+syn keyword elixirKernelFunction contained map_size node rem round tl trunc tuple_size
 
 syn keyword elixirInclude import require alias use
 
