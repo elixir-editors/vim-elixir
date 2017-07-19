@@ -13,6 +13,5 @@ describe 'Tuple syntax' do
     expect(str).to include_elixir_syntax('elixirTuple', ':name')
 
     expect(str).to include_elixir_syntax('elixirTupleDelimiter', '}')
-    expect(str).to include_elixir_syntax('elixirTuple', '}')
   end
 end

@@ -31,7 +31,6 @@ describe 'Struct syntax' do
     expect(str).to include_elixir_syntax('elixirStruct', 'name:')
 
     expect(str).to include_elixir_syntax('elixirStructDelimiter', '}')
-    expect(str).to include_elixir_syntax('elixirStruct', '}')
   end
 
   it 'properly closes strings in structs' do
@@ -59,7 +58,6 @@ describe 'Struct syntax' do
     expect(str).to include_elixir_syntax('elixirStruct', '"}')
 
     expect(str).to include_elixir_syntax('elixirStructDelimiter', '} #')
-    expect(str).to include_elixir_syntax('elixirStruct', '} #')
 
     expect(str).to include_elixir_syntax('elixirComment', '# this should not be a string still')
   end

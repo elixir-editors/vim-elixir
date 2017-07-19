@@ -97,7 +97,7 @@ describe 'Sigil syntax' do
     end
 
     it 'with escapes' do
-      expect('~s(foo \n bar)').to include_elixir_syntax('elixirRegexEscape', '\\')
+      expect('~s(foo \n bar)').to include_elixir_syntax('elixirRegexEscapePunctuation', '\\')
     end
 
     it 'with interpolation' do
@@ -113,7 +113,7 @@ describe 'Sigil syntax' do
     end
 
     it 'escapes with slashes' do
-      expect('~s/foo \n bar/').to include_elixir_syntax('elixirRegexEscape', '\\')
+      expect('~s/foo \n bar/').to include_elixir_syntax('elixirRegexEscapePunctuation', '\\')
     end
   end
 end
