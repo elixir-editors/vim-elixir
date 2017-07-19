@@ -52,10 +52,13 @@ class Buffer
       return []
     end
 
-    # Return the syntax groups in a list.
-    @vim.echo <<~EOF
+    syngroups = @vim.echo <<~EOF
     map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
     EOF
+
+    # From: "['elixirRecordDeclaration', 'elixirAtom']"
+    # To:   ["elixirRecordDeclaration", "elixirAtom"]
+    syngroups.gsub!(/["'\[\]]/, '').split(', ')
   end
 
   private
