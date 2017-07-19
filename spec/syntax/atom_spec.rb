@@ -41,4 +41,10 @@ describe 'Atom syntax' do
       EOF
     end
   end
+
+  it 'atoms as part of a comprehension' do
+    s = 'for kvp <- map, do: &atomize_key/1, into: %{}'
+    expect(s).to include_elixir_syntax('elixirAtom', 'do')
+    expect(s).to include_elixir_syntax('elixirAtom', 'into')
+  end
 end
