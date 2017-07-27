@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'Default argument syntax' do
+describe 'Operators' do
   it 'default argument' do
     expect(<<~'EOF').to include_elixir_syntax('elixirOperator', '\\')
       def foo(bar \\ :baz)
@@ -10,6 +10,16 @@ describe 'Default argument syntax' do
 
     expect(<<~EOF).to include_elixir_syntax('elixirOperator', '\/')
       def foo(bar // :baz)
+    EOF
+  end
+
+  it 'in' do
+    expect(<<~EOF).to include_elixir_syntax('elixirOperator', 'in')
+      'x' in ['x']
+    EOF
+
+    expect(<<~EOF).not_to include_elixir_syntax('elixirOperator', 'in')
+      :queue.in x, 5
     EOF
   end
 end
