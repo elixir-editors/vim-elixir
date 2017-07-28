@@ -2,6 +2,11 @@ if !exists("g:elixir_indent_max_lookbehind")
   let g:elixir_indent_max_lookbehind = 30
 endif
 
+" Return the effective value of 'shiftwidth'
+function! s:sw()
+  return &shiftwidth == 0 ? &tabstop : &shiftwidth
+endfunction
+
 function! elixir#indent#indent(lnum)
   let lnum = a:lnum
   let text = getline(lnum)
@@ -141,7 +146,7 @@ function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, p
     if s:starts_with(a:text, s:keyword('end'), a:lnum)
       return indent(a:prev_nb_lnum)
     else
-      return indent(a:prev_nb_lnum) + &sw
+      return indent(a:prev_nb_lnum) + s:sw()
     end
   else
     return -1
@@ -152,7 +157,7 @@ function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, pr
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
   if s:ends_with(a:prev_nb_text, binary_operator, a:prev_nb_lnum)
-    return indent(a:prev_nb_lnum) + &sw
+    return indent(a:prev_nb_lnum) + s:sw()
   else
     return -1
   endif
@@ -175,7 +180,7 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
     else
       let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
       if next_word_pos == -1
-        return indent(a:prev_nb_lnum) + &sw
+        return indent(a:prev_nb_lnum) + s:sw()
       else
         return pos + 1 + next_word_pos
       end
@@ -231,7 +236,7 @@ function! elixir#indent#handle_starts_with_binary_operator(lnum, text, prev_nb_l
     else
       let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
       if next_word_pos == -1
-        return indent(a:prev_nb_lnum) + &sw
+        return indent(a:prev_nb_lnum) + s:sw()
       else
         return pos + 1 + next_word_pos
       end
@@ -296,7 +301,7 @@ function! s:do_handle_inside_with(pair_lnum, pair_col, lnum, text, prev_nb_lnum,
 
     if s:starts_with(a:text, '\Cdo:', a:lnum)
       call s:debug("current line is do:")
-      return pair_col - 1 + &sw
+      return pair_col - 1 + s:sw()
     elseif s:starts_with(a:text, '\Celse:', a:lnum)
       call s:debug("current line is else:")
       return pair_col - 1
@@ -305,13 +310,13 @@ function! s:do_handle_inside_with(pair_lnum, pair_col, lnum, text, prev_nb_lnum,
       return pair_col - 1
     elseif s:starts_with(pair_text, '\C\(do\|else\):', pair_lnum)
       call s:debug("inside do:/else:")
-      return pair_col - 1 + &sw
+      return pair_col - 1 + s:sw()
     elseif pair_char == 'w'
       call s:debug("inside with/do")
       return pair_col + 4
     elseif pair_char == 'd'
       call s:debug("inside do/else|end")
-      return pair_col - 1 + &sw
+      return pair_col - 1 + s:sw()
     else
       call s:debug("inside else/end")
       return s:do_handle_inside_pattern_match_block(pair_lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
@@ -325,7 +330,7 @@ function! s:do_handle_inside_keyword_block(pair_lnum, _pair_col, _lnum, text, pr
     " last line is a "receive" or something
     if s:starts_with(a:prev_nb_text, keyword_pattern, a:prev_nb_lnum)
       call s:debug("prev nb line is keyword")
-      return indent(a:prev_nb_lnum) + &sw
+      return indent(a:prev_nb_lnum) + s:sw()
     else
       return s:do_handle_inside_pattern_match_block(a:pair_lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
     end
@@ -338,10 +343,10 @@ endfunction
 function! s:do_handle_inside_pattern_match_block(block_start_lnum, text, prev_nb_lnum, prev_nb_text)
   if a:text =~ '->'
     call s:debug("current line contains ->")
-    return indent(a:block_start_lnum) + &sw
+    return indent(a:block_start_lnum) + s:sw()
   elseif a:prev_nb_text =~ '->'
     call s:debug("prev nb line contains ->")
-    return indent(a:prev_nb_lnum) + &sw
+    return indent(a:prev_nb_lnum) + s:sw()
   else
     return indent(a:prev_nb_lnum)
   end
@@ -364,7 +369,7 @@ function! s:do_handle_inside_square_brace(pair_lnum, pair_col, _lnum, _text, _pr
     if indent_pos != -1
       return indent_pos + a:pair_col
     else
-      return indent(a:pair_lnum) + &sw
+      return indent(a:pair_lnum) + s:sw()
     endif
   else
     return -1
@@ -372,13 +377,13 @@ function! s:do_handle_inside_square_brace(pair_lnum, pair_col, _lnum, _text, _pr
 endfunction
 
 function! s:do_handle_inside_curly_brace(pair_lnum, _pair_col, _lnum, _text, _prev_nb_lnum, _prev_nb_text)
-  return indent(a:pair_lnum) + &sw
+  return indent(a:pair_lnum) + s:sw()
 endfunction
 
 function! s:do_handle_inside_parens(pair_lnum, pair_col, _lnum, _text, prev_nb_lnum, prev_nb_text)
   if a:pair_lnum
     if s:ends_with(a:prev_nb_text, '(', a:prev_nb_lnum)
-      return indent(a:prev_nb_lnum) + &sw
+      return indent(a:prev_nb_lnum) + s:sw()
     elseif a:pair_lnum == a:prev_nb_lnum
       " Align indent (e.g. "def add(a,")
       let pos = s:find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '[^(]\+,')
@@ -401,9 +406,9 @@ function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, p
     " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
     " blocks
     if s:ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
-      return indent(pair_lnum) + 2 * &sw
+      return indent(pair_lnum) + 2 * s:sw()
     else
-      return indent(pair_lnum) + &sw
+      return indent(pair_lnum) + s:sw()
     endif
   else
     return -1
