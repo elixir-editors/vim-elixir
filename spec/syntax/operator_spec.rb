@@ -22,4 +22,10 @@ describe 'Operators' do
       :queue.in x, 5
     EOF
   end
+
+  it 'does not highlight operators inside of elixirIds' do
+    expect(<<~EOF).not_to include_elixir_syntax('elixirOperator', 'in')
+      incoming
+    EOF
+  end
 end
