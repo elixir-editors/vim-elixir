@@ -36,7 +36,7 @@ syn keyword elixirSelf self
 " This unfortunately also matches function names in function calls
 syn match elixirUnusedVariable contained '\v%(^|[^.])@<=<_\w*>'
 
-syn match   elixirOperator '\v\.@<!%(and|or|in|not)'
+syn match   elixirOperator '\v\.@<!<%(and|or|in|not)>'
 syn match   elixirOperator '!==\|!=\|!'
 syn match   elixirOperator '=\~\|===\|==\|='
 syn match   elixirOperator '<<<\|<<\|<=\|<-\|<'
