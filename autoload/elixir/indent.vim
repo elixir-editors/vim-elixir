@@ -28,7 +28,7 @@ function! elixir#indent#indent(lnum)
         \'inside_nested_construct',
         \'starts_with_comment',
         \'inside_generic_block',
-        \'following_prev_end'
+        \'follow_prev_nb'
         \]
   for handler in handlers
     call s:debug('testing handler elixir#indent#handle_'.handler)
@@ -138,6 +138,39 @@ function! elixir#indent#handle_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_
   else
     return -1
   end
+endfunction
+
+function! elixir#indent#handle_follow_prev_nb(_lnum, _text, prev_nb_lnum, prev_nb_text)
+  return s:get_base_indent(a:prev_nb_lnum, a:prev_nb_text)
+endfunction
+
+" Given the line at `lnum`, returns the indent of the line that acts as the 'base indent'
+" for this line. In particular it traverses backwards up things like pipelines
+" to find the beginning of the expression
+function! s:get_base_indent(lnum, text)
+  let prev_nb_lnum = prevnonblank(a:lnum - 1)
+  let prev_nb_text = getline(prev_nb_lnum)
+
+  let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
+  let data_structure_close = '\%(\]\|}\|)\)'
+  let pipe = '|>'
+
+  if s:starts_with(a:text, binary_operator, a:lnum)
+    return s:get_base_indent(prev_nb_lnum, prev_nb_text)
+  elseif s:starts_with(a:text, pipe, a:lnum)
+    return s:get_base_indent(prev_nb_lnum, prev_nb_text)
+  elseif s:ends_with(prev_nb_text, binary_operator, prev_nb_lnum)
+    return s:get_base_indent(prev_nb_lnum, prev_nb_text)
+  elseif s:ends_with(a:text, data_structure_close, a:lnum)
+    let data_structure_open = '\%(\[\|{\|(\)'
+    let close_match_idx = match(a:text, data_structure_close . '\s*$')
+    let _move = cursor(a:lnum, close_match_idx + 1)
+    let [open_match_lnum, open_match_col] = searchpairpos(data_structure_open, '', data_structure_close, 'bnW')
+    let open_match_text = getline(open_match_lnum)
+    return s:get_base_indent(open_match_lnum, open_match_text)
+  else
+    return indent(a:lnum)
+  endif
 endfunction
 
 " TODO: @jbodah 2017-03-31: remove
