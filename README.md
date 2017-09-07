@@ -39,7 +39,7 @@ Plugin 'elixir-lang/vim-elixir'
 
 ### Manual installation
 
-Copy the contents of each directory in the respective directories inside
+Run [./manual_install.sh](manual_install.sh) to copy the contents of each directory in the respective directories inside
 `~/.vim`.
 
 
