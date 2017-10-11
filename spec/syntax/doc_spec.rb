@@ -61,9 +61,9 @@ describe 'documentation syntax' do
         foo #{bar}
         """
       EOF
-      expect(ex).to     include_elixir_syntax('elixirDocString',       'foo')
-      expect(ex).to     include_elixir_syntax('elixirStringDelimiter', '"""')
-      expect(ex).not_to include_elixir_syntax('elixirInterpolation',   'bar')
+      expect(ex).to include_elixir_syntax('elixirDocString',       'foo')
+      expect(ex).to include_elixir_syntax('elixirStringDelimiter', '"""')
+      expect(ex).to include_elixir_syntax('elixirInterpolation',   'bar')
     end
 
     it 'doc with doctest' do
