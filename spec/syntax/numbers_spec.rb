@@ -9,7 +9,7 @@ describe 'Numbers syntax' do
     end
 
     it 'negative is colorized' do
-      expect('-123').to include_elixir_syntax('elixirNumber', '-123')
+      expect('-123').to include_elixir_syntax('elixirNumber', '123')
     end
   end
 
@@ -19,7 +19,7 @@ describe 'Numbers syntax' do
     end
 
     it 'negative is colorized' do
-      expect('-0xdeadbeaf').to include_elixir_syntax('elixirNumber', '-0xdeadbeaf')
+      expect('-0xdeadbeaf').to include_elixir_syntax('elixirNumber', '0xdeadbeaf')
     end
   end
 
@@ -29,7 +29,7 @@ describe 'Numbers syntax' do
     end
 
     it 'negative is colorized' do
-      expect('-0o777').to include_elixir_syntax('elixirNumber', '-0o777')
+      expect('-0o777').to include_elixir_syntax('elixirNumber', '0o777')
     end
   end
 
@@ -39,7 +39,7 @@ describe 'Numbers syntax' do
     end
 
     it 'negative is colorized' do
-      expect('-0b1011').to include_elixir_syntax('elixirNumber', '-0b1011')
+      expect('-0b1011').to include_elixir_syntax('elixirNumber', '0b1011')
     end
   end
 end
