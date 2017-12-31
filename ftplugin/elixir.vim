@@ -47,5 +47,20 @@ onoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR
 
 silent! setlocal formatoptions-=t formatoptions+=croqlj
 
+let b:block_begin = '\<\(do$\|fn\>\)'
+let b:block_end = '\<end\>'
+
+nnoremap <buffer> <silent> <expr> ]] ':silent keeppatterns /'.b:block_begin.'<CR>'
+nnoremap <buffer> <silent> <expr> [[ ':silent keeppatterns ?'.b:block_begin.'<CR>'
+nnoremap <buffer> <silent> <expr> ][ ':silent keeppatterns /'.b:block_end  .'<CR>'
+nnoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR>'
+
+onoremap <buffer> <silent> <expr> ]] ':silent keeppatterns /'.b:block_begin.'<CR>'
+onoremap <buffer> <silent> <expr> [[ ':silent keeppatterns ?'.b:block_begin.'<CR>'
+onoremap <buffer> <silent> <expr> ][ ':silent keeppatterns /'.b:block_end  .'<CR>'
+onoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR>'
+
+silent! setlocal formatoptions-=t formatoptions+=croqlj
+
 let b:undo_ftplugin = 'setlocal sw< sts< et< isk< com< cms< path< inex< sua< def<'.
-      \ '| unlet! b:match_ignorecase b:match_words b:block_begin b:block_end
+      \ '| unlet! b:match_ignorecase b:match_words b:block_begin b:block_end'
