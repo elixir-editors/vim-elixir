@@ -32,6 +32,34 @@ setlocal suffixesadd=.ex,.exs,.eex,.erl,.yrl,.hrl
 
 let &l:define = 'def\(macro|guard|delegate\)p'
 
+let b:block_begin = '\<\(do$\|fn\>\)'
+let b:block_end = '\<end\>'
+
+nnoremap <buffer> <silent> <expr> ]] ':silent keeppatterns /'.b:block_begin.'<CR>'
+nnoremap <buffer> <silent> <expr> [[ ':silent keeppatterns ?'.b:block_begin.'<CR>'
+nnoremap <buffer> <silent> <expr> ][ ':silent keeppatterns /'.b:block_end  .'<CR>'
+nnoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR>'
+
+onoremap <buffer> <silent> <expr> ]] ':silent keeppatterns /'.b:block_begin.'<CR>'
+onoremap <buffer> <silent> <expr> [[ ':silent keeppatterns ?'.b:block_begin.'<CR>'
+onoremap <buffer> <silent> <expr> ][ ':silent keeppatterns /'.b:block_end  .'<CR>'
+onoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR>'
+
+silent! setlocal formatoptions-=t formatoptions+=croqlj
+
+let b:block_begin = '\<\(do$\|fn\>\)'
+let b:block_end = '\<end\>'
+
+nnoremap <buffer> <silent> <expr> ]] ':silent keeppatterns /'.b:block_begin.'<CR>'
+nnoremap <buffer> <silent> <expr> [[ ':silent keeppatterns ?'.b:block_begin.'<CR>'
+nnoremap <buffer> <silent> <expr> ][ ':silent keeppatterns /'.b:block_end  .'<CR>'
+nnoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR>'
+
+onoremap <buffer> <silent> <expr> ]] ':silent keeppatterns /'.b:block_begin.'<CR>'
+onoremap <buffer> <silent> <expr> [[ ':silent keeppatterns ?'.b:block_begin.'<CR>'
+onoremap <buffer> <silent> <expr> ][ ':silent keeppatterns /'.b:block_end  .'<CR>'
+onoremap <buffer> <silent> <expr> [] ':silent keeppatterns ?'.b:block_end  .'<CR>'
+
 silent! setlocal formatoptions-=t formatoptions+=croqlj
 
 let b:block_begin = '\<\(do$\|fn\>\)'
