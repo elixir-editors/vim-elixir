@@ -42,6 +42,15 @@ Plugin 'elixir-editors/vim-elixir'
 Run [./manual_install.sh](manual_install.sh) to copy the contents of each directory in the respective directories inside
 `~/.vim`.
 
+## Disabling `mix format` Integration
+
+`mix format` integration is supported by setting `formatprg`. If you wish to opt-out of this (e.g. you're running a version prior to Elixir 1.6)
+then you can do so by resetting this setting back to the default value in your `after` directory (e.g. `~/.vim/after/ftplugin/elixir.vim`):
+
+```viml
+setlocal formatprg=
+```
+
 ## Development
 
 To run the tests you can run `bundle exec rspec`
