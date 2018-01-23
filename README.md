@@ -42,27 +42,6 @@ Plugin 'elixir-editors/vim-elixir'
 Run [./manual_install.sh](manual_install.sh) to copy the contents of each directory in the respective directories inside
 `~/.vim`.
 
-
-## Syntastic integration
-
-> :warning: **Warning:** older versions (`<= 3.4.0-106`) of
-> [Syntastic][syntastic] check Elixir scripts *by executing them*. In addition
-> to being unsafe, this can cause Vim to hang while saving Elixir scripts. This
-> is not an error in `vim-elixir`. This issue [can be fixed in
-> Syntastic][syntastic-issue-fix] by disabling Elixir checking by default.
->
-> **If your version of Syntastic is below `3.4.0-107` (16 July 2014), you should
-> update to a newer version.**
->
-> You can check your version by running `:echo g:_SYNTASTIC_VERSION`
-
-[vim-plug]: https://github.com/junegunn/vim-plug
-[vundle]: https://github.com/VundleVim/Vundle.vim
-[neobundle]: https://github.com/Shougo/neobundle.vim
-[pathogen]: https://github.com/tpope/vim-pathogen
-[syntastic]: https://github.com/scrooloose/syntastic
-[syntastic-issue-fix]: https://github.com/scrooloose/syntastic/commit/1d19dff701524ebed90a4fbd7c7cd75ab954b79d
-
 ## Development
 
 To run the tests you can run `bundle exec rspec`
