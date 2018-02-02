@@ -16,6 +16,9 @@ function! elixir#indent#indent(lnum)
   call s:debug("==> Indenting line " . lnum)
   call s:debug("text = '" . text . "'")
 
+  let [_, curs_lnum, curs_col, _] = getpos('.')
+  call cursor(lnum, 0)
+
   let handlers = [
         \'top_of_file',
         \'starts_with_end',
@@ -35,11 +38,13 @@ function! elixir#indent#indent(lnum)
     let indent = function('elixir#indent#handle_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
     if indent != -1
       call s:debug('line '.lnum.': elixir#indent#handle_'.handler.' returned '.indent)
+      call cursor(curs_lnum, curs_col)
       return indent
     endif
   endfor
 
   call s:debug("defaulting")
+  call cursor(curs_lnum, curs_col)
   return 0
 endfunction
 
@@ -164,7 +169,7 @@ function! s:get_base_indent(lnum, text)
   elseif s:ends_with(a:text, data_structure_close, a:lnum)
     let data_structure_open = '\%(\[\|{\|(\)'
     let close_match_idx = match(a:text, data_structure_close . '\s*$')
-    let _move = cursor(a:lnum, close_match_idx + 1)
+    call cursor(a:lnum, close_match_idx + 1)
     let [open_match_lnum, open_match_col] = searchpairpos(data_structure_open, '', data_structure_close, 'bnW')
     let open_match_text = getline(open_match_lnum)
     return s:get_base_indent(open_match_lnum, open_match_text)
