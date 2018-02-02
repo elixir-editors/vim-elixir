@@ -24,6 +24,7 @@ function! elixir#indent#indent(lnum)
         \'starts_with_end',
         \'starts_with_mid_or_end_block_keyword',
         \'following_trailing_do',
+        \'following_trailing_rocket',
         \'following_trailing_binary_operator',
         \'starts_with_pipe',
         \'starts_with_close_bracket',
@@ -185,6 +186,14 @@ function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, p
     else
       return indent(a:prev_nb_lnum) + s:sw()
     end
+  else
+    return -1
+  endif
+endfunction
+
+function! elixir#indent#handle_following_trailing_rocket(lnum, text, prev_nb_lnum, prev_nb_text)
+  if s:ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
+    return indent(a:prev_nb_lnum) + s:sw()
   else
     return -1
   endif

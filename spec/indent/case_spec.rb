@@ -104,4 +104,11 @@ describe 'Indenting case statements' do
       IO.puts "believe it or not"
   end
   EOF
+
+  i <<~EOF
+  case o do
+    a ->
+      e(fn -> f end)
+  end
+  EOF
 end
