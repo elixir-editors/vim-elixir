@@ -40,4 +40,21 @@ describe 'Binary operators' do
       Repo.insert!(%Category{name: category})
   end
   EOF
+
+  i <<~EOF
+  data = [
+    "blah",
+    "blah2", # *
+    "blah3"
+  ]
+  EOF
+
+  i <<~EOF
+  data = [
+    "blah",
+    # +
+    "blah2",
+    "blah3"
+  ]
+  EOF
 end
