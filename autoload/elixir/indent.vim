@@ -178,7 +178,6 @@ function! s:get_base_indent(lnum, text)
   endif
 endfunction
 
-" TODO: @jbodah 2017-03-31: remove
 function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, prev_nb_text)
   if s:ends_with(a:prev_nb_text, s:keyword('do'), a:prev_nb_lnum)
     if s:starts_with(a:text, s:keyword('end'), a:lnum)
