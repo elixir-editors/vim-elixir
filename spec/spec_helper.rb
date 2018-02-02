@@ -201,6 +201,7 @@ Vimrunner::RSpec.configure do |config|
     VIM.add_plugin(File.expand_path('..', __dir__))
     VIM.command('filetype off')
     VIM.command('filetype plugin indent on')
+    VIM.command('autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o') # disable automatic comment continuation
     VIM.normal(":set ignorecase<CR>") # make sure we test ignorecase
     VIM
   end
