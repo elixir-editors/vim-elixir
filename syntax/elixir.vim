@@ -200,7 +200,7 @@ hi def link elixirComment                Comment
 hi def link elixirTodo                   Todo
 hi def link elixirKeyword                Define
 hi def link elixirExUnitAssert           Keyword
-hi def link elixirKernelFunction         Keyword
+hi def link elixirKernelFunction         Define
 hi def link elixirOperator               Operator
 hi def link elixirAtom                   Constant
 hi def link elixirPseudoVariable         Constant
