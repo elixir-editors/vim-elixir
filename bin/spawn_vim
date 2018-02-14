@@ -6,6 +6,7 @@ plugin = 'ftdetect/elixir.vim'
 vim = Vimrunner.start_gvim
 vim.add_plugin(dir, plugin)
 vim.normal ":let g:elixir_indent_debug=1<CR>"
+vim.normal ":set ruler<CR>"
 vim.edit! "test.ex"
 vim.normal
 
