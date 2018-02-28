@@ -165,8 +165,8 @@ syn match  elixirRecordDeclaration      "[^[:space:];#<]\+"        contained con
 syn match  elixirMacroDeclaration       "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirDelegateDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 syn region elixirDelegateDeclaration    start='\['     end='\]'    contained contains=elixirFunctionDeclaration             skipwhite skipnl
-syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
-syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
+syn match  elixirOverridableDeclaration "[^[:space:];#<]\+"        contained contains=elixirAlias,elixirAtom                skipwhite skipnl
+syn match  elixirExceptionDeclaration   "[^[:space:];#<]\+"        contained contains=elixirAlias,elixirAtom                skipwhite skipnl
 syn match  elixirCallbackDeclaration    "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 
 " ExUnit
