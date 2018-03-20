@@ -10,7 +10,7 @@ Features included so far:
 * Syntax highlighting for Elixir and EEx
 * Filetype detection for `.ex`, `.exs` and `.eex` files
 * Automatic indentation
-
+* Basic `mix format` integration
 
 ## Installation
 
