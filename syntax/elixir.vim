@@ -16,18 +16,9 @@ syn cluster elixirDeclaration contains=elixirFunctionDeclaration,elixirModuleDec
 syn match elixirComment '#.*' contains=elixirTodo,@Spell
 syn keyword elixirTodo FIXME NOTE TODO OPTIMIZE XXX HACK contained
 
-syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>' contains=elixirUnusedVariable,elixirKernelFunction
+syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>' contains=elixirUnusedVariable
 
-syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|send\)\>'
-syn match elixirKeyword '\(\.\)\@<!\<\(exit\|raise\|throw\|after\|rescue\|catch\|else\)\>'
-syn match elixirKeyword '\(\.\)\@<!\<\(quote\|unquote\|super\|spawn\|spawn_link\|spawn_monitor\)\>'
-
-" Kernel functions
-syn keyword elixirKernelFunction contained is_atom is_binary is_bitstring is_boolean is_float
-syn keyword elixirKernelFunction contained is_function is_integer is_list is_map is_nil
-syn keyword elixirKernelFunction contained is_number is_pid is_port is_reference is_tuple
-syn keyword elixirKernelFunction contained abs binary_part bit_size byte_size div elem hd length
-syn keyword elixirKernelFunction contained map_size node rem round tl trunc tuple_size
+syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|send\|exit\|raise\|throw\|after\|rescue\|catch\|else\|quote\|unquote\|super\|spawn\|spawn_link\|spawn_monitor\|is_atom\|is_binary\|is_bitstring\|is_boolean\|is_float\|is_function\|is_integer\|is_list\|is_map\|is_nil\|is_number\|is_pid\|is_port\|is_reference\|is_tuple\|abs\|binary_part\|bit_size\|byte_size\|div\|elem\|hd\|length\|map_size\|node\|rem\|round\|tl\|trunc\|tuple_size\)\>'
 
 syn keyword elixirInclude import require alias use
 
@@ -86,14 +77,14 @@ syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('\)+   end=+
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@Spell,@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('''\)+ end=+^\s*\z1+ contains=@Spell,@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("""\)+ end=+^\s*\z1+ contains=@Spell,@elixirStringContained
-syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirKernelFunction,elixirComment,@elixirNotTop
+syn region elixirInterpolation matchgroup=elixirInterpolationDelimiter start="#{" end="}" contained contains=ALLBUT,elixirComment,@elixirNotTop
 
 syn match elixirAtomInterpolated   ':\("\)\@=' contains=elixirString
 syn match elixirString             "\(\w\)\@<!?\%(\\\(x\d{1,2}\|\h{1,2}\h\@!\>\|0[0-7]{0,2}[0-7]\@!\>\|[^x0MC]\)\|(\\[MC]-)+\w\|[^\s\\]\)"
 
-syn region elixirBlock              matchgroup=elixirBlockDefinition start="\<do\>:\@!" end="\<end\>" contains=ALLBUT,elixirKernelFunction,@elixirNotTop fold
-syn region elixirElseBlock          matchgroup=elixirBlockDefinition start="\<else\>:\@!" end="\<end\>" contains=ALLBUT,elixirKernelFunction,@elixirNotTop fold
-syn region elixirAnonymousFunction  matchgroup=elixirBlockDefinition start="\<fn\>"     end="\<end\>" contains=ALLBUT,elixirKernelFunction,@elixirNotTop fold
+syn region elixirBlock              matchgroup=elixirBlockDefinition start="\<do\>:\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
+syn region elixirElseBlock          matchgroup=elixirBlockDefinition start="\<else\>:\@!" end="\<end\>" contains=ALLBUT,@elixirNotTop fold
+syn region elixirAnonymousFunction  matchgroup=elixirBlockDefinition start="\<fn\>"     end="\<end\>" contains=ALLBUT,@elixirNotTop fold
 
 syn region elixirArguments start="(" end=")" contained contains=elixirOperator,elixirAtom,elixirPseudoVariable,elixirAlias,elixirBoolean,elixirVariable,elixirUnusedVariable,elixirNumber,elixirDocString,elixirAtomInterpolated,elixirRegex,elixirString,elixirStringDelimiter,elixirRegexDelimiter,elixirInterpolationDelimiter,elixirSigil,elixirAnonymousFunction
 
@@ -200,7 +191,6 @@ hi def link elixirComment                Comment
 hi def link elixirTodo                   Todo
 hi def link elixirKeyword                Define
 hi def link elixirExUnitAssert           Keyword
-hi def link elixirKernelFunction         Define
 hi def link elixirOperator               Operator
 hi def link elixirAtom                   Constant
 hi def link elixirPseudoVariable         Constant

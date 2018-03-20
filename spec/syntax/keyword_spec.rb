@@ -14,4 +14,18 @@ describe 'Keyword syntax' do
     case true do
     EOF
   end
+
+  it 'length' do
+    expect(<<~EOF).not_to include_elixir_syntax('elixirKeyword', 'length')
+    assert String.length(captured) > 0
+    EOF
+
+    expect(<<~EOF).not_to include_elixir_syntax('elixirKeyword', 'size')
+    assert String.size(captured) > 0
+    EOF
+
+    expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'length')
+    assert length(captured) > 0
+    EOF
+  end
 end
