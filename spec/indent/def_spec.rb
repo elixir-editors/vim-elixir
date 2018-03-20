@@ -17,12 +17,12 @@ describe 'def indentation' do
   EOF
 
   i <<~EOF
-  defmodule Hello do
-    def hello do
-    end
-#{"\n" * 40}
-    def world do
-    end
+defmodule Hello do
+  def hello do
   end
+#{"\n" * 40}
+  def world do
+  end
+end
   EOF
 end
