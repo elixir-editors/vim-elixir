@@ -53,6 +53,6 @@ setlocal formatprg=
 
 ## Development
 
-To run the tests you can run `bundle exec rspec`
+To run the tests you can run `bundle exec parallel_rspec spec`
 
 To spawn an interactive Vim instance with the configs from this repo use `bin/spawn_vim`

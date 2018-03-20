@@ -5,6 +5,9 @@ GEM
     diff-lcs (1.2.5)
     diffy (3.2.0)
     method_source (0.8.2)
+    parallel (1.12.1)
+    parallel_tests (2.21.2)
+      parallel
     pry (0.10.4)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -30,9 +33,10 @@ PLATFORMS
 
 DEPENDENCIES
   diffy
+  parallel_tests
   pry
   rspec
   vimrunner
 
 BUNDLED WITH
-   1.15.1
+   1.16.1
