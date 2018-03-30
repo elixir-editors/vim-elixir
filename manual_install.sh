@@ -1,4 +1,7 @@
 #!/bin/bash
 
-mkdir -p ~/.vim
-cp -R autoload/ compiler/ ftdetect/ ftplugin/ indent/ syntax/ ~/.vim/
+for INSTALL_DIR in autoload compiler ftdetect ftplugin indent syntax
+do
+  mkdir -p ~/.vim/${INSTALL_DIR}
+  cp -R ${INSTALL_DIR}/ ~/.vim/${INSTALL_DIR}
+done
