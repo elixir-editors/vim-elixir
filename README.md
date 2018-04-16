@@ -51,6 +51,8 @@ then you can do so by resetting this setting back to the default value in your `
 setlocal formatprg=
 ```
 
+For asynchronous execution of the formatter, have a look at [vim-mix-format](https://github.com/mhinz/vim-mix-format).
+
 ## Development
 
 To run the tests you can run `bundle exec parallel_rspec spec`
