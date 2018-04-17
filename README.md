@@ -10,7 +10,6 @@ Features included so far:
 * Syntax highlighting for Elixir and EEx
 * Filetype detection for `.ex`, `.exs` and `.eex` files
 * Automatic indentation
-* Basic `mix format` integration
 
 ## Installation
 
@@ -31,8 +30,10 @@ each plugin. In general, you have to add a line to your `~/.vimrc`:
 ```viml
 " vim-plug
 Plug 'elixir-editors/vim-elixir'
+
 " NeoBundle
 NeoBundle 'elixir-editors/vim-elixir'
+
 " Vundle
 Plugin 'elixir-editors/vim-elixir'
 ```
@@ -42,16 +43,12 @@ Plugin 'elixir-editors/vim-elixir'
 Run [./manual_install.sh](manual_install.sh) to copy the contents of each directory in the respective directories inside
 `~/.vim`.
 
-## Disabling `mix format` Integration
+## `mix format` Integration
 
-`mix format` integration is supported by setting `formatprg`. If you wish to opt-out of this (e.g. you're running a version prior to Elixir 1.6)
-then you can do so by resetting this setting back to the default value in your `after` directory (e.g. `~/.vim/after/ftplugin/elixir.vim`):
+We've decided not to include `mix format` integration into `vim-elixir`. If you'd like to set it up yourself, you have the following options:
 
-```viml
-setlocal formatprg=
-```
-
-For asynchronous execution of the formatter, have a look at [vim-mix-format](https://github.com/mhinz/vim-mix-format).
+* For asynchronous execution of the formatter, have a look at [vim-mix-format](https://github.com/mhinz/vim-mix-format)
+* Add it as a `formatprg` (e.g. `set formatprg=mix\ format\ -`)
 
 ## Development
 
