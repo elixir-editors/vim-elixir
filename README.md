@@ -1,6 +1,6 @@
 # vim-elixir
 
-[![Build Status](https://travis-ci.org/elixir-lang/vim-elixir.svg?branch=master)](https://travis-ci.org/elixir-lang/vim-elixir)
+[![Build Status](https://travis-ci.org/elixir-editors/vim-elixir.svg?branch=master)](https://travis-ci.org/elixir-editors/vim-elixir)
 
 [Elixir](http://elixir-lang.org) support for vim. This plugin also adds support
 for Elixir's templating language, EEx.
