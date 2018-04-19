@@ -171,4 +171,15 @@ describe 'ExUnit syntax' do
     end
     EOF
   end
+
+  it 'does not highlight keys named after macros' do
+    expect('test: foo').not_to include_elixir_syntax('elixirExUnitMacro', 'test')
+  end
+
+  it 'does not highlight functions named after macros' do
+    # Tradeoff: Technically, a macro's argument can be put into parentheses, but
+    # that happens only seldomly. It's more likely that a function gets named
+    # after an ExUnit macro.
+    expect('setup(foo)').not_to include_elixir_syntax('elixirExUnitMacro', 'setup')
+  end
 end
