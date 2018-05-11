@@ -20,6 +20,8 @@ syn match elixirId '\<[_a-zA-Z]\w*[!?]\?\>' contains=elixirUnusedVariable
 
 syn match elixirKeyword '\(\.\)\@<!\<\(for\|case\|when\|with\|cond\|if\|unless\|try\|receive\|after\|rescue\|catch\|else\|quote\|unquote\|super\|unquote_splicing\)\>:\@!'
 
+syn match elixirGuardFunction '\(\.\)\@<!\<\(is_atom\|is_binary\|is_bitstring\|is_boolean\|is_float\|is_function\|is_integer\|is_list\|is_map\|is_nil\|is_number\|is_pid\|is_port\|is_reference\|is_tuple\|abs\|binary_part\|bit_size\|byte_size\|div\|elem\|hd\|length\|map_size\|node\|rem\|round\|self\|tl\|trunc\|tuple_size\|band\|bor\|bnot\|bsl\|bsr\|bxor\)\>:\@!'
+
 syn keyword elixirInclude import require alias use
 
 syn keyword elixirSelf self
