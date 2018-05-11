@@ -47,4 +47,31 @@ describe 'Atom syntax' do
     expect(s).to include_elixir_syntax('elixirAtom', 'do')
     expect(s).to include_elixir_syntax('elixirAtom', 'into')
   end
+
+  it 'defoverridable' do
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', 'init:')
+    defmodule Test do
+      defmacro __using__(_options) do
+        quote do
+          def init(args) do
+            {:ok, args}
+          end
+          defoverridable init: 1
+        end
+      end
+    end
+    EOF
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', 'init:')
+    defmodule Test do
+      defmacro __using__(_options) do
+        quote do
+          def init(args) do
+            {:ok, args}
+          end
+          defoverridable [init: 1]
+        end
+      end
+    end
+    EOF
+  end
 end

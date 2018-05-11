@@ -14,19 +14,4 @@ describe 'Keyword syntax' do
     case true do
     EOF
   end
-
-  it 'defoverridable' do
-    expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'init:')
-    defmodule Test do
-      defmacro __using__(_options) do
-        quote do
-          def init(args) do
-            {:ok, args}
-          end
-          defoverridable init: 1
-        end
-      end
-    end
-    EOF
-  end
 end
