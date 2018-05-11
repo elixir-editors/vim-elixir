@@ -17,19 +17,19 @@ describe 'defguard syntax' do
 end
 
 describe 'Guard syntax' do
-  it 'guard in function' do
+  pending 'guard in function' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
     def fun(a) when is_atom(a), do:
     EOF
   end
 
-  it 'guard in if' do
+  pending 'guard in if' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
     if is_atom(:atom), do: true
     EOF
   end
 
-  it 'guard in case' do
+  pending 'guard in case' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
     case true do
       true when is_atom(:atom) -> true
@@ -37,7 +37,7 @@ describe 'Guard syntax' do
     EOF
   end
 
-  it 'guard in case (multiline)' do
+  pending 'guard in case (multiline)' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'is_atom')
     case true do
       true when is_boolean(true) and
