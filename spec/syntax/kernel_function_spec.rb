@@ -16,12 +16,4 @@ describe 'Kernel function syntax' do
     plug Plug.Parsers, length: 400_000_000
     EOF
   end
-
-  it 'kernel function used as a guard' do
-    expect(<<~'EOF').to include_elixir_syntax('elixirKeyword', 'length')
-    def hello(name) when length(name) > 20 do
-      IO.puts "hello #{name}, you big boy"
-    end
-    EOF
-  end
 end
