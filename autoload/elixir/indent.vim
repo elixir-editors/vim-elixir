@@ -176,26 +176,6 @@ function! s:get_base_indent(lnum, text)
   endif
 endfunction
 
-function! elixir#indent#handle_following_trailing_do(lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:ends_with(a:prev_nb_text, s:keyword('do'), a:prev_nb_lnum)
-    if s:starts_with(a:text, s:keyword('end'), a:lnum)
-      return indent(a:prev_nb_lnum)
-    else
-      return indent(a:prev_nb_lnum) + s:sw()
-    end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_following_trailing_rocket(lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
-    return indent(a:prev_nb_lnum) + s:sw()
-  else
-    return -1
-  endif
-endfunction
-
 function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, prev_nb_lnum, prev_nb_text)
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
@@ -244,15 +224,6 @@ endfunction
 function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if s:starts_with(a:text, s:keyword('end'), a:lnum)
     let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end').'\zs', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
-    return indent(pair_lnum)
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_starts_with_mid_or_end_block_keyword(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if s:starts_with(a:text, s:keyword('catch\|rescue\|after\|else'), a:lnum)
-    let pair_lnum = searchpair(s:keyword('with\|receive\|try\|if\|fn'), s:keyword('catch\|rescue\|after\|else').'\zs', s:keyword('end'), 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     return indent(pair_lnum)
   else
     return -1
