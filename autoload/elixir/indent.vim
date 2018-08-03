@@ -23,7 +23,6 @@ function! elixir#indent#indent(lnum)
         \'top_of_file',
         \'following_trailing_binary_operator',
         \'starts_with_pipe',
-        \'starts_with_close_bracket',
         \'starts_with_binary_operator',
         \'inside_block',
         \'starts_with_end',
@@ -215,15 +214,6 @@ endfunction
 function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
   if s:starts_with(a:text, s:keyword('end'), a:lnum)
     let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end').'\zs', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
-    return indent(pair_lnum)
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_starts_with_close_bracket(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if s:starts_with(a:text, '\%(\]\|}\|)\)', a:lnum)
-    let pair_lnum = searchpair('\%(\[\|{\|(\)', '', '\%(\]\|}\|)\)', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     return indent(pair_lnum)
   else
     return -1
@@ -474,9 +464,11 @@ function! s:do_handle_fn(fn_start_lnum, _fn_start_col, lnum, text, prev_nb_lnum,
   endif
 endfunction
 
-function! s:do_handle_square_brace(brace_start_lnum, brace_start_col, _lnum, _text, _prev_nb_lnum, _prev_nb_text)
+function! s:do_handle_square_brace(brace_start_lnum, brace_start_col, lnum, text, _prev_nb_lnum, _prev_nb_text)
   " If in list...
-  if a:brace_start_lnum != 0 || a:brace_start_col != 0
+  if s:starts_with(a:text, ']', a:lnum)
+    return indent(a:brace_start_lnum)
+  elseif a:brace_start_lnum != 0 || a:brace_start_col != 0
     let brace_start_text = getline(a:brace_start_lnum)
     let substr = strpart(brace_start_text, a:brace_start_col, len(brace_start_text)-1)
     let indent_pos = match(substr, '\S')
@@ -490,12 +482,18 @@ function! s:do_handle_square_brace(brace_start_lnum, brace_start_col, _lnum, _te
   end
 endfunction
 
-function! s:do_handle_curly_brace(brace_start_lnum, _brace_start_col, _lnum, _text, _prev_nb_lnum, _prev_nb_text)
-  return indent(a:brace_start_lnum) + s:sw()
+function! s:do_handle_curly_brace(brace_start_lnum, _brace_start_col, lnum, text, _prev_nb_lnum, _prev_nb_text)
+  if s:starts_with(a:text, '}', a:lnum)
+    return indent(a:brace_start_lnum)
+  else
+    return indent(a:brace_start_lnum) + s:sw()
+  endif
 endfunction
 
-function! s:do_handle_parens(paren_start_lnum, paren_start_col, _lnum, _text, prev_nb_lnum, prev_nb_text)
-  if a:paren_start_lnum
+function! s:do_handle_parens(paren_start_lnum, paren_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
+  if s:starts_with(a:text, ')', a:lnum)
+    return indent(a:paren_start_lnum)
+  elseif a:paren_start_lnum
     if s:ends_with(a:prev_nb_text, '(', a:prev_nb_lnum)
       return indent(a:prev_nb_lnum) + s:sw()
     elseif a:paren_start_lnum == a:prev_nb_lnum
