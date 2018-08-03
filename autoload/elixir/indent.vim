@@ -184,14 +184,6 @@ function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, pr
   endif
 endfunction
 
-function! elixir#indent#handle_following_prev_end(_lnum, _text, prev_nb_lnum, prev_nb_text)
-  if s:ends_with(a:prev_nb_text, s:keyword('end'), a:prev_nb_lnum)
-    return indent(a:prev_nb_lnum)
-  else
-    return -1
-  endif
-endfunction
-
 function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_nb_text)
   if s:starts_with(a:text, '|>', a:lnum)
     let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
