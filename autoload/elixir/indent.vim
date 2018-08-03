@@ -26,7 +26,6 @@ function! elixir#indent#indent(lnum)
         \'starts_with_close_bracket',
         \'starts_with_binary_operator',
         \'inside_block',
-        \'starts_with_comment',
         \'starts_with_end',
         \'inside_generic_block',
         \'follow_prev_nb'
@@ -208,14 +207,6 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
         return pos + 1 + next_word_pos
       end
     end
-  else
-    return -1
-  endif
-endfunction
-
-function! elixir#indent#handle_starts_with_comment(_lnum, text, prev_nb_lnum, _prev_nb_text)
-  if match(a:text, '^\s*#') != -1
-    return indent(a:prev_nb_lnum)
   else
     return -1
   endif
