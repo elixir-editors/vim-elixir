@@ -1,0 +1,32 @@
+version: '3.4'
+services:
+  main:
+    container_name: vim_elixir
+    build:
+      context: .
+      target: user
+
+    volumes:
+      - ./:/home/user/vim-elixir
+      - tmp:/tmp
+
+    stdin_open: true
+    tty: true
+
+    environment:
+      - DISPLAY=:1.0
+    command: bash
+    working_dir: /home/user/vim-elixir
+    depends_on:
+      - xvfb
+
+  xvfb:
+    build:
+      context: .
+      target: user
+    volumes:
+      - tmp:/tmp
+    command: sh -c "rm -f /tmp/.X1-lock && Xvfb :1 -screen 0 800x600x16"
+
+volumes:
+  tmp:
