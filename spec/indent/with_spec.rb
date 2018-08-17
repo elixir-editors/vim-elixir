@@ -27,7 +27,7 @@ describe 'with' do
       with {:ok, width} <- Map.fetch(opts, :width),
            double_width = width * 2,
            {:ok, height} <- Map.fetch(opts, :height),
-        do: {:ok, double_width * height}
+           do: {:ok, double_width * height}
     EOF
   end
 
@@ -48,10 +48,11 @@ describe 'with' do
     expect(<<~EOF).to be_elixir_indentation
     with {:ok, width} <- Map.fetch(opts, :width),
          {:ok, height} <- Map.fetch(opts, :height),
-      do:
-        {:ok, width * height},
-      else:
-        (:error -> {:error, :wrong_data})
+         do:
+           {:ok,
+             width * height * height * height * height * height * height * height * height * height *
+               height * height * height * height * height * height * height},
+         else: (:error -> {:error, :wrong_data})
     EOF
   end
 

@@ -31,7 +31,8 @@ function! elixir#indent#indent(lnum)
         \]
   for handler in handlers
     call s:debug('testing handler elixir#indent#handle_'.handler)
-    let indent = function('elixir#indent#handle_'.handler)(lnum, text, prev_nb_lnum, prev_nb_text)
+    let context = {'lnum': lnum, 'text': text, 'prev_nb_lnum': prev_nb_lnum, 'prev_nb_text': prev_nb_text}
+    let indent = function('elixir#indent#handle_'.handler)(context)
     if indent != -1
       call s:debug('line '.lnum.': elixir#indent#handle_'.handler.' returned '.indent)
       call cursor(curs_lnum, curs_col)
@@ -50,9 +51,17 @@ function! s:debug(str)
   endif
 endfunction
 
+function! s:starts_with(context, expr)
+  return s:_starts_with(a:context.text, a:expr, a:context.lnum)
+endfunction
+
+function! s:prev_starts_with(context, expr)
+  return s:_starts_with(a:context.prev_nb_text, a:expr, a:context.prev_nb_lnum)
+endfunction
+
 " Returns 0 or 1 based on whether or not the text starts with the given
 " expression and is not a string or comment
-function! s:starts_with(text, expr, lnum)
+function! s:_starts_with(text, expr, lnum)
   let pos = match(a:text, '^\s*'.a:expr)
   if pos == -1
     return 0
@@ -67,9 +76,13 @@ function! s:starts_with(text, expr, lnum)
   end
 endfunction
 
+function! s:prev_ends_with(context, expr)
+  return s:_ends_with(a:context.prev_nb_text, a:expr, a:context.prev_nb_lnum)
+endfunction
+
 " Returns 0 or 1 based on whether or not the text ends with the given
 " expression and is not a string or comment
-function! s:ends_with(text, expr, lnum)
+function! s:_ends_with(text, expr, lnum)
   let pos = match(a:text, a:expr.'\s*$')
   if pos == -1
     return 0
@@ -133,16 +146,16 @@ function! s:find_last_pos(lnum, text, match)
   return -1
 endfunction
 
-function! elixir#indent#handle_top_of_file(_lnum, _text, prev_nb_lnum, _prev_nb_text)
-  if a:prev_nb_lnum == 0
+function! elixir#indent#handle_top_of_file(context)
+  if a:context.prev_nb_lnum == 0
     return 0
   else
     return -1
   end
 endfunction
 
-function! elixir#indent#handle_follow_prev_nb(_lnum, _text, prev_nb_lnum, prev_nb_text)
-  return s:get_base_indent(a:prev_nb_lnum, a:prev_nb_text)
+function! elixir#indent#handle_follow_prev_nb(context)
+  return s:get_base_indent(a:context.prev_nb_lnum, a:context.prev_nb_text)
 endfunction
 
 " Given the line at `lnum`, returns the indent of the line that acts as the 'base indent'
@@ -156,13 +169,13 @@ function! s:get_base_indent(lnum, text)
   let data_structure_close = '\%(\]\|}\|)\)'
   let pipe = '|>'
 
-  if s:starts_with(a:text, binary_operator, a:lnum)
+  if s:_starts_with(a:text, binary_operator, a:lnum)
     return s:get_base_indent(prev_nb_lnum, prev_nb_text)
-  elseif s:starts_with(a:text, pipe, a:lnum)
+  elseif s:_starts_with(a:text, pipe, a:lnum)
     return s:get_base_indent(prev_nb_lnum, prev_nb_text)
-  elseif s:ends_with(prev_nb_text, binary_operator, prev_nb_lnum)
+  elseif s:_ends_with(prev_nb_text, binary_operator, prev_nb_lnum)
     return s:get_base_indent(prev_nb_lnum, prev_nb_text)
-  elseif s:ends_with(a:text, data_structure_close, a:lnum)
+  elseif s:_ends_with(a:text, data_structure_close, a:lnum)
     let data_structure_open = '\%(\[\|{\|(\)'
     let close_match_idx = match(a:text, data_structure_close . '\s*$')
     call cursor(a:lnum, close_match_idx + 1)
@@ -174,26 +187,26 @@ function! s:get_base_indent(lnum, text)
   endif
 endfunction
 
-function! elixir#indent#handle_following_trailing_binary_operator(lnum, text, prev_nb_lnum, prev_nb_text)
+function! elixir#indent#handle_following_trailing_binary_operator(context)
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
-  if s:ends_with(a:prev_nb_text, binary_operator, a:prev_nb_lnum)
-    return indent(a:prev_nb_lnum) + s:sw()
+  if s:prev_ends_with(a:context, binary_operator)
+    return indent(a:context.prev_nb_lnum) + s:sw()
   else
     return -1
   endif
 endfunction
 
-function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, '|>', a:lnum)
+function! elixir#indent#handle_starts_with_pipe(context)
+  if s:starts_with(a:context, '|>')
     let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
-    let pos = s:find_last_pos(a:prev_nb_lnum, a:prev_nb_text, match_operator)
+    let pos = s:find_last_pos(a:context.prev_nb_lnum, a:context.prev_nb_text, match_operator)
     if pos == -1
-      return indent(a:prev_nb_lnum)
+      return indent(a:context.prev_nb_lnum)
     else
-      let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
+      let next_word_pos = match(strpart(a:context.prev_nb_text, pos+1, len(a:context.prev_nb_text)-1), '\S')
       if next_word_pos == -1
-        return indent(a:prev_nb_lnum) + s:sw()
+        return indent(a:context.prev_nb_lnum) + s:sw()
       else
         return pos + 1 + next_word_pos
       end
@@ -203,8 +216,8 @@ function! elixir#indent#handle_starts_with_pipe(lnum, text, prev_nb_lnum, prev_n
   endif
 endfunction
 
-function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
+function! elixir#indent#handle_starts_with_end(context)
+  if s:starts_with(a:context, s:keyword('end'))
     let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end').'\zs', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
     return indent(pair_lnum)
   else
@@ -212,18 +225,18 @@ function! elixir#indent#handle_starts_with_end(lnum, text, _prev_nb_lnum, _prev_
   endif
 endfunction
 
-function! elixir#indent#handle_starts_with_binary_operator(lnum, text, prev_nb_lnum, prev_nb_text)
+function! elixir#indent#handle_starts_with_binary_operator(context)
   let binary_operator = '\%(=\|<>\|>>>\|<=\|||\|+\|\~\~\~\|-\|&&\|<<<\|/\|\^\^\^\|\*\)'
 
-  if s:starts_with(a:text, binary_operator, a:lnum)
+  if s:starts_with(a:context, binary_operator)
     let match_operator = '\%(!\|=\|<\|>\)\@<!=\%(=\|>\|\~\)\@!'
-    let pos = s:find_last_pos(a:prev_nb_lnum, a:prev_nb_text, match_operator)
+    let pos = s:find_last_pos(a:context.prev_nb_lnum, a:context.prev_nb_text, match_operator)
     if pos == -1
-      return indent(a:prev_nb_lnum)
+      return indent(a:context.prev_nb_lnum)
     else
-      let next_word_pos = match(strpart(a:prev_nb_text, pos+1, len(a:prev_nb_text)-1), '\S')
+      let next_word_pos = match(strpart(a:context.prev_nb_text, pos+1, len(a:context.prev_nb_text)-1), '\S')
       if next_word_pos == -1
-        return indent(a:prev_nb_lnum) + s:sw()
+        return indent(a:context.prev_nb_lnum) + s:sw()
       else
         return pos + 1 + next_word_pos
       end
@@ -237,279 +250,89 @@ endfunction
 " nested structure. For example, we might be in a function in a map in a
 " function, etc... so we need to first figure out what the innermost structure
 " is then forward execution to the proper handler
-function! elixir#indent#handle_inside_block(lnum, text, prev_nb_lnum, prev_nb_text)
+function! elixir#indent#handle_inside_block(context)
   let start_pattern = '\C\%(\<with\>\|\<if\>\|\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|{\|\[\|(\)'
   let end_pattern = '\C\%(\<end\>\|\]\|}\|)\)'
   " hack - handle do: better
-  let pair_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip() || getline(line('.')) =~ 'do:'", max([0, a:lnum - g:elixir_indent_max_lookbehind]))
-  let pair_lnum = pair_info[0]
-  let pair_col = pair_info[1]
-  if pair_lnum != 0 || pair_col != 0
-    let pair_text = getline(pair_lnum)
-    let pair_char = pair_text[pair_col - 1]
-    if pair_char == 'w'
-      " Handle with
-      call s:debug("testing s:do_handle_with")
-      return s:do_handle_with(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == 'i'
-      " Handle if
-      call s:debug("testing s:do_handle_if")
-      return s:do_handle_if(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == 'c' && pair_text[pair_col] == 'a'
-      " Handle case
-      call s:debug("testing s:do_handle_case")
-      return s:do_handle_case(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == 'c' && pair_text[pair_col] == 'o'
-      " Handle cond
-      call s:debug("testing s:do_handle_cond")
-      return s:do_handle_cond(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == 't'
-      " Handle try
-      call s:debug("testing s:do_handle_try")
-      return s:do_handle_try(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == 'r'
-      " Handle receive
-      call s:debug("testing s:do_handle_receive")
-      return s:do_handle_receive(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == 'f'
-      " Handle fn
-      call s:debug("testing s:do_handle_fn")
-      return s:do_handle_fn(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == '['
-      " Handle [
-      call s:debug("testing s:do_handle_square_brace")
-      return s:do_handle_square_brace(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == '{'
-      " Handle {
-      call s:debug("testing s:do_handle_curly_brace")
-      return s:do_handle_curly_brace(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif pair_char == '('
-      " Handle (
-      call s:debug("testing s:do_handle_parens")
-      return s:do_handle_parens(pair_lnum, pair_col, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
+  let block_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip() || getline(line('.')) =~ 'do:'", max([0, a:context.lnum - g:elixir_indent_max_lookbehind]))
+  let block_start_lnum = block_info[0]
+  let block_start_col = block_info[1]
+  if block_start_lnum != 0 || block_start_col != 0
+    let block_text = getline(block_start_lnum)
+    let block_start_char = block_text[block_start_col - 1]
+
+    let never_match = '\(a\)\@=b'
+    let config = {
+          \'f': {'aligned_clauses': s:keyword('end'), 'pattern_match_clauses': never_match},
+          \'c': {'aligned_clauses': s:keyword('end'), 'pattern_match_clauses': never_match},
+          \'t': {'aligned_clauses': s:keyword('end\|catch\|rescue\|after'), 'pattern_match_clauses': s:keyword('catch\|rescue')},
+          \'r': {'aligned_clauses': s:keyword('end\|after'), 'pattern_match_clauses': s:keyword('after')},
+          \'i': {'aligned_clauses': s:keyword('end\|else'), 'pattern_match_clauses': never_match},
+          \'[': {'aligned_clauses': ']', 'pattern_match_clauses': never_match},
+          \'{': {'aligned_clauses': '}', 'pattern_match_clauses': never_match},
+          \'(': {'aligned_clauses': ')', 'pattern_match_clauses': never_match}
+          \}
+
+    if block_start_char == 'w'
+      call s:debug("testing s:handle_with")
+      return s:handle_with(block_start_lnum, block_start_col, a:context)
     else
-      " Should never get hit!
-      return -1
-    end
-  else
-    return -1
-  end
-endfunction
-
-function! s:do_handle_try(try_start_lnum, try_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("current line is end")
-    return indent(a:try_start_lnum)
-  elseif s:starts_with(a:text, s:keyword('catch'), a:lnum)
-    call s:debug("current line is catch")
-    return indent(a:try_start_lnum)
-  elseif s:starts_with(a:text, s:keyword('rescue'), a:lnum)
-    call s:debug("current line is rescue")
-    return indent(a:try_start_lnum)
-  elseif s:starts_with(a:text, s:keyword('after'), a:lnum)
-    call s:debug("current line is after")
-    return indent(a:try_start_lnum)
-  else
-    if search(s:keyword('catch'), 'bnW', a:try_start_lnum) != 0
-      call s:debug("in catch")
-      return s:do_handle_pattern_match_block(a:try_start_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    elseif search(s:keyword('rescue'), 'bnW', a:try_start_lnum) != 0
-      call s:debug("in rescue")
-      return s:do_handle_pattern_match_block(a:try_start_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    else
-      return indent(a:try_start_lnum) + s:sw()
-    end
-  end
-endfunction
-
-function! s:do_handle_case(case_start_lnum, case_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("current line is end")
-    return indent(a:case_start_lnum)
-  else
-    call s:debug("in pattern match")
-    return s:do_handle_pattern_match_block(a:case_start_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-  end
-endfunction
-
-function! s:do_handle_cond(cond_start_lnum, cond_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("current line is end")
-    return indent(a:cond_start_lnum)
-  else
-    call s:debug("in pattern match")
-    return s:do_handle_pattern_match_block(a:cond_start_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-  end
-endfunction
-
-function! s:do_handle_receive(receive_start_lnum, receive_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("current line is end")
-    return indent(a:receive_start_lnum)
-  elseif s:starts_with(a:text, s:keyword('after'), a:lnum)
-    call s:debug("current line is after")
-    return indent(a:receive_start_lnum)
-  elseif a:receive_start_lnum == a:prev_nb_lnum
-    call s:debug("prev nb line is receive")
-    return indent(a:prev_nb_lnum) + s:sw()
-  elseif s:starts_with(a:prev_nb_text, s:keyword('after'), a:prev_nb_lnum)
-    call s:debug("prev nb line is after")
-    return indent(a:prev_nb_lnum) + s:sw()
-  else
-    call s:debug("in pattern match")
-    return s:do_handle_pattern_match_block(a:receive_start_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-  end
-endfunction
-
-function! s:do_handle_with(with_start_lnum, with_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if a:with_start_lnum == a:lnum
-    " This is the `with` line or an inline `with`/`do`
-    call s:debug("current line is `with`")
-    return -1
-  else
-    " Determine if in with/do, do/else|end, or else/end
-    let start_pattern = '\C\%(\<with\>\|\<else\>\|\<do\>\)'
-    let end_pattern = '\C\%(\<end\>\)'
-    let pair_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
-    let pair_lnum = pair_info[0]
-    let pair_col = pair_info[1]
-
-    let pair_text = getline(pair_lnum)
-    let pair_char = pair_text[pair_col - 1]
-
-    if s:starts_with(a:text, '\Cdo:', a:lnum)
-      call s:debug("current line is do:")
-      return a:with_start_col - 1 + s:sw()
-    elseif s:starts_with(a:text, '\Celse:', a:lnum)
-      call s:debug("current line is else:")
-      return pair_col - 1
-    elseif s:starts_with(a:text, '\Cend', a:lnum)
-      call s:debug("current line is end")
-      return a:with_start_col - 1
-    elseif s:starts_with(a:text, '\C\(\<do\>\|\<else\>\)', a:lnum)
-      call s:debug("current line is do/else")
-      return a:with_start_col - 1
-    elseif s:starts_with(pair_text, '\C\(do\|else\):', pair_lnum)
-      call s:debug("inside do:/else:")
-      return pair_col - 1 + s:sw()
-    elseif pair_char == 'w'
-      call s:debug("inside with/do")
-      return a:with_start_col + 4
-    elseif pair_char == 'd'
-      call s:debug("inside do/else|end")
-      return a:with_start_col - 1 + s:sw()
-    else
-      call s:debug("inside else/end")
-      return s:do_handle_pattern_match_block(pair_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-    end
-  end
-endfunction
-
-function! s:do_handle_if(if_start_lnum, if_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("current line is end")
-    return indent(a:if_start_lnum)
-  elseif s:starts_with(a:text, s:keyword('else'), a:lnum)
-    call s:debug("current line is else")
-    return indent(a:if_start_lnum)
-  else
-    call s:debug("current line is nested inside if")
-    return indent(a:if_start_lnum) + s:sw()
-  end
-endfunction
-
-" Implements indent for pattern-matching blocks (e.g. case, fn, with/else)
-function! s:do_handle_pattern_match_block(block_start_lnum, lnum, text, prev_nb_lnum, prev_nb_text)
-  call s:debug("running s:do_handle_pattern_match_block")
-  " hack!
-  if a:text =~ '\(fn.*\)\@<!->'
-    call s:debug("current line contains ->; assuming match definition")
-    return indent(a:block_start_lnum) + s:sw()
-  elseif a:prev_nb_text =~ '\(fn.*\)\@<!->'
-    call s:debug("prev nb line contains ->; assuming first line of match handler")
-    return indent(a:prev_nb_lnum) + s:sw()
-  else
-    call s:debug("assuming match handler; returning previous indent")
-    return indent(a:prev_nb_lnum)
-  end
-endfunction
-
-function! s:do_handle_fn(fn_start_lnum, _fn_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("current line is end")
-    return indent(a:fn_start_lnum)
-  elseif s:ends_with(a:prev_nb_text, '->', a:prev_nb_lnum)
-    if a:prev_nb_lnum == a:fn_start_lnum
-      call s:debug("prev line is fn that ends with ->")
-      return indent(a:fn_start_lnum) + s:sw()
-    else
-      call s:debug("prev line ends with -> but is not fn declaration")
-      return indent(a:prev_nb_lnum) + s:sw()
-    endif
-  elseif s:starts_with(a:text, s:keyword('end'), a:lnum)
-    call s:debug("starts with end; returning indent of line " . a:fn_start_lnum)
-    return indent(a:fn_start_lnum)
-  elseif a:fn_start_lnum && a:fn_start_lnum != a:lnum
-    return s:do_handle_pattern_match_block(a:fn_start_lnum, a:lnum, a:text, a:prev_nb_lnum, a:prev_nb_text)
-  else
-    return -1
-  endif
-endfunction
-
-function! s:do_handle_square_brace(brace_start_lnum, brace_start_col, lnum, text, _prev_nb_lnum, _prev_nb_text)
-  " If in list...
-  if s:starts_with(a:text, ']', a:lnum)
-    return indent(a:brace_start_lnum)
-  elseif a:brace_start_lnum != 0 || a:brace_start_col != 0
-    let brace_start_text = getline(a:brace_start_lnum)
-    let substr = strpart(brace_start_text, a:brace_start_col, len(brace_start_text)-1)
-    let indent_pos = match(substr, '\S')
-    if indent_pos != -1
-      return indent_pos + a:brace_start_col
-    else
-      return indent(a:brace_start_lnum) + s:sw()
-    endif
-  else
-    return -1
-  end
-endfunction
-
-function! s:do_handle_curly_brace(brace_start_lnum, _brace_start_col, lnum, text, _prev_nb_lnum, _prev_nb_text)
-  if s:starts_with(a:text, '}', a:lnum)
-    return indent(a:brace_start_lnum)
-  else
-    return indent(a:brace_start_lnum) + s:sw()
-  endif
-endfunction
-
-function! s:do_handle_parens(paren_start_lnum, paren_start_col, lnum, text, prev_nb_lnum, prev_nb_text)
-  if s:starts_with(a:text, ')', a:lnum)
-    return indent(a:paren_start_lnum)
-  elseif a:paren_start_lnum
-    if s:ends_with(a:prev_nb_text, '(', a:prev_nb_lnum)
-      return indent(a:prev_nb_lnum) + s:sw()
-    elseif a:paren_start_lnum == a:prev_nb_lnum
-      " Align indent (e.g. "def add(a,")
-      let pos = s:find_last_pos(a:prev_nb_lnum, a:prev_nb_text, '[^(]\+,')
-      if pos == -1
-        return 0
+      let block_config = config[block_start_char]
+      if s:starts_with(a:context, block_config.aligned_clauses)
+        call s:debug("clause")
+        return indent(block_start_lnum)
       else
-        return pos
-      end
-    else
-      return indent(a:prev_nb_lnum)
+        let clause_lnum = searchpair(block_config.pattern_match_clauses, '', '*', 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()", block_start_lnum)
+        let relative_lnum = max([clause_lnum, block_start_lnum])
+        call s:debug("pattern matching relative to lnum " . relative_lnum)
+        return s:do_handle_pattern_match_block(relative_lnum, a:context)
+      endif
     end
   else
     return -1
-  endif
+  end
 endfunction
 
-function! elixir#indent#handle_inside_generic_block(lnum, _text, prev_nb_lnum, prev_nb_text)
-  let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end'), 'bW', "line('.') == ".a:lnum." || s:is_string_or_comment(line('.'), col('.'))", max([0, a:lnum - g:elixir_indent_max_lookbehind]))
+function! s:handle_with(start_lnum, start_col, context)
+  let block_info = searchpairpos('\C\%(\<with\>\|\<do\>\|\<else\>\)', '', s:keyword('end'), 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip()")
+  let block_start_lnum = block_info[0]
+  let block_start_col = block_info[1]
+
+  let block_start_text = getline(block_start_lnum)
+  let block_start_char = block_start_text[block_start_col - 1]
+
+  if s:starts_with(a:context, s:keyword('do\|else\|end'))
+    return indent(a:start_lnum)
+  elseif block_start_char == 'w' || s:starts_with(a:context, '\C\(do\|else\):')
+    return indent(a:start_lnum) + 5
+  elseif s:_starts_with(block_start_text, '\C\(do\|else\):', a:start_lnum)
+    return indent(block_start_lnum) + s:sw()
+  else
+    return s:do_handle_pattern_match_block(a:start_lnum, a:context)
+  end
+endfunction
+
+function! s:do_handle_pattern_match_block(relative_line, context)
+  let relative_indent = indent(a:relative_line)
+  " hack!
+  if a:context.text =~ '\(fn.*\)\@<!->'
+    call s:debug("current line contains ->; assuming match definition")
+    return relative_indent + s:sw()
+  elseif search('\(fn.*\)\@<!->', 'bnW', a:relative_line) != 0
+    call s:debug("a previous line contains ->; assuming match handler")
+    return relative_indent + 2 * s:sw()
+  else
+    call s:debug("couldn't find any previous ->; assuming body text")
+    return relative_indent + s:sw()
+  end
+endfunction
+
+function! elixir#indent#handle_inside_generic_block(context)
+  let pair_lnum = searchpair(s:keyword('do\|fn'), '', s:keyword('end'), 'bW', "line('.') == ".a:context.lnum." || s:is_string_or_comment(line('.'), col('.'))", max([0, a:context.lnum - g:elixir_indent_max_lookbehind]))
   if pair_lnum
     " TODO: @jbodah 2017-03-29: this should probably be the case in *all*
     " blocks
-    if s:ends_with(a:prev_nb_text, ',', a:prev_nb_lnum)
+    if s:prev_ends_with(a:context, ',')
       return indent(pair_lnum) + 2 * s:sw()
     else
       return indent(pair_lnum) + s:sw()

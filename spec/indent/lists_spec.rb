@@ -76,15 +76,6 @@ describe 'Indenting lists' do
     EOF
   end
 
-  it 'lists without whitespace' do
-    expect(<<~EOF).to be_elixir_indentation
-    def project do
-      [{:bar, path: "deps/umbrella/apps/bar"},
-       {:umbrella, path: "deps/umbrella"}]
-    end
-    EOF
-  end
-
   it 'lists with line break after square brackets' do
     expect(<<~EOF).to be_elixir_indentation
     def project do
@@ -136,8 +127,10 @@ describe 'Indenting lists' do
   it 'parameters list in many lines' do
     expect(<<~EOF).to be_elixir_indentation
     def double(x) do
-      add(x,
-          y)
+      add(
+        x,
+        y
+      )
     end
     EOF
   end
@@ -145,10 +138,12 @@ describe 'Indenting lists' do
   it 'long parameters list in many lines' do
     expect(<<~EOF).to be_elixir_indentation
     def double(x) do
-      add(x,
-          y,
-          w,
-          z)
+      add(
+        x,
+        y,
+        w,
+        z
+      )
     end
     EOF
   end
@@ -157,8 +152,10 @@ describe 'Indenting lists' do
     it 'correct indentation after long parameter list' do
       expect(<<~EOF).to be_elixir_indentation
       def double(x) do
-        resutl = add(x,
-                     z)
+        result = add(
+          x,
+          z
+        )
         div(result, 2)
       end
       EOF
