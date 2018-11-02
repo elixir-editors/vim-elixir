@@ -51,3 +51,19 @@ silent! setlocal formatoptions-=t formatoptions+=croqlj
 
 let b:undo_ftplugin = 'setlocal sw< sts< et< isk< com< cms< path< inex< sua< def<'.
       \ '| unlet! b:match_ignorecase b:match_words b:block_begin b:block_end'
+
+function s:projectionist_detect_elixir()
+  if filereadable('mix.exs')
+    let root = simplify(fnamemodify('.', ':p:s?[\/]$??'))
+
+    let projections = {}
+    let projections['lib/*.ex'] = { 'type': 'main', 'alternate': ['test/{}_test.exs'] }
+    let projections['lib/**/*.ex'] = { 'type': 'main', 'alternate': ['test/{}_test.exs'] }
+    let projections['test/*_test.exs'] = { 'type': 'test', 'alternate': ['lib/{}.ex'] }
+    let projections['test/**/*_test.exs'] = { 'type': 'test', 'alternate': ['lib/{}.ex'] }
+
+    call projectionist#append(root, projections)
+  endif
+endfunc
+
+autocmd User ProjectionistDetect call s:projectionist_detect_elixir()
