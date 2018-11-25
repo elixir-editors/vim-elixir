@@ -61,6 +61,16 @@ class Buffer
     syngroups.gsub!(/["'\[\]]/, '').split(', ')
   end
 
+  def fold_and_delete(content)
+    with_file content do
+      @vim.command("set foldmethod=syntax")
+
+      @vim.normal("zO")
+      @vim.normal("zM")
+      @vim.normal("dd")
+    end
+  end
+
   private
 
   def with_file(content = nil)
@@ -190,6 +200,16 @@ end
         #{code}
       EOF
     end
+  end
+end
+
+RSpec::Matchers.define :fold_lines do |lines|
+  buffer = Buffer.new(VIM, :ex)
+
+  match do |code|
+    after = buffer.fold_and_delete(code)
+
+    code.lines.count - after.lines.count == lines
   end
 end
 
