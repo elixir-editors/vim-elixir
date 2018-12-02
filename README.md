@@ -48,3 +48,12 @@ We've decided not to include `mix format` integration into `vim-elixir`. If you'
 
 Run the tests: `bundle exec parallel_rspec spec`
 Spawn a vim instance with dev configs: `bin/spawn_vim`
+
+Running the tests currently needs `gvim`. If you cannot install a version of vim to get the tests running,
+you can use `docker-compose` to spin up an enviroment for testing. Run
+
+```
+docker-compose run main
+```
+
+This will drop you into a shell where you can run the above commands. Run `docker-compose down` when you are done to free resources.
