@@ -26,13 +26,12 @@ class Buffer
     with_file do
       @vim.normal 'gg'
 
-      content.each_line.each_with_index do |line, index|
-        if index.zero?
-          @vim.type("i#{line.strip}")
-        else
-          @vim.normal 'o'
-          @vim.type(line.strip)
-        end
+      lines = content.each_line
+      count = lines.count
+      @vim.type("i")
+      lines.each_with_index do |line, index|
+        @vim.type("#{line.strip}")
+        @vim.type("<CR>") if index < count - 1
       end
     end
   end
@@ -239,7 +238,8 @@ Vimrunner::RSpec.configure do |config|
     VIM.command('filetype off')
     VIM.command('filetype plugin indent on')
     VIM.command('autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o') # disable automatic comment continuation
-    VIM.normal(":set ignorecase<CR>") # make sure we test ignorecase
+    VIM.command("set ignorecase") # make sure we test ignorecase
+    VIM.command("set formatoptions-=cro") # disable auto comments on <CR>
     VIM
   end
 end

@@ -3,13 +3,11 @@
 require 'spec_helper'
 
 describe 'Indenting documentation' do
-  it 'with end keyword' do
-    expect(<<~EOF).to be_elixir_indentation
-    defmodule Test do
-      @doc """
-      end
-      """
+  i <<~EOF
+  defmodule Test do
+    @doc """
     end
-    EOF
+    """
   end
+  EOF
 end

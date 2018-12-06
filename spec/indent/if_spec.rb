@@ -3,31 +3,25 @@
 require 'spec_helper'
 
 describe 'Indenting if clauses' do
-  it 'if..do..end' do
-    expect(<<~EOF).to be_elixir_indentation
-    if foo do
-      bar
-    end
-    EOF
+  i <<~EOF
+  if foo do
+    bar
   end
+  EOF
 
-  it 'if..do..else..end' do
-    expect(<<~EOF).to be_elixir_indentation
-    if foo do
-      bar
-    else
-      baz
-    end
-    EOF
+  i <<~EOF
+  if foo do
+    bar
+  else
+    baz
   end
+  EOF
 
-  it 'does not indent keywords in strings' do
-    expect(<<~EOF).to be_elixir_indentation
-    def test do
-      "else"
-    end
-    EOF
+  i <<~EOF
+  def test do
+    "else"
   end
+  EOF
 
   i <<~EOF
   if true do

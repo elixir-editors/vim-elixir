@@ -3,69 +3,53 @@
 require 'spec_helper'
 
 describe 'Indenting anonymous functions' do
-  context 'single body functions inside do block' do
-    it 'is declared with fn syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      def do
-        some_func = fn  x -> x end
-      end
-      EOF
-    end
+  i <<~EOF
+  def do
+    some_func = fn  x -> x end
+  end
+  EOF
 
-    it 'is declared with function syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      def do
-        some_func = function do x -> x end
-      end
-      EOF
-    end
+  i <<~EOF
+  def do
+    some_func = function do x -> x end
+  end
+  EOF
 
-    it 'spans in multiple lines' do
-      expect(<<~EOF).to be_elixir_indentation
-      def test do
-        assert_raise Queue.Empty, fn ->
-          Q.new |> Q.deq!
-        end
-      end
-      EOF
-    end
-
-    it 'spans in multiple lines inside parentheses' do
-      expect(<<~EOF).to be_elixir_indentation
-      defmodule Test do
-        def lol do
-          Enum.map([1,2,3], fn x ->
-            x * 3
-          end)
-        end
-      end
-      EOF
+  i <<~EOF
+  def test do
+    assert_raise Queue.Empty, fn ->
+      Q.new |> Q.deq!
     end
   end
+  EOF
 
-  context 'multiple body functions declaring' do
-    it 'it with fn syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      fizzbuzz = fn
-        0, 0, _ -> "FizzBuzz"
-        0, _, _ -> "Fizz"
-        _, 0, _ -> "Buzz"
-        _, _, x -> x
-      end
-      EOF
-    end
-
-    it 'it with function syntax' do
-      expect(<<~EOF).to be_elixir_indentation
-      fizzbuzz = function do
-        0, 0, _ -> "FizzBuzz"
-        0, _, _ -> "Fizz"
-        _, 0, _ -> "Buzz"
-        _, _, x -> x
-      end
-      EOF
+  i <<~EOF
+  defmodule Test do
+    def lol do
+      Enum.map([1,2,3], fn x ->
+        x * 3
+      end)
     end
   end
+  EOF
+
+  i <<~EOF
+  fizzbuzz = fn
+    0, 0, _ -> "FizzBuzz"
+    0, _, _ -> "Fizz"
+    _, 0, _ -> "Buzz"
+    _, _, x -> x
+  end
+  EOF
+
+  i <<~EOF
+  fizzbuzz = function do
+    0, 0, _ -> "FizzBuzz"
+    0, _, _ -> "Fizz"
+    _, 0, _ -> "Buzz"
+    _, _, x -> x
+  end
+  EOF
 
   i <<~EOF
     {:ok, 0} = Mod.exec!(cmd, fn progress ->

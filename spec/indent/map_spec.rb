@@ -3,15 +3,13 @@
 require 'spec_helper'
 
 describe 'Map indent' do
-  it 'maps in funcs' do
-    expect(<<~'EOF').to be_elixir_indentation
-    DrMock.mock(fn ->
-      params = %{
+  it <<~'EOF'
+  DrMock.mock(fn ->
+    params = %{
 
-      }
-    end)
-    EOF
-  end
+    }
+  end)
+  EOF
 
   i <<~EOF
   x = %{
