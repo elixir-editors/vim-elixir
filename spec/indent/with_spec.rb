@@ -11,50 +11,42 @@ describe 'with' do
   end
   EOF
 
-  it 'with..do..end' do
-    expect(<<~EOF).to be_elixir_indentation
+  i <<~EOF
+  with {:ok, width} <- Map.fetch(opts, :width),
+       double_width = width * 2,
+       {:ok, height} <- Map.fetch(opts, :height)
+  do
+    {:ok, double_width * height}
+  end
+  EOF
+
+  i <<~EOF
     with {:ok, width} <- Map.fetch(opts, :width),
          double_width = width * 2,
-         {:ok, height} <- Map.fetch(opts, :height)
-    do
-      {:ok, double_width * height}
-    end
-    EOF
-  end
-
-  it 'with..do:' do
-    expect(<<~EOF).to be_elixir_indentation
-      with {:ok, width} <- Map.fetch(opts, :width),
-           double_width = width * 2,
-           {:ok, height} <- Map.fetch(opts, :height),
-           do: {:ok, double_width * height}
-    EOF
-  end
-
-  it 'with..do..else..end' do
-    expect(<<~EOF).to be_elixir_indentation
-    with {:ok, width} <- Map.fetch(opts, :width),
-         {:ok, height} <- Map.fetch(opts, :height)
-    do
-      {:ok, width * height}
-    else
-      :error ->
-        {:error, :wrong_data}
-    end
-    EOF
-  end
-
-  it 'with..,do:..,else:..' do
-    expect(<<~EOF).to be_elixir_indentation
-    with {:ok, width} <- Map.fetch(opts, :width),
          {:ok, height} <- Map.fetch(opts, :height),
-         do:
-           {:ok,
-             width * height * height * height * height * height * height * height * height * height *
-               height * height * height * height * height * height * height},
-         else: (:error -> {:error, :wrong_data})
-    EOF
+         do: {:ok, double_width * height}
+  EOF
+
+  i <<~EOF
+  with {:ok, width} <- Map.fetch(opts, :width),
+       {:ok, height} <- Map.fetch(opts, :height)
+  do
+    {:ok, width * height}
+  else
+    :error ->
+      {:error, :wrong_data}
   end
+  EOF
+
+  i <<~EOF
+  with {:ok, width} <- Map.fetch(opts, :width),
+       {:ok, height} <- Map.fetch(opts, :height),
+       do:
+         {:ok,
+           width * height * height * height * height * height * height * height * height * height *
+             height * height * height * height * height * height * height},
+       else: (:error -> {:error, :wrong_data})
+  EOF
 
   i <<~'EOF'
     # This file is responsible for configuring your application
