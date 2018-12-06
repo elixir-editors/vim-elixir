@@ -61,6 +61,18 @@ class Buffer
     syngroups.gsub!(/["'\[\]]/, '').split(', ')
   end
 
+  def fold_and_delete(content, opts)
+    start_line = opts[:on_line]
+    with_file content do
+      @vim.command("set foldmethod=syntax")
+
+      @vim.normal("zO")
+      @vim.normal("#{start_line}G")
+      @vim.normal("zc")
+      @vim.normal("dd")
+    end
+  end
+
   private
 
   def with_file(content = nil)
@@ -190,6 +202,31 @@ end
         #{code}
       EOF
     end
+  end
+end
+
+RSpec::Matchers.define :fold_lines do |lines, opts|
+  buffer = Buffer.new(VIM, :ex)
+  opts ||= {}
+  start_line = opts[:on_line] ||= 1
+
+  after = nil
+
+  match do |code|
+    after = buffer.fold_and_delete(code, opts)
+
+    code.lines.count - after.lines.count == lines
+  end
+
+  failure_message do |code|
+    <<~EOF
+    expected
+    #{code}
+    to fold #{lines} lines at line #{start_line},
+    but after folding at line #{start_line} and deleting a line I got
+    #{after}
+    back
+    EOF
   end
 end
 
