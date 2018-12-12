@@ -10,6 +10,20 @@ describe 'Sigil syntax' do
     expect('def f(~s(")), do: true').not_to include_elixir_syntax('elixirSigilDelimiter', '"')
   end
 
+  it 'as function argument multiline content' do
+    ex = <<~'EOF'
+      f(
+        ~S"""
+        foo
+        """,
+        bar
+      )
+    EOF
+
+    expect(ex).to include_elixir_syntax('elixirSigilDelimiter', 'S"""')
+    expect(ex).to include_elixir_syntax('elixirSigil', 'foo')
+  end
+
   describe 'upper case' do
     it 'string' do
       expect('~S(string)').to include_elixir_syntax('elixirSigilDelimiter', 'S')

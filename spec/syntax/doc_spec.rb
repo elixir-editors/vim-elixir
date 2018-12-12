@@ -35,6 +35,17 @@ describe 'documentation syntax' do
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
     end
 
+    it 'doc with sigil_S triple double-quoted multiline content with parentheses' do
+      ex = <<~'EOF'
+        @doc(~S"""
+        foo
+        """)
+      EOF
+      expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirSigilDelimiter', 'S"""')
+      expect(ex).to include_elixir_syntax('elixirSigil', 'foo')
+    end
+
     it 'doc with sigil_S triple single-quoted multiline content' do
       ex = <<~'EOF'
         @doc ~S'''
@@ -44,6 +55,17 @@ describe 'documentation syntax' do
       expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
       expect(ex).to include_elixir_syntax('elixirSigilDelimiter', "S'''")
       expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
+    end
+
+    it 'doc with sigil_S triple single-quoted multiline content with parentheses' do
+      ex = <<~'EOF'
+        @doc(~S'''
+        foo
+        ''')
+      EOF
+      expect(ex).to include_elixir_syntax('elixirVariable', 'doc')
+      expect(ex).to include_elixir_syntax('elixirSigilDelimiter', "S'''")
+      expect(ex).to include_elixir_syntax('elixirSigil', 'foo')
     end
 
     it 'doc with triple single-quoted multiline content is not a doc string' do
