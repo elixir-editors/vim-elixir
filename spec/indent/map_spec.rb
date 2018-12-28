@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'Map indent' do
-  it <<~'EOF'
+  i <<~'EOF'
   DrMock.mock(fn ->
     params = %{
 
