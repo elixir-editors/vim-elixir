@@ -30,4 +30,12 @@ describe 'try indent' do
     end
   end
   EOF
+
+  i <<~EOF
+  try do
+    foo()
+  else
+    value -> value
+  end
+  EOF
 end
