@@ -13,12 +13,9 @@ class Buffer
 
   def reindent(content)
     with_file content do
-      # remove all indentation
-      @vim.normal 'ggVG999<<'
-      # force vim to indent the file
-      @vim.normal 'gg=G'
-      # save the changes
-      sleep 0.1 if ENV['CI']
+      cmd = 'ggVG999<<' # remove all indentation
+      cmd += 'gg=G' # force vim to indent the file
+      @vim.normal cmd
     end
   end
 
@@ -79,14 +76,12 @@ class Buffer
 
     yield if block_given?
 
-    @vim.write
-    @vim.command 'redraw'
+    @vim.normal ":w<CR>:redraw<CR>"
     IO.read(@file)
   end
 
   def edit_file(content)
     File.write(@file, content) if content
-
     @vim.edit @file
   end
 end
