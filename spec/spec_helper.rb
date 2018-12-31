@@ -6,6 +6,8 @@ require 'vimrunner'
 require 'vimrunner/rspec'
 
 class Buffer
+  FOLD_PLACEHOLDER = '<!-- FOLD -->'.freeze
+
   def initialize(vim, type)
     @file = ".fixture.#{type}"
     @vim = vim
@@ -60,15 +62,15 @@ class Buffer
     syngroups.gsub!(/["'\[\]]/, '').split(', ')
   end
 
-  def fold_and_delete(content, opts)
-    start_line = opts[:on_line]
+  def fold_and_replace(content, fold_on_line)
     with_file content do
       @vim.command("set foldmethod=syntax")
 
       @vim.normal("zO")
-      @vim.normal("#{start_line}G")
+      @vim.normal("#{fold_on_line}G")
       @vim.normal("zc")
-      @vim.normal("dd")
+      @vim.normal("cc#{FOLD_PLACEHOLDER}")
+      @vim.normal(":.s/\s*//<CR>")
     end
   end
 
@@ -135,14 +137,14 @@ RSpec::Matchers.define :be_typed_with_right_indent do |syntax|
   end
 
   failure_message do |code|
-      <<~EOM
-      Expected
+    <<~EOM
+    Expected
 
-      #{@typed}
-      to be indented as
+    #{@typed}
+    to be indented as
 
-      #{code}
-      EOM
+    #{code}
+    EOM
   end
 end
 
@@ -204,27 +206,42 @@ end
   end
 end
 
-RSpec::Matchers.define :fold_lines do |lines, opts|
+RSpec::Matchers.define :fold_lines do
   buffer = Buffer.new(VIM, :ex)
-  opts ||= {}
-  start_line = opts[:on_line] ||= 1
-
-  after = nil
 
   match do |code|
-    after = buffer.fold_and_delete(code, opts)
+    @code = code
 
-    code.lines.count - after.lines.count == lines
+    pattern = /# fold\s*$/
+
+    placeholder_set = false
+    @expected = code.each_line.reduce([]) do |acc, line|
+      if line =~ pattern
+        if !placeholder_set
+          placeholder_set = true
+          acc << (Buffer::FOLD_PLACEHOLDER + "\n")
+        end
+      else
+        acc << line
+      end
+
+      acc
+    end.join
+
+    fold_on_line = code.each_line.find_index { |l| l =~ pattern } + 1
+    @actual = buffer.fold_and_replace(code, fold_on_line)
+
+    @expected == @actual
   end
 
   failure_message do |code|
     <<~EOF
-    expected
-    #{code}
-    to fold #{lines} lines at line #{start_line},
-    but after folding at line #{start_line} and deleting a line I got
-    #{after}
-    back
+    Folded
+
+    #{@code}
+    and unexpectedly got
+
+    #{@actual}
     EOF
   end
 end
