@@ -64,13 +64,13 @@ class Buffer
 
   def fold_and_replace(content, fold_on_line)
     with_file content do
-      @vim.command("set foldmethod=syntax")
-
-      @vim.normal("zO")
-      @vim.normal("#{fold_on_line}G")
-      @vim.normal("zc")
-      @vim.normal("cc#{FOLD_PLACEHOLDER}")
-      @vim.normal(":.s/\s*//<CR>")
+      cmd = ":set foldmethod=syntax<CR>"
+      cmd += "zO"
+      cmd += "#{fold_on_line}G"
+      cmd += "zc"
+      cmd += "cc#{FOLD_PLACEHOLDER}<Esc>"
+      cmd += ":.s/\s*//<CR>"
+      @vim.normal(cmd)
     end
   end
 
