@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'rspec/expectations'
 require 'tmpdir'
 require 'vimrunner'
@@ -252,11 +250,11 @@ Vimrunner::RSpec.configure do |config|
   config.start_vim do
     VIM = Vimrunner.start_gvim
     VIM.add_plugin(File.expand_path('..', __dir__))
-    VIM.command('filetype off')
-    VIM.command('filetype plugin indent on')
-    VIM.command('autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o') # disable automatic comment continuation
-    VIM.command("set ignorecase") # make sure we test ignorecase
-    VIM.command("set formatoptions-=cro") # disable auto comments on <CR>
+    cmd = ':filetype off<CR>'
+    cmd += ':filetype plugin indent on<CR>'
+    cmd += ':autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o<CR>' # disable automatic comment continuation
+    cmd += ":set ignorecase<CR>" # make sure we test ignorecase
+    VIM.normal(cmd)
     VIM
   end
 end
