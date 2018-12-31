@@ -3,56 +3,46 @@
 require 'spec_helper'
 
 describe 'Basic folding' do
-  def self.it_folds_lines(content, lines, tags = nil)
-    it("folds #{lines} lines on \n#{content}", tags) do
-      expect(content).to fold_lines(lines, tags)
+  def self.fold(content)
+    it("properly folds \n#{content}") do
+      expect(content).to fold_lines
     end
   end
 
-  it_folds_lines(<<~EOF, 2)
+  fold <<~EOF
+  defmodule M do # fold
+  end # fold
+  "not in fold"
+  EOF
+
+  fold <<~EOF
+  defmodule M do # fold
+    def some_func do # fold
+    end # fold
+  end # fold
+  "not in fold"
+  EOF
+
+  fold <<~EOF
   defmodule M do
+    def some_func do # fold
+    end # fold
   end
   "not in fold"
   EOF
 
-  it_folds_lines(<<~EOF, 4)
-  defmodule M do
-    def some_func do
-    end
-  end
+  fold <<~EOF
+  if true do # fold
+  end # fold
   "not in fold"
   EOF
 
-  it_folds_lines(<<~EOF, 2, on_line: 2)
-  defmodule M do
-    def some_func do
-    end
-  end
-  "not in fold"
-  EOF
-
-  it_folds_lines(<<~EOF, 2)
-  if true do
-  end
-  "not in fold"
-  EOF
-
-  it_folds_lines(<<~EOF, 3, on_line: 3)
-  if true do
-    nil
-  else
-    nil
-  end
-  "not in fold"
-  EOF
-
-  it_folds_lines(<<~EOF, 5, skip: "broken")
-  if true do
-    nil
-  else
-    nil
-  end
+  fold <<~EOF
+  if true do # fold
+    nil # fold
+  else # fold
+    nil # fold
+  end # fold
   "not in fold"
   EOF
 end
-
