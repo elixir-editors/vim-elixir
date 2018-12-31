@@ -38,15 +38,6 @@ describe 'Basic folding' do
   EOF
 
   fold <<~EOF
-  if true do
-    nil
-  else # fold
-    nil # fold
-  end # fold
-  "not in fold"
-  EOF
-
-  fold <<~EOF
   if true do # fold
     nil # fold
   else # fold
