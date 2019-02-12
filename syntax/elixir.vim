@@ -117,15 +117,15 @@ else
   syn region elixirDocTest start="^\s*\%(iex\|\.\.\.\)\%((\d*)\)\?>\s" end="^\s*$" contained
 endif
 
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]{"                   end="}"   skip="\\\\\|\\}"   contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]<"                   end=">"   skip="\\\\\|\\>"   contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\["                  end="\]"  skip="\\\\\|\\\]"  contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]("                   end=")"   skip="\\\\\|\\)"   contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirDocStringContained keepend
-syn region elixirDocString matchgroup=elixirStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+\z1+ contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\)+ end=+\z1+ skip=+\\'+ contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+ end=+\z1+ skip=+\\"+ contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]{"                   end="}"   skip="\\\\\|\\}"   contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]<"                   end=">"   skip="\\\\\|\\>"   contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\["                  end="\]"  skip="\\\\\|\\\]"  contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]("                   end=")"   skip="\\\\\|\\)"   contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+  contains=@elixirDocStringContained keepend
+syn region elixirDocString matchgroup=elixirDocStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+\z1+ contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\)+ end=+\z1+ skip=+\\'+ contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+ end=+\z1+ skip=+\\"+ contains=@elixirDocStringContained fold keepend
 
 " Defines
 syn match elixirDefine              '\<def\>\(:\)\@!'             nextgroup=elixirFunctionDeclaration    skipwhite skipnl
@@ -209,6 +209,8 @@ hi def link elixirRegexQuantifier        elixirSpecial
 hi def link elixirSpecial                Special
 hi def link elixirString                 String
 hi def link elixirSigil                  String
+hi def link elixirDocStringDelimiter     elixirStringDelimiter
+hi def link elixirDocSigilDelimiter      elixirSigilDelimiter
 hi def link elixirStringDelimiter        Delimiter
 hi def link elixirRegexDelimiter         Delimiter
 hi def link elixirInterpolationDelimiter Delimiter
