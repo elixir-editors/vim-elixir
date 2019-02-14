@@ -76,7 +76,8 @@ class Buffer
 
     yield if block_given?
 
-    @vim.normal ":w<CR>:redraw<CR>"
+    @vim.normal ":w<CR>"
+    @vim.normal ":redraw<CR>"
     IO.read(@file)
   end
 
