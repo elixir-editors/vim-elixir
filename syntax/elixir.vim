@@ -146,7 +146,7 @@ syn match elixirCallbackDefine      '\<defcallback\>\(:\)\@!'     nextgroup=elix
 syn match elixirStructDefine        '\<defstruct\>\(:\)\@!'       skipwhite skipnl
 
 " Declarations
-syn match  elixirModuleDeclaration          "[^[:space:];#<]\+"        contained                      nextgroup=elixirBlock     skipwhite skipnl
+syn match  elixirModuleDeclaration          "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirBlock     skipwhite skipnl
 syn match  elixirFunctionDeclaration        "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirPrivateFunctionDeclaration "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirArguments skipwhite skipnl
 syn match  elixirProtocolDeclaration        "[^[:space:];#<]\+"        contained contains=elixirAlias                           skipwhite skipnl
