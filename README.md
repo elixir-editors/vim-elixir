@@ -19,7 +19,7 @@ Features:
 ```bash
 # vim 8 native package loading
 # http://vimhelp.appspot.com/repeat.txt.html#packages
-git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/pack/my-packages/start
+git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/pack/my-packages/start/vim-elixir
 ```
 
 ```bash
