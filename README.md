@@ -11,6 +11,8 @@ Features:
 * Syntax highlighting for Elixir and EEx files
 * Filetype detection for `.ex`, `.exs` and `.eex` files
 * Automatic indentation
+* Integration between Ecto projects and [vim-dadbod][] for running SQL queries
+  on defined Ecto repositories
 
 ## Installation
 
@@ -54,3 +56,5 @@ We've decided not to include `mix format` integration into `vim-elixir`. If you'
 
 Run the tests: `bundle exec parallel_rspec spec`
 Spawn a vim instance with dev configs: `bin/spawn_vim`
+
+[vim-dadbod]: https://github.com/tpope/vim-dadbod
