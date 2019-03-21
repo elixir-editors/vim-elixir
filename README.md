@@ -9,7 +9,7 @@
 Features:
 
 * Syntax highlighting for Elixir and EEx files
-* Filetype detection for `.ex`, `.exs` and `.eex` files
+* Filetype detection for `.ex`, `.exs`, `.eex` and `.leex` files
 * Automatic indentation
 * Integration between Ecto projects and [vim-dadbod][] for running SQL queries
   on defined Ecto repositories
