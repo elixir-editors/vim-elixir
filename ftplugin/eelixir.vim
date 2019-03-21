@@ -20,7 +20,7 @@ if !exists("b:eelixir_subtype")
     let b:eelixir_subtype = matchstr(&filetype,'^eex\.\zs\w\+')
   endif
   if b:eelixir_subtype == ''
-    let b:eelixir_subtype = matchstr(substitute(expand("%:t"),'\c\%(\.eex\|\.eelixir\)\+$','',''),'\.\zs\w\+$')
+    let b:eelixir_subtype = matchstr(substitute(expand("%:t"),'\c\%(\.eex\|\.eelixir\|\.leex\)\+$','',''),'\.\zs\w\+$')
   endif
   if b:eelixir_subtype == 'ex'
     let b:eelixir_subtype = 'elixir'
