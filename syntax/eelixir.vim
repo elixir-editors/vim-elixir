@@ -50,9 +50,6 @@ syn include @elixirTop syntax/elixir.vim
 
 syn cluster eelixirRegions contains=eelixirBlock,eelixirExpression,eelixirComment
 
-" Sigils surrounded with heredoc
-syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\z1+ skip=+\\"+ fold
-
 exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
 exe 'syn region  eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
 exe 'syn region  eelixirQuote      matchgroup=eelixirDelimiter start="<%%" end="%\@<!%>" contains=@elixirTop  containedin=ALLBUT,@eelixirRegions keepend'
@@ -60,10 +57,8 @@ exe 'syn region  eelixirComment    matchgroup=eelixirDelimiter start="<%#" end="
 
 " Define the default highlighting.
 
-hi def link eelixirDelimiter                  PreProc
-hi def link eelixirComment                    Comment
-hi def link elixirSigilDelimiter              Delimiter
-hi def link elixirDocSigilDelimiter           elixirSigilDelimiter
+hi def link eelixirDelimiter PreProc
+hi def link eelixirComment   Comment
 
 let b:current_syntax = 'eelixir'
 
