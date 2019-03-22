@@ -105,6 +105,36 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\/"           
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\z1+ skip=+\\"+ fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\z1+ skip=+\\'+ fold
 
+" TODO
+" add LiveView Sigil Support within .ex
+function! TextEnableCodeSnip(filetype,start,end,textSnipHl) abort
+  let ft=toupper(a:filetype)
+  let group='textGroup'.ft
+  if exists('b:current_syntax')
+    let s:current_syntax=b:current_syntax
+    " Remove current syntax definition, as some syntax files (e.g. cpp.vim)
+    " do nothing if b:current_syntax is defined.
+    unlet b:current_syntax
+  endif
+  execute 'syntax include @'.group.' syntax/'.a:filetype.'.vim'
+  try
+    execute 'syntax include @'.group.' after/syntax/'.a:filetype.'.vim'
+  catch
+  endtry
+  if exists('s:current_syntax')
+    let b:current_syntax=s:current_syntax
+  else
+    unlet b:current_syntax
+  endif
+  execute 'syntax region textSnip'.ft.'
+  \ matchgroup='.a:textSnipHl.'
+  \ keepend
+  \ start="'.a:start.'" end="'.a:end.'"
+  \ contains=@'.group
+endfunction
+
+call TextEnableCodeSnip('html' ,'~L"""' ,'"""', 'SpecialComment')
+
 " Documentation
 if exists('g:elixir_use_markdown_for_docs') && g:elixir_use_markdown_for_docs
   syn include @markdown syntax/markdown.vim
@@ -221,6 +251,8 @@ hi def link elixirRegexDelimiter             Delimiter
 hi def link elixirInterpolationDelimiter     Delimiter
 hi def link elixirSigilDelimiter             Delimiter
 hi def link elixirPrivateRecordDeclaration   elixirRecordDeclaration
+" DOING
+" hi def link elixirLiveViewSigilDelimiter         elixirLiveViewSigilDelimiter
 
 let b:current_syntax = "elixir"
 
