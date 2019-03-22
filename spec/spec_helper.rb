@@ -122,6 +122,12 @@ module EexBuffer
   end
 end
 
+module EexBuffer
+  def self.new
+    Buffer.new(VIM, :leex)
+  end
+end
+
 RSpec::Matchers.define :be_typed_with_right_indent do |syntax|
   buffer = Buffer.new(VIM, syntax || :ex)
 
@@ -145,6 +151,7 @@ end
 {
   be_elixir_indentation:  :ex,
   be_eelixir_indentation: :eex
+  be_eelixir_indentation: :leex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do
     buffer = Buffer.new(VIM, type)
@@ -170,6 +177,7 @@ end
 {
   include_elixir_syntax:  :ex,
   include_eelixir_syntax: :eex
+  include_eelixir_syntax: :leex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do |syntax, pattern|
     buffer = Buffer.new(VIM, type)
