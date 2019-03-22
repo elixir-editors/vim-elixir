@@ -105,6 +105,12 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\/"           
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\z1+ skip=+\\"+ fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\z1+ skip=+\\'+ fold
 
+
+" LiveView Sigils surrounded with ~L"""
+syntax include @HTML syntax/html.vim
+syntax region elixirLiveViewSigil matchgroup=elixirSigilDelimiter keepend start=+\~L\z("""\)+ end=+^\s*\z1+ skip=+\\"+ contains=@HTML fold
+
+
 " Documentation
 if exists('g:elixir_use_markdown_for_docs') && g:elixir_use_markdown_for_docs
   syn include @markdown syntax/markdown.vim
