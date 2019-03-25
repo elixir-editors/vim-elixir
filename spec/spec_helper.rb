@@ -151,7 +151,7 @@ end
 {
   be_elixir_indentation:  :ex,
   be_eelixir_indentation: :eex
-  be_eelixir_indentation: :leex
+  be_leelixir_indentation: :leex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do
     buffer = Buffer.new(VIM, type)
@@ -177,7 +177,7 @@ end
 {
   include_elixir_syntax:  :ex,
   include_eelixir_syntax: :eex
-  include_eelixir_syntax: :leex
+  include_leelixir_syntax: :leex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do |syntax, pattern|
     buffer = Buffer.new(VIM, type)
