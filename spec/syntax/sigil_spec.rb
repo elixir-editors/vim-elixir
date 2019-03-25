@@ -90,7 +90,6 @@ describe 'Sigil syntax' do
 
     it 'Live EEx' do
       expect('~L"""liveview template"""').to include_elixir_syntax('elixirSigilDelimiter', '""""')
-      expect('~L"""liveview template"""').to include_elixir_syntax('elixirSigilDelimiter', '""""')
     end
   end
 
