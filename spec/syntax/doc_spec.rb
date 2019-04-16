@@ -82,6 +82,23 @@ describe 'documentation syntax' do
       expect(ex).not_to include_elixir_syntax('elixirDocString', 'foo')
     end
 
+    it 'doc with multiline escaped' do
+      ex = <<~'EOF'
+        @doc """
+        foo
+        ```
+        @xxx \"""
+        bar
+        \"""
+        ```
+        baz
+        """
+      EOF
+      expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'bar')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'baz')
+    end
+
     it 'doc skip interpolation' do
       ex = <<~'EOF'
         @doc """

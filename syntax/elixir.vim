@@ -123,9 +123,9 @@ syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc
 syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]\["               end="\]"  skip="\\\\\|\\\]"  contains=@elixirDocStringContained fold keepend
 syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start="\%(@\w*doc\s\+\)\@<=\~[Ss]("                end=")"   skip="\\\\\|\\)"   contains=@elixirDocStringContained fold keepend
 syn region elixirDocString matchgroup=elixirDocStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("\)+                 end=+\z1+ skip=+\\\\\|\\\z1+ contains=@elixirDocStringContained      keepend
-syn region elixirDocString matchgroup=elixirDocStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+\z1+                    contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\)+         end=+\z1+ skip=+\\'+         contains=@elixirDocStringContained fold keepend
-syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+         end=+\z1+ skip=+\\"+         contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocStringDelimiter start=+\%(@\w*doc\s\+\)\@<=\z("""\)+               end=+^\s*\z1+                contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z('''\)+         end=+^\s*\z1+                contains=@elixirDocStringContained fold keepend
+syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\s\+\)\@<=\~[Ss]\z("""\)+         end=+^\s*\z1+                contains=@elixirDocStringContained fold keepend
 
 " Defines
 syn match elixirDefine              '\<def\>\(:\)\@!'             nextgroup=elixirFunctionDeclaration        skipwhite skipnl
