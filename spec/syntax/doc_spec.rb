@@ -82,6 +82,23 @@ describe 'documentation syntax' do
       expect(ex).not_to include_elixir_syntax('elixirDocString', 'foo')
     end
 
+    it 'doc with multiline escaped' do
+      ex = <<~'EOF'
+        @doc """
+        foo
+        ```
+        @xxx \"""
+        bar
+        \"""
+        ```
+        baz
+        """
+      EOF
+      expect(ex).to include_elixir_syntax('elixirDocString', 'foo')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'bar')
+      expect(ex).to include_elixir_syntax('elixirDocString', 'baz')
+    end
+
     it 'doc skip interpolation' do
       ex = <<~'EOF'
         @doc """
@@ -129,7 +146,7 @@ describe 'documentation syntax' do
 
       it 'with double quote' do
         ex = <<~'EOF'
-	@doc "
+        @doc "
         doctest
 
             iex> \"bob\"
@@ -144,7 +161,7 @@ describe 'documentation syntax' do
 
       it 'with sigil_S' do
         ex = <<~'EOF'
-	@doc ~S(
+        @doc ~S(
         doctest
 
             iex> to_string("bob"\)
@@ -159,7 +176,7 @@ describe 'documentation syntax' do
 
       it 'with sigil_s' do
         ex = <<~'EOF'
-	@doc ~s(
+        @doc ~s(
         doctest
 
             iex> to_string("bob"\)
@@ -188,13 +205,13 @@ describe 'documentation syntax' do
       after(:each) { VIM.command("let g:elixir_use_markdown_for_docs = 0") }
 
       it 'doc with inline code' do
-	ex = <<~'EOF'
-	@doc """
-	doc with inline code `List.wrap([])`
-	"""
-	EOF
-	expect(ex).to include_elixir_syntax('elixirDocString', 'inline')
-	expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
+        ex = <<~'EOF'
+        @doc """
+        doc with inline code `List.wrap([])`
+        """
+        EOF
+        expect(ex).to include_elixir_syntax('elixirDocString', 'inline')
+        expect(ex).to include_elixir_syntax('markdownCode',   'wrap')
       end
     end
   end
