@@ -87,6 +87,10 @@ describe 'Sigil syntax' do
     it 'without escaped parenthesis' do
       expect('~S(\( )').not_to include_elixir_syntax('elixirRegexEscapePunctuation', '( ')
     end
+
+    it 'Live EEx' do
+      expect('~L"""liveview template"""').to include_elixir_syntax('elixirSigilDelimiter', '"""')
+    end
   end
 
   describe 'lower case' do
