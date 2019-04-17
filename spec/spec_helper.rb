@@ -150,7 +150,7 @@ end
 
 {
   be_elixir_indentation:  :ex,
-  be_eelixir_indentation: :eex
+  be_eelixir_indentation: :eex,
   be_leelixir_indentation: :leex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do
@@ -176,7 +176,7 @@ end
 
 {
   include_elixir_syntax:  :ex,
-  include_eelixir_syntax: :eex
+  include_eelixir_syntax: :eex,
   include_leelixir_syntax: :leex
 }.each do |matcher, type|
   RSpec::Matchers.define matcher do |syntax, pattern|
