@@ -55,6 +55,6 @@ We've decided not to include `mix format` integration into `vim-elixir`. If you'
 ## Development
 
 Run the tests: `bundle exec parallel_rspec spec`
-Spawn a vim instance with dev configs: `bin/spawn_vim`
+Spawn a container with vim and dev configs: `docker-compose build && docker-compose run vim`
 
 [vim-dadbod]: https://github.com/tpope/vim-dadbod

@@ -1,0 +1,9 @@
+version: "2"
+services:
+  vim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/root/vim-elixir
+    working_dir: /root/vim-elixir
