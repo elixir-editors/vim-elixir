@@ -4,9 +4,10 @@ require 'spec_helper'
 
 describe 'Alias syntax' do
   it 'colorize only module alias' do
-    expect(<<~EOF).to include_elixir_syntax('elixirAlias', 'Enum')
-      Enum.empty?(...)
-    EOF
+    str = "Enum.empty?(...)"
+    expect(str).to include_elixir_syntax('elixirAlias', 'Enum')
+    expect(str).to include_elixir_syntax('elixirOperator', '\.')
+    expect(str).to include_elixir_syntax('elixirId', 'empty?')
   end
 
   it 'colorize the module alias even if it starts with `!`' do
@@ -32,5 +33,16 @@ describe 'Alias syntax' do
     expect(str).to include_elixir_syntax('elixirAlias', 'S')
     expect(str).to include_elixir_syntax('elixirAlias', '3')
     expect(str).to include_elixir_syntax('elixirAlias', 'Manager')
+  end
+
+  it 'colorize dots in module alias' do
+    str = "Foo.Bar.Baz.fun(...)"
+    expect(str).to include_elixir_syntax('elixirAlias', 'Foo')
+    expect(str).to include_elixir_syntax('elixirAlias', '\.\(Bar\)\@=')
+    expect(str).to include_elixir_syntax('elixirAlias', 'Bar')
+    expect(str).to include_elixir_syntax('elixirAlias', '\.\(Baz\)\@=')
+    expect(str).to include_elixir_syntax('elixirAlias', 'Baz')
+    expect(str).to include_elixir_syntax('elixirOperator', '\.\(fun\)\@=')
+    expect(str).to include_elixir_syntax('elixirId', 'fun')
   end
 end

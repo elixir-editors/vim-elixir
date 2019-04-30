@@ -10,9 +10,10 @@ describe 'Defmodule syntax' do
   end
 
   it 'defines module name as elixirModuleDeclaration' do
-    expect(<<~EOF).to include_elixir_syntax('elixirModuleDeclaration', 'HelloPhoenix.HelloController')
-      defmodule HelloPhoenix.HelloController do
-    EOF
+    str = "defmodule HelloPhoenix.HelloController do"
+    expect(str).to include_elixir_syntax('elixirModuleDeclaration', 'HelloPhoenix')
+    expect(str).to include_elixir_syntax('elixirModuleDeclaration', '\.')
+    expect(str).to include_elixir_syntax('elixirModuleDeclaration', 'HelloController')
   end
 
   it 'does not define module name as elixirAlias' do
