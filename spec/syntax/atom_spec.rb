@@ -74,4 +74,18 @@ describe 'Atom syntax' do
     end
     EOF
   end
+
+  it '`Atom:` style atoms used in keyword list' do
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', 'Protocols:')
+    def project do
+      [
+        docs: [
+          groups_for_modules: [
+            Protocols: [Enumerable],
+          ]
+        ]
+      ]
+    end
+    EOF
+  end
 end
