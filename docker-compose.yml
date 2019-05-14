@@ -7,3 +7,10 @@ services:
     volumes:
       - .:/root/vim-elixir
     working_dir: /root/vim-elixir
+  nvim:
+    build:
+      context: .
+      dockerfile: Dockerfile.nvim
+    volumes:
+      - .:/root/vim-elixir
+    working_dir: /root/vim-elixir
