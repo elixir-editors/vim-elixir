@@ -108,12 +108,14 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=
 
 " LiveView Sigils surrounded with ~L"""
 syntax include @HTML syntax/html.vim
+unlet b:current_syntax
 syntax region elixirLiveViewSigil matchgroup=elixirSigilDelimiter keepend start=+\~L\z("""\)+ end=+^\s*\z1+ skip=+\\"+ contains=@HTML fold
 
 
 " Documentation
 if exists('g:elixir_use_markdown_for_docs') && g:elixir_use_markdown_for_docs
   syn include @markdown syntax/markdown.vim
+  unlet b:current_syntax
   syn cluster elixirDocStringContained contains=@markdown,@Spell,elixirInterpolation
 else
   let g:elixir_use_markdown_for_docs = 0
