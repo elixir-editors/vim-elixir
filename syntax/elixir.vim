@@ -1,5 +1,8 @@
-if exists("b:current_syntax")
-  finish
+if !exists("main_syntax")
+  if exists("b:current_syntax")
+    finish
+  endif
+  let main_syntax = "elixir"
 endif
 
 let s:cpo_save = &cpo
@@ -229,6 +232,10 @@ hi def link elixirSigilDelimiter             Delimiter
 hi def link elixirPrivateRecordDeclaration   elixirRecordDeclaration
 
 let b:current_syntax = "elixir"
+
+if main_syntax == "elixir"
+  unlet main_syntax
+endif
 
 let &cpo = s:cpo_save
 unlet s:cpo_save
