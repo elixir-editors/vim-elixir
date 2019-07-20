@@ -50,7 +50,7 @@ Run [./manual_install.sh](manual_install.sh) to copy the contents of each direct
 We've decided not to include `mix format` integration into `vim-elixir`. If you'd like to set it up yourself, you have the following options:
 
 * For asynchronous execution of the formatter, have a look at [vim-mix-format](https://github.com/mhinz/vim-mix-format)
-* Add it as a `formatprg` (e.g. `set formatprg=mix\ format\ -`)
+* Add it as a `formatprg` (e.g. `setlocal formatprg=mix\ format\ -`)
 
 ## Development
 
