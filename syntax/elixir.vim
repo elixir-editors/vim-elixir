@@ -168,9 +168,9 @@ syn match  elixirExceptionDeclaration       "[^[:space:];#<]\+"        contained
 syn match  elixirCallbackDeclaration        "[^[:space:];#<,()\[\]]\+" contained contains=elixirFunctionDeclaration             skipwhite skipnl
 
 " ExUnit
-syn match  elixirExUnitMacro "\(^\s*\)\@<=\<\(test\|describe\|setup\|setup_all\|on_exit\|doctest\)\>"
-syn match  elixirExUnitAssert "\(^\s*\)\@<=\<\(assert\|assert_in_delta\|assert_raise\|assert_receive\|assert_received\|catch_error\)\>"
-syn match  elixirExUnitAssert "\(^\s*\)\@<=\<\(catch_exit\|catch_throw\|flunk\|refute\|refute_in_delta\|refute_receive\|refute_received\)\>"
+syn match  elixirExUnitMacro "\C\(^\s*\)\@<=\<\(test\|describe\|setup\|setup_all\|on_exit\|doctest\)\>"
+syn match  elixirExUnitAssert "\C\(^\s*\)\@<=\<\(assert\|assert_in_delta\|assert_raise\|assert_receive\|assert_received\|catch_error\)\>"
+syn match  elixirExUnitAssert "\C\(^\s*\)\@<=\<\(catch_exit\|catch_throw\|flunk\|refute\|refute_in_delta\|refute_receive\|refute_received\)\>"
 
 hi def link elixirBlockDefinition            Define
 hi def link elixirDefine                     Define
