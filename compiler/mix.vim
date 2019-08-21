@@ -8,4 +8,9 @@ if exists(":CompilerSet") != 2
 endif
 
 CompilerSet makeprg=mix\ compile
-CompilerSet errorformat=%A%t%*[^:]:\ %m,%C%f:%l:\ %m,%C%f:%l,%Z
+CompilerSet errorformat=
+            \%Wwarning:\ %m,
+            \%C%f:%l,%Z,
+            \%E==\ Compilation\ error\ in\ file\ %f\ ==,
+            \%C**\ (%\\w%\\+)\ %f:%l:\ %m,%Z
+
