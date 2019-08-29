@@ -50,6 +50,9 @@ syn keyword elixirBoolean true false nil
 syn match elixirVariable '@[a-z]\w*'
 syn match elixirVariable '&\d\+'
 
+syn match elixirFunctionCall '\<[a-z_]\w*[!?]\?\(\s*\.\?\s*(\)\@='
+syn match elixirFunctionCall '\([A-Z]\w*\s*\.\s*\)\@<=[a-z_]\w*[!?]\?'
+
 syn keyword elixirPseudoVariable __FILE__ __DIR__ __MODULE__ __ENV__ __CALLER__
 
 syn match elixirNumber '\<-\?\d\(_\?\d\)*\(\.[^[:space:][:digit:]]\@!\(_\?\d\)*\)\?\([eE][-+]\?\d\(_\?\d\)*\)\?\>'
@@ -197,6 +200,7 @@ hi def link elixirStructDefine               Define
 hi def link elixirExUnitMacro                Define
 hi def link elixirModuleDeclaration          Type
 hi def link elixirPrivateFunctionDeclaration elixirFunctionDeclaration
+hi def link elixirFunctionCall               Function
 hi def link elixirFunctionDeclaration        Function
 hi def link elixirPrivateMacroDeclaration    elixirMacroDeclaration
 hi def link elixirMacroDeclaration           Macro

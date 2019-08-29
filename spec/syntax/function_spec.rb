@@ -17,4 +17,16 @@ describe 'function syntax' do
         __ensure_defimpl__(protocol, for, env)
     EOF
   end
+
+  it 'detects function calls with parenthesis' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      func()
+    EOF
+  end
+
+  it 'detects function calls appended by module without parenthesis' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      Mod.func
+    EOF
+  end
 end
