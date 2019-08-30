@@ -50,7 +50,7 @@ syn keyword elixirBoolean true false nil
 syn match elixirVariable '@[a-z]\w*'
 syn match elixirVariable '&\d\+'
 
-syn match elixirFunctionCall '\<[a-z_]\w*[!?]\?\(\s*\.\?\s*(\)\@='
+syn match elixirFunctionCall '\<[a-z_]\w*[!?]\?\(\s*\.\?\s*(\|\s\+[a-zA-Z0-9@:\'\"\[]\)\@='
 syn match elixirFunctionCall '\(:\w\+\s*\.\s*\|[A-Z]\w*\s*\.\s*\)\@<=[a-z_]\w*[!?]\?'
 
 syn keyword elixirPseudoVariable __FILE__ __DIR__ __MODULE__ __ENV__ __CALLER__

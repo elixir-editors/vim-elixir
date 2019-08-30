@@ -66,7 +66,25 @@ describe 'function syntax' do
     EOF
   end
 
-  it 'does not highlight function calls without parameters that have no parenthesis' do
+  it 'detects function calls without parenthesis that contain paramenters' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      func 1
+    EOF
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      func [1]
+    EOF
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      func :atom
+    EOF
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      func "string"
+    EOF
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      func 'a'
+    EOF
+  end
+
+  it 'does not highlight function calls without parenthesis that does not contain paramenters' do
     expect(<<~'EOF').not_to include_elixir_syntax('elixirFunctionCall', 'func')
       func
     EOF
