@@ -101,4 +101,18 @@ describe 'function syntax' do
       Module .           func
     EOF
   end
+
+  it 'detects piped functions with parenthesis' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      one_func()
+      |> func()
+    EOF
+  end
+
+  it 'detects piped functions without parenthesis' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      one_func()
+      |> func
+    EOF
+  end
 end
