@@ -48,13 +48,25 @@ describe 'function syntax' do
     EOF
   end
 
+  it 'detects function calls appended by atom with parenthesis' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      :mod.func()
+    EOF
+  end
+
   it 'detects function calls appended by module without parenthesis' do
     expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
       Mod.func
     EOF
   end
 
-  it 'does not highlight terms without a parentheresis' do
+  it 'detects function calls appended by atom without parenthesis' do
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
+      :mod.func
+    EOF
+  end
+
+  it 'does not highlight function calls without parameters that have no parenthesis' do
     expect(<<~'EOF').not_to include_elixir_syntax('elixirFunctionCall', 'func')
       func
     EOF
