@@ -5,7 +5,7 @@ require 'spec_helper'
 
 describe 'function syntax' do
   it 'doesnt treat underscored functions like unsued variables' do
-    expect(<<~EOF).to include_elixir_syntax('elixirId', '__ensure_defimpl__')
+    expect(<<~EOF).to include_elixir_syntax('elixirFunctionCall', '__ensure_defimpl__')
       defp derive(protocol, for, struct, opts, env) do
         # ... code ...
         __ensure_defimpl__(protocol, for, env)
@@ -97,7 +97,7 @@ describe 'function syntax' do
   end
 
   it 'ignores spacing between module and function names' do
-    expect(<<~'EOF').not_to include_elixir_syntax('elixirFunctionCall', 'func')
+    expect(<<~'EOF').to include_elixir_syntax('elixirFunctionCall', 'func')
       Module .           func
     EOF
   end
