@@ -88,4 +88,19 @@ describe 'Atom syntax' do
     end
     EOF
   end
+
+  it 'detects atoms containing @ in it' do
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', '@somewhere')
+      :atom@somewhere
+    EOF
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', '@somewhere')
+      [atom@somewhere: nil]
+    EOF
+  end
+
+  it 'detects atoms containing Unicode letters in it' do
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', 'ó')
+      :atóm
+    EOF
+  end
 end

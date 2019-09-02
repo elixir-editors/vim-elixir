@@ -41,9 +41,9 @@ syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
 
 syn match   elixirAlias '\([a-z]\)\@<![A-Z]\w*\%(\.[A-Z]\w*\)*'
 
-syn match   elixirAtom '\(:\)\@<!:\%([a-zA-Z_]\w*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
+syn match   elixirAtom '\(:\)\@<!:\%([a-zA-Z_]\%(\w\|@\|\P\)*\%([?!]\|=[>=]\@!\)\?\|<>\|===\?\|>=\?\|<=\?\)'
 syn match   elixirAtom '\(:\)\@<!:\%(<=>\|&&\?\|%\(()\|\[\]\|{}\)\|++\?\|--\?\|||\?\|!\|//\|[%&`/|]\)'
-syn match   elixirAtom "\%([a-zA-Z_]\w*[?!]\?\):\(:\)\@!"
+syn match   elixirAtom "\%([a-zA-Z_]\%(\w\|@\|\P\)*[?!]\?\):\(:\)\@!"
 
 syn keyword elixirBoolean true false nil
 
