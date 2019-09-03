@@ -88,4 +88,31 @@ describe 'Atom syntax' do
     end
     EOF
   end
+
+  it 'detects atoms containing @ in it' do
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', '@somewhere')
+      :atom@somewhere
+    EOF
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', '@somewhere')
+      [atom@somewhere: nil]
+    EOF
+  end
+
+  it 'detects atoms containing Unicode letters in it' do
+    expect(<<~EOF).to include_elixir_syntax('elixirAtom', 'ó')
+      :atóm
+    EOF
+  end
+
+  it 'does not incorrectly detects spaces as part of the atom' do
+    input = <<~EOF
+      {:power_assert, "~> 0.2.0", only: :test}
+    EOF
+    expect(input).to include_elixir_syntax('elixirAtom', 'power_assert')
+    expect(input).to include_elixir_syntax('elixirAtom', 'only')
+    expect(input).to include_elixir_syntax('elixirAtom', 'test')
+    expect(input).not_to include_elixir_syntax('elixirAtom', '0.2.0')
+    expect(input).not_to include_elixir_syntax('elixirAtom', '{')
+    expect(input).not_to include_elixir_syntax('elixirAtom', '}')
+  end
 end
