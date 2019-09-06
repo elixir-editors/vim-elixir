@@ -41,5 +41,16 @@ describe 'Indenting *after* comments' do
       {:error, :timed_out_waiting_for_lock}
   end
   EOF
+
+  it "bulk indenting comments" do
+    expect(<<~EOF).to be_elixir_indentation
+    defmodule Test do
+      # SELECT *
+      #  FROM table
+      # WHERE column = 123
+      #   AND another_column = 456
+    end
+    EOF
+  end
 end
 
