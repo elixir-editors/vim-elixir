@@ -15,13 +15,11 @@ describe 'Keyword syntax' do
     EOF
   end
 
-  it 'raise used as keyword with string' do
+  it 'raise used as keyword' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'raise')
     raise "oops"
     EOF
-  end
 
-  it 'raise used as keyword with module' do
     expect(<<~EOF).to include_elixir_syntax('elixirKeyword', 'raise')
     raise ArgumentError, message: "invalid argument foo"
     EOF
