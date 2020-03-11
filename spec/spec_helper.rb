@@ -257,7 +257,7 @@ Vimrunner::RSpec.configure do |config|
   config.reuse_server = true
 
   config.start_vim do
-    VIM = Vimrunner.start_gvim
+    VIM = Vimrunner.start
     VIM.add_plugin(File.expand_path('..', __dir__))
     cmd = ':filetype off<CR>'
     cmd += ':filetype plugin indent on<CR>'
