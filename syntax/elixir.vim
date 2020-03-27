@@ -42,6 +42,7 @@ syn match   elixirOperator '|||\|||\||>\||'
 syn match   elixirOperator '\.\.\|\.'
 syn match   elixirOperator "\^\^\^\|\^"
 syn match   elixirOperator '\\\\\|::\|\*\|/\|\~\~\~\|@'
+syn match   elixirOperator '\~>\|\~>>\|<\~\|<<\~\|<\~>'
 
 syn match   elixirAlias '\([a-z]\)\@<![A-Z]\w*\%(\.[A-Z]\w*\)*'
 
