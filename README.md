@@ -78,4 +78,19 @@ Run the tests: `bundle exec parallel_rspec spec`
 
 Spawn a container with vim and dev configs: `docker-compose build && docker-compose run vim`
 
+### Feature Wishlist
+
+Here is a list of features that I think would be great additions to `vim-elixir`:
+
+* Regularly merging `vim-elixir` into `vim` and keeping the sync up-to-date
+* Fixing our build so it can run regularly on CI
+* Live view support
+* Testing .exs files and ensuring feature compatibility between .ex and .exs
+* Documentation (e.g. `:h vim-elixir`)
+* README docs for various .vimrc options/flags
+* Identifying and rewriting tests that conflict with `mix format`
+* Fixes for indentation rule edge cases (e.g. `with`, see GH issues for examples)
+* Simplifying syntax rules
+* Performance optimizations for syntax/indent rules (especially for determining if something is a string)
+
 [vim-dadbod]: https://github.com/tpope/vim-dadbod
