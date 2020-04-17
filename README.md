@@ -69,8 +69,8 @@ which I think could be acceptable to merge into master.
 
 ### Maintenance Help
 
-I no longer use Elixir regularly and would love help maintaining this plugin.
-If you get a lot of value from it, know vimscript well, or eager to learn about it then feel free to get in touch (GH issue, Elixir Slack, etc)
+`vim-elixir` is looking for new maintainers.
+If you get a lot of value from it, know vimscript well, or eager to learn about it then feel free to get in touch with @jbodah (GH issue, elixir-lang Slack)
 
 ### Running the Tests
 
