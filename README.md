@@ -48,6 +48,19 @@ If you are not using a package manager then you can use the provided `manual_ins
 
 Run [./manual_install.sh](manual_install.sh) to copy the contents of each directory in the respective directories inside `~/.vim`.
 
+## Configuration
+
+You must add the following to you `~/.vimrc`:
+
+```
+" Enable syntax highlighting
+syntax on
+
+" Enables filetype detection, loads ftplugin, and loads indent
+" (Not necessary on nvim and may not be necessary on vim 8.2+)
+filetype plugin indent on
+```
+
 ## Notes/Caveats
 
 ### `mix format` Integration
