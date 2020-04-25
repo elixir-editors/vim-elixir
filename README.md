@@ -50,7 +50,7 @@ Run [./manual_install.sh](manual_install.sh) to copy the contents of each direct
 
 ## Configuration
 
-You must add the following to you `~/.vimrc`:
+You must add the following to your `~/.vimrc`:
 
 ```
 " Enable syntax highlighting
