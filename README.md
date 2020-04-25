@@ -25,10 +25,10 @@ If you are using a plugin manager then add `vim-elixir` the way you would any ot
 ```bash
 # Using vim 8 native package loading
 #   http://vimhelp.appspot.com/repeat.txt.html#packages
-git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/pack/my-packages/start/vim-elixir
+git clone https://github.com/elixir-editors/vim-elixir.git ~/.vim/pack/my-packages/start/vim-elixir
 
 # Using pathogen
-git clone https://github.com/elixir-lang/vim-elixir.git ~/.vim/bundle/vim-elixir
+git clone https://github.com/elixir-editors/vim-elixir.git ~/.vim/bundle/vim-elixir
 ```
 
 ```viml
