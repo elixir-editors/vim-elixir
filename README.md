@@ -89,7 +89,7 @@ If you get a lot of value from it, know vimscript well, or eager to learn about 
 
 Run the tests: `bundle exec parallel_rspec spec`
 
-Spawn a container with vim and dev configs: `docker-compose build && docker-compose run vim`
+Spawn a container with vim and dev configs: `bin/vim` or `bin/nvim`
 
 ### Feature Wishlist
 
