@@ -7,7 +7,7 @@ describe 'Alias syntax' do
     str = "Enum.empty?(...)"
     expect(str).to include_elixir_syntax('elixirAlias', 'Enum')
     expect(str).to include_elixir_syntax('elixirOperator', '\.')
-    expect(str).to include_elixir_syntax('elixirFunctionCall', 'empty?')
+    expect(str).to include_elixir_syntax('elixirId', 'empty?')
   end
 
   it 'colorize the module alias even if it starts with `!`' do
@@ -43,6 +43,6 @@ describe 'Alias syntax' do
     expect(str).to include_elixir_syntax('elixirAlias', '\.\(Baz\)\@=')
     expect(str).to include_elixir_syntax('elixirAlias', 'Baz')
     expect(str).to include_elixir_syntax('elixirOperator', '\.\(fun\)\@=')
-    expect(str).to include_elixir_syntax('elixirFunctionCall', 'fun')
+    expect(str).to include_elixir_syntax('elixirId', 'fun')
   end
 end
