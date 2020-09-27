@@ -101,4 +101,11 @@ describe 'Indenting case statements' do
       e(fn -> f end)
   end
   EOF
+
+  i <<~EOF
+  case pattern do
+    :* -> :ok
+    _ -> :error
+  end
+  EOF
 end
