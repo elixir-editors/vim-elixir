@@ -91,6 +91,15 @@ describe 'Sigil syntax' do
     it 'Live EEx' do
       expect('~L"""liveview template"""').to include_elixir_syntax('elixirSigilDelimiter', '"""')
     end
+
+    it 'Surface EEx' do
+      expect('~H"""surface template"""').to include_elixir_syntax('elixirSigilDelimiter', '"""')
+    end
+
+    it 'EEx' do
+      expect('~E"""Phoenix.HTML template"""').to include_elixir_syntax('elixirSigilDelimiter', '"""')
+      expect('~e"""Phoenix.HTML template"""').to include_elixir_syntax('elixirSigilDelimiter', '"""')
+    end
   end
 
   describe 'lower case' do
