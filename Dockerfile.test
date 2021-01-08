@@ -1,0 +1,15 @@
+FROM ubuntu:latest
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -yq vim-gtk ruby2.5 xvfb
+
+COPY Gemfile /var/vim-elixir/Gemfile
+
+WORKDIR /var/vim-elixir
+
+RUN gem install bundler && bundle
+
+COPY . /var/vim-elixir
+
+ENTRYPOINT ["/var/vim-elixir/entrypoint.sh"]
