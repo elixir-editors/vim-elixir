@@ -30,6 +30,7 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-19
 
 DEPENDENCIES
   diffy
@@ -39,4 +40,4 @@ DEPENDENCIES
   vimrunner
 
 BUNDLED WITH
-   1.16.1
+   2.2.2
