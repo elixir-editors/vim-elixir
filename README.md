@@ -87,9 +87,15 @@ If you get a lot of value from it, know vimscript well, or eager to learn about 
 
 ### Running the Tests
 
-Run the tests: `bundle exec parallel_rspec spec`
+The tests depend on having Ruby installed.
+They also depend on a GUI vim (gvim, mvim) with server support.
+If you do not have gvim or mvim in your PATH then you can create a `.gvim_path` file in the vim-elixir root directory which specifies the path to the GUI vim executable.
 
-Spawn a container with vim and dev configs: `bin/vim` or `bin/nvim`
+To run the tests: `bundle exec parallel_rspec spec`
+
+### Developing in Docker
+
+You can spawn a container with vim and your development configs using `bin/vim` or `bin/nvim`
 
 ### Debugging Indent
 

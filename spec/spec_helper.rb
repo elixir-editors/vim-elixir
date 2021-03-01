@@ -3,6 +3,8 @@ require 'tmpdir'
 require 'vimrunner'
 require 'vimrunner/rspec'
 
+GVIM_PATH_FILE = File.expand_path('../../.gvim_path', __FILE__)
+
 class Buffer
   FOLD_PLACEHOLDER = '<!-- FOLD -->'.freeze
 
@@ -265,7 +267,12 @@ Vimrunner::RSpec.configure do |config|
   config.reuse_server = true
 
   config.start_vim do
-    VIM = Vimrunner.start_gvim
+    VIM =
+      if File.exists?(GVIM_PATH_FILE)
+        Vimrunner::Server.new(executable: File.read(GVIM_PATH_FILE).rstrip).start
+      else
+        Vimrunner.start_gvim
+      end
     VIM.add_plugin(File.expand_path('..', __dir__))
     cmd = ':filetype off<CR>'
     cmd += ':filetype plugin indent on<CR>'
