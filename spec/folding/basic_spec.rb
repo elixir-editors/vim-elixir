@@ -45,4 +45,52 @@ describe 'Basic folding' do
   end # fold
   "not in fold"
   EOF
+
+  fold <<~EOF
+  defmodule M do
+    def some_func do
+      [ # fold
+        :hello, # fold
+        :world # fold
+      ] # fold
+      :hello_world
+    end
+  end
+  EOF
+
+  fold <<~EOF
+  defmodule M do
+    def some_func do
+      { # fold
+        :hello, # fold
+        :world # fold
+      } # fold
+      :hello_world
+    end
+  end
+  EOF
+
+  fold <<~EOF
+  defmodule M do
+    def some_func do
+      %{ # fold
+        hello: "a", # fold
+        world: "b" # fold
+      } # fold
+      :hello_world
+    end
+  end
+  EOF
+
+  fold <<~EOF
+  defmodule M do
+    def some_func do
+      %User{ # fold
+        hello: "a", # fold
+        world: "b" # fold
+      } # fold
+      :hello_world
+    end
+  end
+  EOF
 end
