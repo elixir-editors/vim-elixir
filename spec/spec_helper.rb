@@ -62,8 +62,7 @@ class Buffer
 
   def fold_and_replace(content, fold_on_line)
     with_file content do
-      cmd = ":set foldmethod=syntax<CR>"
-      cmd += "zO"
+      cmd = "zO"
       cmd += "#{fold_on_line}G"
       cmd += "zc"
       cmd += "cc#{FOLD_PLACEHOLDER}<Esc>"

@@ -102,6 +102,9 @@ SETTINGS					*elixir-settings*
 					*g:elixir_indent_max_lookbehind*
 	TODO
 
+					*g:elixir_fold*
+	TODO
+
 					*g:elixir_use_markdown_for_docs*
 	TODO
 

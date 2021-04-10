@@ -8,6 +8,11 @@ endif
 let s:cpo_save = &cpo
 set cpo&vim
 
+" Default to enable folding; allow users to explicitly opt out
+if has("folding") && !(exists("g:elixir_fold") && !g:elixir_fold)
+  setlocal foldmethod=syntax
+endif
+
 syn cluster elixirNotTop contains=@elixirRegexSpecial,@elixirStringContained,@elixirDeclaration,elixirTodo,elixirArguments,elixirBlockDefinition,elixirUnusedVariable,elixirStructDelimiter,elixirListDelimiter
 syn cluster elixirRegexSpecial contains=elixirRegexEscape,elixirRegexCharClass,elixirRegexQuantifier,elixirRegexEscapePunctuation
 syn cluster elixirStringContained contains=elixirInterpolation,elixirRegexEscape,elixirRegexCharClass
