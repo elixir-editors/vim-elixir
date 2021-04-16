@@ -21,10 +21,10 @@ setlocal commentstring=#\ %s
 
 let &l:path =
       \ join([
-      \   'lib',
-      \   'src',
-      \   'deps/**/lib',
-      \   'deps/**/src',
+      \   'lib/**',
+      \   'src/**',
+      \   'deps/**/lib/**',
+      \   'deps/**/src/**',
       \   &g:path
       \ ], ',')
 setlocal includeexpr=elixir#util#get_filename(v:fname)
