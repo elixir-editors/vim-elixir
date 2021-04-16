@@ -23,6 +23,7 @@ let &l:path =
       \ join([
       \   'lib/**',
       \   'src/**',
+      \   'test/**',
       \   'deps/**/lib/**',
       \   'deps/**/src/**',
       \   &g:path
