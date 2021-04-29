@@ -76,7 +76,7 @@ syn region elixirStruct matchgroup=elixirStructDelimiter start="%\(\w\+{\)\@=" e
 
 syn region elixirMap matchgroup=elixirMapDelimiter start="%{" end="}" contains=ALLBUT,@elixirNotTop fold
 
-syn region elixirCharList  matchgroup=elixirCharListDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@Spell
+syn region elixirCharList  matchgroup=elixirCharListDelimiter start=+\z('\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@Spell,@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("\)+   end=+\z1+ skip=+\\\\\|\\\z1+  contains=@Spell,@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z('''\)+ end=+^\s*\z1+ contains=@Spell,@elixirStringContained
 syn region elixirString  matchgroup=elixirStringDelimiter start=+\z("""\)+ end=+^\s*\z1+ contains=@Spell,@elixirStringContained
