@@ -15,22 +15,27 @@ defmodule LoadRepos do
         repos = Application.get_env(app, :ecto_repos),
         is_list(repos) and repos != [],
         repo <- repos,
-        do: {repo, Map.new(Application.get_env(app, repo))}
+        do: {repo, Map.new(repo.config())}
   end
 
   defp config_to_url(_, %{url: url}), do: url
 
-  defp config_to_url(repo, %{
-         hostname: hostname,
-         username: username,
-         password: password,
-         database: database
-       }) do
+  defp config_to_url(repo, config) do
+    host =
+      case Map.fetch(config, :socket_dir) do
+        :error -> Map.fetch!(config, :hostname)
+        {:ok, socket_dir} -> socket_dir
+      end
+    username = Map.get(config, :username)
+    password = Map.get(config, :password)
+    database = Map.get(config, :database)
+    parameters = Map.get(config, :parameters, [])
+
     %URI{
       scheme: adapter_to_string(repo.__adapter__),
-      userinfo: "#{username}:#{password}",
-      host: hostname,
-      path: Path.join("/", database)
+      host: "",
+      path: Path.join("/", database),
+      query: encode_options([host: host, user: username, password: password] ++ parameters)
     }
     |> URI.to_string()
   end
@@ -38,6 +43,13 @@ defmodule LoadRepos do
   defp adapter_to_string(Ecto.Adapters.Postgres), do: "postgres"
   defp adapter_to_string(Ecto.Adapters.MySQL), do: "mysql"
   defp adapter_to_string(mod), do: raise("Unknown adapter #{inspect(mod)}")
+
+  defp encode_options(opts) do
+    cleaned =
+      for {k, v} <- opts, not is_nil(v), do: {k, v}
+
+    URI.encode_query(cleaned)
+  end
 
   def main do
     load_apps()
