@@ -230,12 +230,12 @@ hi def link elixirRegexCharClass             elixirSpecial
 hi def link elixirRegexQuantifier            elixirSpecial
 hi def link elixirSpecial                    Special
 hi def link elixirString                     String
-hi def link elixirCharList                   Identifier
+hi def link elixirCharList                   String
 hi def link elixirSigil                      String
 hi def link elixirDocStringDelimiter         elixirStringDelimiter
 hi def link elixirDocSigilDelimiter          elixirSigilDelimiter
 hi def link elixirStringDelimiter            Delimiter
-hi def link elixirCharListDelimiter          Identifier
+hi def link elixirCharListDelimiter          Delimiter
 hi def link elixirRegexDelimiter             Delimiter
 hi def link elixirInterpolationDelimiter     Delimiter
 hi def link elixirSigilDelimiter             Delimiter
