@@ -104,7 +104,7 @@ endfunction
 " Returns 0 or 1 based on whether or not the given line number and column
 " number pair is a string or comment
 function! s:is_string_or_comment(line, col)
-  return s:syntax_name(a:line, a:col) =~ '\%(String\|Comment\)'
+  return s:syntax_name(a:line, a:col) =~ '\%(String\|Comment\|CharList\)'
 endfunction
 
 function! s:syntax_name(line, col)

@@ -558,4 +558,12 @@ describe 'Basic indenting' do
     :send
   end
   EOF
+
+  i <<~EOF
+  defmodule Hi do
+    def hello_world do
+      "end"
+      'end'
+    end
+  EOF
 end
