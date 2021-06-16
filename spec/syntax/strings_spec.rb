@@ -13,7 +13,7 @@ describe 'String syntax' do
     end
 
     it 'charlist with escaped quote' do
-      expect(<<-'EOF').to include_elixir_syntax('elixirString', 'test')
+      expect(<<-'EOF').to include_elixir_syntax('elixirCharList', 'test')
         'this \'test is all one charlist'
       EOF
     end

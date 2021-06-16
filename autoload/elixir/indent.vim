@@ -145,7 +145,7 @@ function! s:find_last_pos(lnum, text, match)
       let peek_match = match(peek, a:match)
       if peek_match == ss_match + 1
         let syng = synIDattr(synID(a:lnum, c + ss_match, 1), 'name')
-        if syng !~ '\%(String\|Comment\)'
+        if syng !~ '\%(String\|Comment\|CharList\)'
           return c + ss_match
         end
       end
@@ -165,7 +165,7 @@ function! elixir#indent#handle_top_of_file(context)
 endfunction
 
 function! elixir#indent#handle_starts_with_string_continuation(context)
-  if s:syntax_name(a:context.lnum, a:context.first_nb_char_idx) =~ '\(String\|Comment\)$'
+  if s:syntax_name(a:context.lnum, a:context.first_nb_char_idx) =~ '\(String\|Comment\|CharList\)$'
     return -2
   else
     return -1
