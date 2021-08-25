@@ -125,6 +125,12 @@ module EexBuffer
   end
 end
 
+module HeexBuffer
+  def self.new
+    Buffer.new(VIM, :heex)
+  end
+end
+
 module LeexBuffer
   def self.new
     Buffer.new(VIM, :leex)
@@ -162,6 +168,7 @@ end
 {
   be_elixir_indentation:  :ex,
   be_eelixir_indentation: :eex,
+  be_heelixir_indentation: :heex,
   be_leelixir_indentation: :leex,
   be_surface_indentation: :sface
 }.each do |matcher, type|
@@ -191,6 +198,7 @@ end
 {
   include_elixir_syntax:  :ex,
   include_eelixir_syntax: :eex,
+  include_heelixir_syntax: :heex,
   include_leelixir_syntax: :leex,
   include_surface_syntax: :sface
 }.each do |matcher, type|
