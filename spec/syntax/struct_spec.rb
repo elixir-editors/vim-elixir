@@ -16,7 +16,7 @@ describe 'Struct syntax' do
   end
 
   it 'structs' do
-    str = %q(%MyStruct{name: "josh"})
+    str = %q(%MyStruct{name: "one"})
 
     expect(str).to include_elixir_syntax('elixirStructDelimiter', '%')
     expect(str).to include_elixir_syntax('elixirStruct', '%')

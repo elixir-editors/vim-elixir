@@ -197,7 +197,7 @@ describe 'Basic indenting' do
   defmodule Hello do
     def hello do
       case word do
-        :yo -> :dawg
+        :one -> :two
         :high -> :low
       end
     end
@@ -208,7 +208,7 @@ describe 'Basic indenting' do
   defmodule Hello do
     def hello do
       case word do
-        :yo -> :dawg
+        :one -> :two
 
         :high -> :low
       end
@@ -220,8 +220,8 @@ describe 'Basic indenting' do
   defmodule Hello do
     def hello do
       case word do
-        :yo ->
-          :dawg
+        :one ->
+          :two
 
         :high ->
           :low
@@ -234,15 +234,15 @@ describe 'Basic indenting' do
   defmodule Hello do
     def hello do
       case word do
-        :yo ->
+        :one ->
           case word do
-            :yo ->
-              :dawg
+            :one ->
+              :two
 
             :high ->
               :low
           end
-          :dawg
+          :two
 
         :high ->
           :low
@@ -284,9 +284,9 @@ describe 'Basic indenting' do
   defmodule Hello do
     def hello do
       name =
-        "josh"
+        "one"
       street =
-        "newbury"
+        "two"
     end
   end
   EOF
@@ -296,9 +296,9 @@ describe 'Basic indenting' do
     defmodule Hello do
       def hello do
         name #{bin_op}
-          "josh"
+          "one"
         street #{bin_op}
-          "newbury"
+          "two"
       end
     end
     EOF
@@ -306,8 +306,8 @@ describe 'Basic indenting' do
     i <<~EOF
     defmodule Hello do
       def hello do
-        name #{bin_op} "josh"
-        street #{bin_op} "newbury"
+        name #{bin_op} "one"
+        street #{bin_op} "two"
       end
     end
     EOF
@@ -326,8 +326,8 @@ describe 'Basic indenting' do
   i <<~EOF
   defmodule Hello do
     def hello do
-      name = "josh"
-      street = "newbury"
+      name = "one"
+      street = "two"
     end
   end
   EOF
@@ -346,15 +346,15 @@ describe 'Basic indenting' do
     def hi do
       fn hello ->
         case hello do
-          :yo ->
+          :one ->
             case word do
-              :yo ->
-                :dawg
+              :one ->
+                :two
 
               :high ->
                 :low
             end
-            :dawg
+            :two
 
           :high ->
             :low
@@ -454,13 +454,13 @@ describe 'Basic indenting' do
   defmodule Hi do
     defp hi do
       try do
-        raise "wtf"
+        raise "boom"
       rescue
         e in errs ->
-          IO.puts "yo"
+          IO.puts "one"
 
         _ ->
-          IO.puts "yo"
+          IO.puts "one"
       end
     end
   end
@@ -473,10 +473,10 @@ describe 'Basic indenting' do
         raise "wtf"
       catch
         e ->
-          IO.puts "yo"
+          IO.puts "one"
 
         _ ->
-          IO.puts "yo"
+          IO.puts "one"
       end
     end
   end
@@ -490,10 +490,10 @@ describe 'Basic indenting' do
           :ok
       after
         1000 ->
-          IO.puts "yo"
+          IO.puts "one"
 
         2000 ->
-          IO.puts "yo"
+          IO.puts "one"
       end
     end
   end

@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Map syntax' do
   it 'maps' do
-    str = %q(%{name: "josh"})
+    str = %q(%{name: "one"})
     expect(str).to include_elixir_syntax('elixirMapDelimiter', '%')
     expect(str).to include_elixir_syntax('elixirMapDelimiter', '{')
     expect(str).to include_elixir_syntax('elixirAtom', 'name:')

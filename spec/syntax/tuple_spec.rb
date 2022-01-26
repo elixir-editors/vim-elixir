@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe 'Tuple syntax' do
   it 'tuples' do
-    str = %q({:name, "josh"})
+    str = %q({:name, "one"})
 
     expect(str).to include_elixir_syntax('elixirTupleDelimiter', '{')
     expect(str).to include_elixir_syntax('elixirTuple', '{')
