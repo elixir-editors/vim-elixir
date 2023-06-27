@@ -143,23 +143,24 @@ syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc
 syn region elixirDocString matchgroup=elixirDocSigilDelimiter  start=+\%(@\w*doc\(\s\|(\)\+\)\@<=\~[Ss]\z("""\)+         end=+^\s*\z1+                contains=@elixirDocStringContained fold keepend
 
 " Defines
-syn match elixirDefine              '\<def\>\(:\)\@!'             nextgroup=elixirFunctionDeclaration        skipwhite skipnl
-syn match elixirPrivateDefine       '\<defp\>\(:\)\@!'            nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
-syn match elixirNumericalDefine     '\<defn\>\(:\)\@!'            nextgroup=elixirFunctionDeclaration        skipwhite skipnl
-syn match elixirGuard               '\<defguard\>\(:\)\@!'        nextgroup=elixirFunctionDeclaration        skipwhite skipnl
-syn match elixirPrivateGuard        '\<defguardp\>\(:\)\@!'       nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
-syn match elixirModuleDefine        '\<defmodule\>\(:\)\@!'       nextgroup=elixirModuleDeclaration          skipwhite skipnl
-syn match elixirProtocolDefine      '\<defprotocol\>\(:\)\@!'     nextgroup=elixirProtocolDeclaration        skipwhite skipnl
-syn match elixirImplDefine          '\<defimpl\>\(:\)\@!'         nextgroup=elixirImplDeclaration            skipwhite skipnl
-syn match elixirRecordDefine        '\<defrecord\>\(:\)\@!'       nextgroup=elixirRecordDeclaration          skipwhite skipnl
-syn match elixirPrivateRecordDefine '\<defrecordp\>\(:\)\@!'      nextgroup=elixirPrivateRecordDeclaration   skipwhite skipnl
-syn match elixirMacroDefine         '\<defmacro\>\(:\)\@!'        nextgroup=elixirMacroDeclaration           skipwhite skipnl
-syn match elixirPrivateMacroDefine  '\<defmacrop\>\(:\)\@!'       nextgroup=elixirPrivateMacroDeclaration    skipwhite skipnl
-syn match elixirDelegateDefine      '\<defdelegate\>\(:\)\@!'     nextgroup=elixirDelegateDeclaration        skipwhite skipnl
-syn match elixirOverridableDefine   '\<defoverridable\>\(:\)\@!'  nextgroup=elixirOverridableDeclaration     skipwhite skipnl
-syn match elixirExceptionDefine     '\<defexception\>\(:\)\@!'    nextgroup=elixirExceptionDeclaration       skipwhite skipnl
-syn match elixirCallbackDefine      '\<defcallback\>\(:\)\@!'     nextgroup=elixirCallbackDeclaration        skipwhite skipnl
-syn match elixirStructDefine        '\<defstruct\>\(:\)\@!'       skipwhite skipnl
+syn match elixirDefine                 '\<def\>\(:\)\@!'             nextgroup=elixirFunctionDeclaration        skipwhite skipnl
+syn match elixirPrivateDefine          '\<defp\>\(:\)\@!'            nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
+syn match elixirNumericalDefine        '\<defn\>\(:\)\@!'            nextgroup=elixirFunctionDeclaration        skipwhite skipnl
+syn match elixirPrivateNumericalDefine '\<defnp\>\(:\)\@!'           nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
+syn match elixirGuard                  '\<defguard\>\(:\)\@!'        nextgroup=elixirFunctionDeclaration        skipwhite skipnl
+syn match elixirPrivateGuard           '\<defguardp\>\(:\)\@!'       nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
+syn match elixirModuleDefine           '\<defmodule\>\(:\)\@!'       nextgroup=elixirModuleDeclaration          skipwhite skipnl
+syn match elixirProtocolDefine         '\<defprotocol\>\(:\)\@!'     nextgroup=elixirProtocolDeclaration        skipwhite skipnl
+syn match elixirImplDefine             '\<defimpl\>\(:\)\@!'         nextgroup=elixirImplDeclaration            skipwhite skipnl
+syn match elixirRecordDefine           '\<defrecord\>\(:\)\@!'       nextgroup=elixirRecordDeclaration          skipwhite skipnl
+syn match elixirPrivateRecordDefine    '\<defrecordp\>\(:\)\@!'      nextgroup=elixirPrivateRecordDeclaration   skipwhite skipnl
+syn match elixirMacroDefine            '\<defmacro\>\(:\)\@!'        nextgroup=elixirMacroDeclaration           skipwhite skipnl
+syn match elixirPrivateMacroDefine     '\<defmacrop\>\(:\)\@!'       nextgroup=elixirPrivateMacroDeclaration    skipwhite skipnl
+syn match elixirDelegateDefine         '\<defdelegate\>\(:\)\@!'     nextgroup=elixirDelegateDeclaration        skipwhite skipnl
+syn match elixirOverridableDefine      '\<defoverridable\>\(:\)\@!'  nextgroup=elixirOverridableDeclaration     skipwhite skipnl
+syn match elixirExceptionDefine        '\<defexception\>\(:\)\@!'    nextgroup=elixirExceptionDeclaration       skipwhite skipnl
+syn match elixirCallbackDefine         '\<defcallback\>\(:\)\@!'     nextgroup=elixirCallbackDeclaration        skipwhite skipnl
+syn match elixirStructDefine           '\<defstruct\>\(:\)\@!'       skipwhite skipnl
 
 " Declarations
 syn match  elixirModuleDeclaration          "[^[:space:];#<,()\[\]]\+" contained                      nextgroup=elixirBlock     skipwhite skipnl
@@ -189,6 +190,7 @@ hi def link elixirBlockDefinition            Define
 hi def link elixirDefine                     Define
 hi def link elixirPrivateDefine              Define
 hi def link elixirNumericalDefine            Define
+hi def link elixirPrivateNumericalDefine     Define
 hi def link elixirGuard                      Define
 hi def link elixirPrivateGuard               Define
 hi def link elixirModuleDefine               Define
