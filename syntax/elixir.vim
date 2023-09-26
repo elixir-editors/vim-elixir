@@ -147,6 +147,8 @@ syn match elixirDefine                 '\<def\>\(:\)\@!'             nextgroup=e
 syn match elixirPrivateDefine          '\<defp\>\(:\)\@!'            nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
 syn match elixirNumericalDefine        '\<defn\>\(:\)\@!'            nextgroup=elixirFunctionDeclaration        skipwhite skipnl
 syn match elixirPrivateNumericalDefine '\<defnp\>\(:\)\@!'           nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
+syn match elixirTransform              '\<deftransform\>\(:\)\@!'    nextgroup=elixirFunctionDeclaration        skipwhite skipnl
+syn match elixirPrivateTransform       '\<deftransformp\>\(:\)\@!'   nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
 syn match elixirGuard                  '\<defguard\>\(:\)\@!'        nextgroup=elixirFunctionDeclaration        skipwhite skipnl
 syn match elixirPrivateGuard           '\<defguardp\>\(:\)\@!'       nextgroup=elixirPrivateFunctionDeclaration skipwhite skipnl
 syn match elixirModuleDefine           '\<defmodule\>\(:\)\@!'       nextgroup=elixirModuleDeclaration          skipwhite skipnl
@@ -191,6 +193,8 @@ hi def link elixirDefine                     Define
 hi def link elixirPrivateDefine              Define
 hi def link elixirNumericalDefine            Define
 hi def link elixirPrivateNumericalDefine     Define
+hi def link elixirTransform                  Define
+hi def link elixirPrivateTransform           Define
 hi def link elixirGuard                      Define
 hi def link elixirPrivateGuard               Define
 hi def link elixirModuleDefine               Define
