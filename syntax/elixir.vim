@@ -71,8 +71,8 @@ syn region elixirTuple matchgroup=elixirTupleDelimiter start="\(\w\|#\)\@<!{" en
 syn match elixirListDelimiter '\[' contained containedin=elixirList
 syn region elixirList matchgroup=elixirListDelimiter start='\[' end='\]' contains=ALLBUT,@elixirNotTop fold
 
-syn match elixirStructDelimiter '{' contained containedin=elixirStruct
-syn region elixirStruct matchgroup=elixirStructDelimiter start="%\(\w\+{\)\@=" end="}" contains=ALLBUT,@elixirNotTop fold
+syn match elixirStructDelimiter '%' contained containedin=elixirStruct
+syn region elixirStruct  matchgroup=NONE start="%\%([A-Za-z.]\+\){" end="}" contains=ALLBUT,@elixirNotTop fold
 
 syn region elixirMap matchgroup=elixirMapDelimiter start="%{" end="}" contains=ALLBUT,@elixirNotTop fold
 
