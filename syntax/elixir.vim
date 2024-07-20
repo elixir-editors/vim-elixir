@@ -92,11 +92,11 @@ syn region elixirArguments start="(" end=")" contained contains=elixirOperator,e
 
 syn match elixirDelimEscape "\\[(<{\[)>}\]/\"'|]" transparent display contained contains=NONE
 
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u{"                end="}"   skip="\\\\\|\\}"   contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u<"                end=">"   skip="\\\\\|\\>"   contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\["               end="\]"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u("                end=")"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+{"                end="}"   skip="\\\\\|\\}"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+<"                end=">"   skip="\\\\\|\\>"   contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+\["               end="\]"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+("                end=")"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
 
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1"                                                              fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l{"                end="}"   skip="\\\\\|\\}"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
@@ -106,8 +106,10 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l("            
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\/"               end="\/"  skip="\\\\\|\\\/"  contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 
 " Sigils surrounded with heredoc
-syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z("""\)+ end=+^\s*\z1+ skip=+\\"+ fold
-syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\a\z('''\)+ end=+^\s*\z1+ skip=+\\'+ fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\u\+\z("""\)+ end=+^\s*\z1+ skip=+\\"+ fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\u\z('''\)+ end=+^\s*\z1+ skip=+\\'+ fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\l\z("""\)+ end=+^\s*\z1+ skip=+\\"+ fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start=+\~\l\z('''\)+ end=+^\s*\z1+ skip=+\\'+ fold
 
 " LiveView-specific sigils for embedded templates
 syntax include @HTML syntax/html.vim
