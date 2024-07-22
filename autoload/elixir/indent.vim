@@ -68,7 +68,7 @@ endfunction
 
 function! s:in_embedded_view()
   let groups = map(synstack(line('.'), col('.')), "synIDattr(v:val, 'name')")
-  for group in ['elixirPhoenixESigil', 'elixirLiveViewSigil', 'elixirSurfaceSigil']
+  for group in ['elixirPhoenixESigil', 'elixirLiveViewSigil', 'elixirSurfaceSigil', 'elixirHeexSigil']
     if index(groups, group) >= 0
       return 1
     endif
