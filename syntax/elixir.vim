@@ -126,7 +126,7 @@ syn region heexComponent matchgroup=eelixirDelimiter start="<\.[a-z_]\+"  end="%
 syn region eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
 syn region eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
 syn region eelixirQuote matchgroup=eelixirDelimiter start="<%%" end="%\@<!%>" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
-syn region heexComment matchgroup=eelixirDelimiter start="<%!--" end="%\@<!--%>" contains=elixirTodo,eelixirComment,@Spell containedin=@elixirTemplateSigils keepend
+syn region heexComment matchgroup=eelixirDelimiter start="<%!--"ms=s-1 end="%\@<!--%>"me=e+1 containedin=@HTML,@elixirTemplateSigils keepend
 syn region heexExpression matchgroup=heexDelimiter start="=\zs{" end="}" contains=ALLBUT,@elixirNotTop containedin=htmlValue keepend
 syn region heexExpression matchgroup=heexDelimiter start="=\zs{" end="}" skip="#{[^}]*}" contains=ALLBUT,@elixirNotTop containedin=htmlValue keepend
 " missing `keepend` on next line is intentional
