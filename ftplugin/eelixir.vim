@@ -108,8 +108,8 @@ if !exists('b:surround_5')
   let b:surround_5 = "<% \r %>\n<% end %>"
 endif
 
-setlocal comments=:<%#
-setlocal commentstring=<%#\ %s\ %>
+setlocal comments=:<%!--
+setlocal commentstring=<%!--\ %s\ --%>
 
 let b:undo_ftplugin = "setl cms< " .
       \ " | unlet! b:browsefilter b:match_words | " . s:undo_ftplugin
