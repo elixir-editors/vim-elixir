@@ -276,7 +276,7 @@ Vimrunner::RSpec.configure do |config|
 
   config.start_vim do
     VIM =
-      if File.exists?(GVIM_PATH_FILE)
+      if File.exist?(GVIM_PATH_FILE)
         Vimrunner::Server.new(executable: File.read(GVIM_PATH_FILE).rstrip).start
       else
         Vimrunner.start_gvim
