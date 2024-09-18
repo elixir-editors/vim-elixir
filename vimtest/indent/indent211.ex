@@ -1,0 +1,3 @@
+try do
+rescue
+end
