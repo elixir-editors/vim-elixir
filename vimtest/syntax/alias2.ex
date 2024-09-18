@@ -1,0 +1,3 @@
+# \.
+# elixirOperator
+Enum.empty?(...)

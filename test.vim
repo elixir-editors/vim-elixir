@@ -4,10 +4,19 @@ let s:results = []
 
 func s:assert_equal(testcase, expected, actual)
   if (a:actual == a:expected) == 1
-    " let s:results = s:results + [printf("PASS %s", a:testcase['name'])]
+    call s:record_success(a:testcase, a:expected, a:actual)
   else
-    let s:results = s:results + [printf("FAIL %s\nwant\n%s\ngot\n\%s\n", a:testcase['name'], a:expected, a:actual)]
+    call s:record_failure(a:testcase, a:expected, a:actual)
   end
+endfunction
+
+func s:record_success(testcase, expected, actual)
+  let s:results = s:results + [printf("PASS %s\n", a:testcase['name'])]
+  " let s:results = s:results + [printf("PASS %s\nwant\n%s\ngot\n\%s\n", a:testcase['name'], a:expected, a:actual)]
+endfunction
+
+func s:record_failure(testcase, expected, actual)
+  let s:results = s:results + [printf("FAIL %s\nwant\n%s\ngot\n\%s\n", a:testcase['name'], a:expected, a:actual)]
 endfunction
 
 func s:paste(text)
@@ -32,14 +41,8 @@ func s:indent_buffer()
 endfunction
 
 func s:load_file(name)
-  return join(readfile(a:name), "\n")
+  return
 endfunction
-
-let s:testcases = map(readdir("vimtest/indent"), {_, val -> {'name': "vimtest/indent/" . val, 'expected': s:load_file("vimtest/indent/" . val)}})
-" Pin a test by uncommenting the following:
-" let s:testcases = [
-"       \ {'name': "vimtest/indent/indent110.ex", 'expected': s:load_file("vimtest/indent/indent110.ex")}
-"       \ ]
 
 function s:test_indent(testcase)
   set ft=elixir
@@ -57,8 +60,47 @@ function s:paste_results()
   call s:paste(join(s:results, ""))
 endfunction
 
-for tc in s:testcases
-  call s:test_indent(tc)
+func s:test_syntax(testcase)
+  set ft=elixir
+  call s:paste(a:testcase['body'])
+
+  call search(a:testcase['pattern'], 'c')
+  let l:syngroups = map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+  call cursor(0, 0)
+  let l:i = index(l:syngroups, a:testcase['expected'])
+  if l:i == -1
+    call s:record_failure({'name': "test_syntax"}, a:testcase['expected'], l:syngroups)
+  else
+    call s:record_success({'name': "test_syntax"}, a:testcase['expected'], l:syngroups)
+  end
+endfunction
+
+let s:indent_testcases = map(readdir("vimtest/indent"), {_, val -> {'name': "vimtest/indent/" . val, 'expected': join(readfile("vimtest/indent/" . val), "\n")}})
+" Pin a test by uncommenting the following:
+" let s:indent_testcases = [
+"       \ {'name': "vimtest/indent/indent110.ex", 'expected': join(readfile("vimtest/indent/indent110.ex"), "\n")}
+"       \ ]
+
+" for tc in s:indent_testcases
+"   call s:test_indent(tc)
+"   call s:clear_buffer()
+" endfor
+
+let s:syntax_testcases = []
+let s:syndir = readdir("vimtest/syntax")
+for path in s:syndir
+  let contents = readfile("vimtest/syntax/" . path)
+
+  let pattern = contents[0][2:-1]
+  let expected = contents[1][2:-1]
+  let body = join(contents[2:-1], "\n")
+
+  let s:syntax_testcases = s:syntax_testcases + [{'body': body, 'pattern': pattern, 'expected': expected}]
+endfor
+
+for tc in s:syntax_testcases
+  call s:test_syntax(tc)
   call s:clear_buffer()
 endfor
+
 call s:paste_results()

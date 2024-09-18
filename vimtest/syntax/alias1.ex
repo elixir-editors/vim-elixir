@@ -1,0 +1,3 @@
+# Enum
+# elixirAlias
+Enum.empty?(...)
