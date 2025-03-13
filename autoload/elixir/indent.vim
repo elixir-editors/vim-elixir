@@ -379,7 +379,7 @@ endfunction
 " function, etc... so we need to first figure out what the innermost structure
 " is then forward execution to the proper handler
 function! elixir#indent#handle_inside_block(context)
-  let start_pattern = '\C\%(\<with\>\|\<if\>\|\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|\<quote\>\|{\|\[\|(\)'
+  let start_pattern = '\C\%(\<with\>\|\<if\>\|\<case\>\|\<cond\>\|\<try\>\|\<receive\>\|\<fn\>\|\<quote\>\|{\|\[\|(\):\@!'
   let end_pattern = '\C\%(\<end\>\|\]\|}\|)\)'
   " hack - handle do: better
   let block_info = searchpairpos(start_pattern, '', end_pattern, 'bnW', "line('.') == " . line('.') . " || elixir#indent#searchpair_back_skip() || getline(line('.')) =~ 'do:'", max([0, a:context.lnum - g:elixir_indent_max_lookbehind]))
