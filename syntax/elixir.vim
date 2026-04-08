@@ -98,7 +98,7 @@ syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+<"          
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+\["               end="\]"  skip="\\\\\|\\\]"  contains=elixirDelimEscape fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\u\+("                end=")"   skip="\\\\\|\\)"   contains=elixirDelimEscape fold
 
-syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1"                                                              fold
+syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\z(/\|\"\|'\||\)" end="\z1" skip="\\\\\|\\\z1" contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l{"                end="}"   skip="\\\\\|\\}"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l<"                end=">"   skip="\\\\\|\\>"   contains=@elixirStringContained,elixirRegexEscapePunctuation fold
 syn region elixirSigil matchgroup=elixirSigilDelimiter start="\~\l\["               end="\]"  skip="\\\\\|\\\]"  contains=@elixirStringContained,elixirRegexEscapePunctuation fold
@@ -120,17 +120,15 @@ syntax region elixirLiveViewSigil matchgroup=elixirSigilDelimiter keepend start=
 syntax region elixirPhoenixESigil matchgroup=elixirSigilDelimiter keepend start=+\~E\z("""\)+ end=+^\s*\z1+ skip=+\\"+ contains=@HTML fold
 syntax region elixirPhoenixeSigil matchgroup=elixirSigilDelimiter keepend start=+\~e\z("""\)+ end=+^\s*\z1+ skip=+\\"+ contains=@HTML fold
 
-syn cluster elixirTemplateSigils contains=elixirLiveViewSigil,elixirHeexSigil,elixirSurfaceSigil,elixirPhoenixESigil,elixirPhoenixeSigil
+syn cluster elixirTemplateSigils contains=elixirLiveViewSigil,elixirHeexSigil,elixirSurfaceSigil,elixirPhoenixESigil,elixirPhoenixeSigil,elixirHologramSigil
 
 syn region heexComponent matchgroup=eelixirDelimiter start="<\.[a-z_]\+"  end="%\@<!>" contains=ALLBUT,@elixirNotTop keepend
 syn region eelixirExpression matchgroup=eelixirDelimiter start="<%"  end="%\@<!%>" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
 syn region eelixirExpression matchgroup=eelixirDelimiter start="<%=" end="%\@<!%>" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
 syn region eelixirQuote matchgroup=eelixirDelimiter start="<%%" end="%\@<!%>" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
 syn region heexComment matchgroup=eelixirDelimiter start="<%!--" end="%\@<!--%>" contains=elixirTodo,eelixirComment,@Spell containedin=@elixirTemplateSigils keepend
-syn region heexExpression matchgroup=heexDelimiter start="=\zs{" end="}" contains=ALLBUT,@elixirNotTop containedin=htmlValue keepend
-syn region heexExpression matchgroup=heexDelimiter start="=\zs{" end="}" skip="#{[^}]*}" contains=ALLBUT,@elixirNotTop containedin=htmlValue keepend
+syn region heexExpression matchgroup=heexDelimiter start="\(%\([[:keyword:]\.]\+\)\=\)\@<!{" end="}" skip="#{[^}]*}" contains=ALLBUT,elixirComment,@elixirNotTop containedin=elixirHeexSigil,htmlValue
 " missing `keepend` on next line is intentional
-syn region heexExpression matchgroup=heexDelimiter start="=\zs{" end="}" skip="%{[^}]*}" contains=ALLBUT,@elixirNotTop containedin=htmlValue
 
 syn match phxArg "\<phx[-.0-9_a-z]*-[-.0-9_a-z]*\>" containedin=htmlTag
 syn match heexArg "\<[0-9_a-z]*\>\ze=" containedin=htmlTag
@@ -138,12 +136,20 @@ syn match heexSpecialAttribute ":\%(if\|for\|let\)\ze=" containedin=htmlTag
 syn match heexComponentName "<\zs\.[A-Z_a-z][A-Z_a-z0-9]\+" containedin=htmlTag
 syn match heexEndComponent "<\zs\/\.[A-Z_a-z][A-Z_a-z0-9]\+" containedin=htmlEndTag
 
+" Hologram
+syn region elixirHologramSigil matchgroup=elixirSigilDelimiter keepend start=+\~HOLO\=\z("""\)+ end=+^\s*\z1+ skip=+\\"+ contains=@HTML fold
+syn region elixirHologramBlockOpen matchgroup=heexDelimiter start="\zs{%\(for\|if\|raw\)" end="}" skip="%{[^}]*}" contains=ALLBUT,@elixirNotTop containedin=@elixirTemplateSigils keepend
+syn region elixirHologramBlockClose matchgroup=heexDelimiter start="\zs{/\(for\|if\|raw\)" end="}" skip="%{[^}]*}" containedin=@elixirTemplateSigils keepend
+syn region elixirHolgramInterpolation matchgroup=heexDelimiter start="\(%\([[:keyword:]\.]\+\)\=\)\@<!{[%/]\@!" end="}" skip="%{[^}]*}" contains=ALLBUT,elixirComment,@elixirNotTop containedin=elixirHologramSigil,htmlString
+syn match elixirHologramEventBinding "$\%(blur\|change\|click\|focus\|mouse_move\|pointer_cancel\|pointer_down\|pointer_move\|pointer_up\|select\|submit\|transition_\(cancel\|end\|run\|start\)transition_start\)\ze=" containedin=htmlTag
+
 hi def link eelixirDelimiter PreProc
 hi def link heexDelimiter PreProc
 hi def link heexComment Comment
 hi def link phxArg htmlArg
 hi def link heexArg htmlArg
 hi def link heexSpecialAttribute htmlArg
+hi def link elixirHologramEventBinding Keyword
 hi def link heexComponentName htmlTagName
 hi def link heexEndComponent htmlTagName
 
